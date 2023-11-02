@@ -1,3 +1,171 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: IRANSans;
+    font-style: normal;
+    font-weight: normal;
+    src: url('../fonts/eot/IRANSansWeb_UltraLight.eot');
+    src: url('../fonts/woff2/IRANSansWeb_UltraLight.woff2') format('woff2'),
+        url('../fonts/woff/IRANSansWeb_UltraLight.woff') format('woff'),
+        url('../fonts/ttf/IRANSansWeb_UltraLight.ttf') format('truetype'),
+        url('../fonts/eot/IRANSansWeb_UltraLight.eot?#iefix') format('embedded-opentype');
+    font-display: swap;
+}
+
+
+* {
+    font-family: IRANSans;
+}
+
+body {
+    font-size: 14px;
+    /* background: linear-gradient(180deg, #96001d, #520010);
+    background-repeat: no-repeat;
+    min-height: 100vh; */
+    direction: rtl;
+}
+
+
+.price {
+    width: 105px;
+    height: 250px;
+    clip-path: polygon(0 0, 50% 100%, 100% 0);
+    clip: auto;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0) rotate(0deg);
+    display: flex;
+    justify-content: center;
+    align-items: self-start;
+    opacity: 0.9;
+}
+
+.price div {
+    transform: rotate(-90deg);
+    color: #f1bb2f;
+    font-size: 11px;
+    margin-top: 50%;
+}
+
+#pr1 {
+    background-color: #289600;
+}
+
+#pr2 {
+    transform: translate(-50%, 0%) rotate(24deg);
+    transform-origin: bottom;
+    background-color: #fff;
+}
+
+#pr3 {
+    transform: translate(-50%, 0) rotate(48deg);
+    transform-origin: bottom;
+    background-color: #96001d;
+}
+
+#pr4 {
+    transform: translate(-50%, 0) rotate(72deg);
+    transform-origin: bottom;
+    background-color: #fff;
+}
+
+#pr5 {
+    transform: translate(-50%, 0) rotate(96deg);
+    transform-origin: bottom;
+    background: linear-gradient(to top, #cc8129 0%, #f8dd91 100%);
+}
+
+#pr5 div {
+    color: #555;
+}
+
+
+#pr6 {
+    transform: translate(-50%, 0) rotate(120deg);
+    transform-origin: bottom;
+    background-color: #fff;
+}
+
+#pr7 {
+    transform: translate(-50%, 0) rotate(144deg);
+    transform-origin: bottom;
+    background-color: #96001d;
+}
+
+#pr8 {
+    transform: translate(-50%, 0) rotate(168deg);
+    transform-origin: bottom;
+    background-color: #fff;
+}
+
+#pr9 {
+    transform: translate(-50%, 0) rotate(192deg);
+    transform-origin: bottom;
+    background: linear-gradient(to top, #cc8129 0%, #f8dd91 100%);
+}
+
+#pr9 div {
+    color: #555;
+}
+
+
+#pr10 {
+    transform: translate(-50%, 0) rotate(216deg);
+    transform-origin: bottom;
+    background-color: #fff;
+}
+
+#pr11 {
+    transform: translate(-50%, 0) rotate(240deg);
+    transform-origin: bottom;
+    background-color: #96001d;
+}
+
+#pr12 {
+    transform: translate(-50%, 0) rotate(264deg);
+    transform-origin: bottom;
+    background-color: #fff;
+}
+
+#pr13 {
+    transform: translate(-50%, 0) rotate(288deg);
+    transform-origin: bottom;
+    background-color: #96001d;
+}
+
+#pr14 {
+    transform: translate(-50%, 0) rotate(312deg);
+    transform-origin: bottom;
+    background-color: #fff;
+}
+
+#pr15 {
+    transform: translate(-50%, 0) rotate(336deg);
+    transform-origin: bottom;
+    background: linear-gradient(to top, #cc8129 0%, #f8dd91 100%);
+}
+
+#pr15 div {
+    color: #555;
+}
+
+.wheel-prices {
+    transform: rotate(0);
+    animation-name: spinSlow;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-out;
+    animation-duration: 10s;
+    transition: 10s cubic-bezier(.08, .46, .4, 1.01);
+}
+
+
+.wheel-prices div:nth-child(2n) div {
+    color: #666;
+}
+
+.wheel-sub-container span:nth-child(1) {
+    transform: translate(-50%, -50%) rotate(24deg);
+}
