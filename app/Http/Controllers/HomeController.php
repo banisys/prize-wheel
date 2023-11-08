@@ -12,8 +12,18 @@ class HomeController extends Controller
         return Inertia::render('Home');
     }
 
-    public function test()
+    public function p_15()
     {
-        return Inertia::render('Test');
+        return Inertia::render('p_15');
+    }
+
+    public function p_12()
+    {
+        return Inertia::render('p_12');
+    }
+
+    public function p_10()
+    {
+        return Inertia::render('p_10');
     }
 }
