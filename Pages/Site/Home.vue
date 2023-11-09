@@ -1,5 +1,5 @@
 <script>
-import p_10 from '../Components/p_10.vue'
+import p_10 from './Components/p_10.vue'
 
 export default {
   components: {

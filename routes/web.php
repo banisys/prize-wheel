@@ -1,10 +1,14 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Seller\AuthController;
 use Illuminate\Support\Facades\Route;
 
 
+//================================ Site =====================================
 Route::get('/', [HomeController::class, 'index']);
-Route::get('/p_15', [HomeController::class, 'p_15']);
-Route::get('/p_12', [HomeController::class, 'p_12']);
-Route::get('/p_10', [HomeController::class, 'p_10']);
+
+
+
+//================================ Seller =====================================
+Route::get('/login', [AuthController::class, 'show'])->name('seller.login');
