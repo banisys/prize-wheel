@@ -7,8 +7,8 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                'resources/css/app.css',
-                'resources/js/app.js'
+                'resources/scss/app.scss',
+                'resources/js/seller.js'
             ],
             refresh: true,
         }),
@@ -16,7 +16,7 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            vue: 'vue/dist/vue.esm-bundler.js'
+            vue: 'vue/dist/vue.esm-bundler.js',
         }
     }
 });

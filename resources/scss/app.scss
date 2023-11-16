@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'bootstrap/scss/bootstrap';
 
 @font-face {
     font-family: IRANSans;
@@ -27,6 +25,9 @@ body {
     direction: rtl;
 }
 
+.ltr {
+    direction: ltr;
+}
 
 .price {
     width: 105px;
@@ -111,7 +112,6 @@ body {
     color: #555;
 }
 
-
 #pr10 {
     transform: translate(-50%, 0) rotate(216deg);
     transform-origin: bottom;
@@ -160,7 +160,6 @@ body {
     animation-duration: 10s;
     transition: 10s cubic-bezier(.08, .46, .4, 1.01);
 }
-
 
 .wheel-prices div:nth-child(2n) div {
     color: #666;

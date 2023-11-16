@@ -1,6 +1,9 @@
+import purgecss from '@fullhuman/postcss-purgecss'
+
 export default {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
+    plugins: [
+        // purgecss({
+        //     content: ['./**/*.vue', './**/*.blade.php']
+        // })
+    ]
 }

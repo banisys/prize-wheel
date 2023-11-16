@@ -11,4 +11,4 @@ Route::get('/', [HomeController::class, 'index']);
 
 
 //================================ Seller =====================================
-Route::get('/login', [AuthController::class, 'show'])->name('seller.login');
+Route::get('sellers/login', [AuthController::class, 'show'])->name('seller.login');
