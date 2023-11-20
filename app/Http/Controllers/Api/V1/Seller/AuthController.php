@@ -1,13 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Seller;
+namespace App\Http\Controllers\Api\V1\Seller;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\ResponseFactory;
+use App\Http\Controllers\Api\V1\Helper;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
+
     public $inertia;
 
     public function __construct()
@@ -19,6 +22,15 @@ class AuthController extends Controller
     public function show()
     {
         return $this->inertia->render('Login');
+    }
+
+    public function sendVerificationCode(Request $req) : Response
+    {
+        $code = rand(1000, 9999);
+
+        // send SMS
+
+        return response(Helper::responseTemplate(['code' => $code]), 200);
     }
 
     public function login(Request $req)
@@ -34,5 +46,4 @@ class AuthController extends Controller
         }
         return response()->json('unauthorized', 401);
     }
-
 }

@@ -14,13 +14,15 @@ class AuthTest extends TestCase
     ];
 
     /**
-     * A basic test example.
+     * ----------
      */
     /** @test */
     public function send_verification_code(): void
     {
-        $response = $this->get('/api/v1/seller/send_verification_code');
+        // $this->withoutExceptionHandling();
+        $res = $this->postJson('api/v1/sellers/send_verification_code', ['mobile' => $this->seller['mobile']]);
 
-        $response->assertStatus(200);
+        $res->assertStatus(200);
+        $this->assertEquals(4, strlen($res['data']['code']));
     }
 }
