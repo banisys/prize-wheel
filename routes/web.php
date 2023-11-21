@@ -12,3 +12,6 @@ Route::get('/', [HomeController::class, 'index']);
 
 //================================ Seller =====================================
 Route::get('sellers/login', [AuthController::class, 'show'])->name('seller.login');
+
+
+Route::view('/swagger', 'swagger');

@@ -8,7 +8,8 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/scss/app.scss',
-                'resources/js/seller.js'
+                'resources/js/seller.js',
+                'resources/js/swagger.js'
             ],
             refresh: true,
         }),

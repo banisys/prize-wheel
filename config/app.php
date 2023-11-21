@@ -160,7 +160,6 @@ return [
          * Package Service Providers...
          */
         Spatie\Permission\PermissionServiceProvider::class,
-        L5Swagger\L5SwaggerServiceProvider::class,
         /*
          * Application Service Providers...
          */

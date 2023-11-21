@@ -6,7 +6,7 @@ class Helper
 {
     public static function responseTemplate($data)
     {
-        return $data = [
+        return [
             'data' => $data
         ];
     }
