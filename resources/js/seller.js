@@ -1,9 +1,7 @@
 import './bootstrap'
 import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
-import { createPinia } from 'pinia'
 
-const pinia = createPinia()
 
 createInertiaApp({
   resolve: name => {
@@ -18,7 +16,7 @@ createInertiaApp({
         assetsURL: import.meta.env.VITE_APP_ASSETS_URL
       }),
     })
-      .use(plugin).use(pinia)
+      .use(plugin)
       .mount(el)
   },
 })

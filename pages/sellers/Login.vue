@@ -1,11 +1,11 @@
 <script>
-import axios from 'axios';
-
+import axios from 'axios'
+import { router } from '@inertiajs/vue3'
 // import p_10 from './Components/p_10.vue'
 
 export default {
   components: {
-    // p_10
+
   },
   data: () => ({
     mobile: null,
@@ -18,22 +18,20 @@ export default {
   methods: {
     submit() {
 
-      axios.defaults.withCredentials = true
+      axios.post(`${this.baseURL}/sellers/send_verification_code`, {
+        mobile: this.mobile
+      }).then((res) => {
 
-      axios.get('/sanctum/csrf-cookie').then(response => {
-        console.log(response);
-      });
+        if (res.status === 201) {
+          this.$parent.mobile = this.mobile
+          router.get('code')
+        }
 
-    //   axios.post(`${this.baseURL}/`).then((res) => {
-
-    //     console.log(res);
-
-    //   })
-
+      })
     }
   },
   created() {
-    this.baseURL = this.$root.baseURL
+    this.baseURL = this.$root.baseURL + '/api/v1'
     this.assetsURL = this.$root.assetsURL
   },
   mounted() {
@@ -45,7 +43,8 @@ export default {
 <template>
   <div class="container mt-5">
     <div class="row">
-      <div class="col-4"></div>
+      <div class="col-4">
+      </div>
       <div class="col-3">
         <label for="mobile" class="form-label">
           شماره موبایل
