@@ -1,14 +1,13 @@
 <script>
 import axios from 'axios';
-
-
-// import p_10 from './Components/p_10.vue'
+import { router } from '@inertiajs/vue3'
 
 export default {
   components: {
 
   },
   data: () => ({
+    mobile: null,
     code: null,
     baseURL: '',
     assetsURL: '',
@@ -18,15 +17,17 @@ export default {
   },
   methods: {
     submit() {
+      axios.post(`${this.baseURL}/sellers/enter_verification_code`, {
+        mobile: this.mobile,
+        code: this.code,
+      }).then((res) => {
+        // check set password
+        if (res.status === 200) {
+          res.data.message === 'password set' && router.get('dashboard')
+          res.data.message === 'password not set' && router.get('set_password')
+        }
 
-      //   axios.post(`${this.baseURL}/sellers/send_verification_code`, {
-      //     mobile: this.mobile
-      //   }).then((res) => {
-
-      //     res.status === 201 ?
-
-      //   })
-
+      })
     }
   },
   created() {
@@ -34,8 +35,7 @@ export default {
     this.assetsURL = this.$root.assetsURL
   },
   mounted() {
-    console.log(this.$parent)
-    console.log(this.$root)
+
   }
 }
 </script>
@@ -45,10 +45,10 @@ export default {
     <div class="row">
       <div class="col-4"></div>
       <div class="col-3">
-        <label for="mobile" class="form-label">
+        <label for="code" class="form-label">
           کد ارسالی را وارد کنید
         </label>
-        <input type="text" id="mobile" class="form-control ltr" placeholder="091********" v-model="code">
+        <input type="text" id="code" class="form-control ltr" v-model="code">
       </div>
     </div>
   </div>

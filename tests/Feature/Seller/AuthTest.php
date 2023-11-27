@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Seller;
-use App\Models\VerificationCode;
 
 class AuthTest extends TestCase
 {
@@ -43,11 +42,37 @@ class AuthTest extends TestCase
         );
 
         $seller = Seller::first();
-        $verificationCode = VerificationCode::first();
 
         $this->assertNotEmpty($seller);
-        $this->assertNotEmpty($verificationCode);
+        $this->assertNotEmpty($seller->verificationCode->code);
         $res->assertStatus(201);
         // $this->assertEquals(4, strlen($res['data']['code']));
+    }
+
+    /**
+     * ----------
+     */
+    /** @test */
+    public function enter_verification_code(): void
+    {
+        $this->postJson(
+            $this->urlPrefix . 'send_verification_code',
+            [
+                'mobile' => $this->seller['mobile']
+            ]
+        );
+
+        $seller = Seller::with('verificationCode')->first();
+
+        $res = $this->postJson(
+            $this->urlPrefix . 'enter_verification_code',
+            [
+                'mobile' => $this->seller['mobile'],
+                'code' => $seller->verificationCode->code
+            ]
+        );
+
+        $res->assertStatus(200)->assertJson(['message' => 'password not set',]);
+        $this->assertEquals(auth('seller')->user()->mobile, '09391121001');
     }
 }

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\V1\Helper;
 use App\Models\Seller;
+use App\Models\VerificationCode;
+use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
 
@@ -24,16 +26,22 @@ class AuthController extends Controller
             'mobile' => 'required',
         ]);
 
-        $seller = Seller::updateOrCreate(['mobile' => $req->mobile]);
+        $seller = Seller::firstOrCreate(['mobile' => $req->mobile]);
 
         $code = rand(1000, 9999);
 
-        $seller->verificationCode()->updateOrCreate([
-            'codeable_type' => Seller::class,
-            'codeable_id' => $seller->id,
-        ], [
-            'code' => $code
-        ]);
+
+        if ($seller->verificationCode) {
+            if ($seller->verificationCode->updated_at < Carbon::now()->subMinutes(3)) {
+                $seller->verificationCode()->update([
+                    'code' => $code
+                ]);
+            }
+        } else {
+            $seller->verificationCode()->create([
+                'code' => $code
+            ]);
+        }
 
         // send SMS
 
@@ -45,6 +53,27 @@ class AuthController extends Controller
         Inertia::setRootView('seller');
 
         return Inertia::render('Code');
+    }
+
+    public function enterVerificationCode(Request $req)
+    {
+        $verificationCode = VerificationCode::whereHasMorph(
+            'verificationCodeable',
+            Seller::class,
+            function ($query) use ($req) {
+                $query->where('mobile', $req->input('mobile'));
+            }
+        )->pluck('code')->first();
+
+        if ($verificationCode !== $req->input('code'))
+            return response(Helper::responseTemplate(message: 'code not correct'), 500);
+
+        $seller = Seller::where('mobile', $req->input('mobile'))->first();
+        auth('seller')->login($seller);
+
+        return response(Helper::responseTemplate(
+            message: $seller->password ? 'password set' : 'password not set'
+        ), 200);
     }
 
     public function login(Request $req)

@@ -12,6 +12,8 @@ class RouteSeller
         Route::prefix('v1/sellers')->controller(AuthController::class)->name('sellers.')->group(function () {
 
             Route::post('/send_verification_code', 'sendVerificationCode')->name('sendVerificationCode');
+            Route::post('/enter_verification_code', 'enterVerificationCode')->name('enterVerificationCode');
+
         });
     }
 }

@@ -17,16 +17,13 @@ export default {
   },
   methods: {
     submit() {
-
       axios.post(`${this.baseURL}/sellers/send_verification_code`, {
         mobile: this.mobile
       }).then((res) => {
-
         if (res.status === 201) {
           this.$parent.mobile = this.mobile
           router.get('code')
         }
-
       })
     }
   },

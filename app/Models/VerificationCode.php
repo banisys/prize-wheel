@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class VerificationCode extends Model
 {
@@ -23,6 +24,6 @@ class VerificationCode extends Model
      */
     public function verificationCodeable(): MorphTo
     {
-        return $this->morphTo('verification_codes', 'codeable_type', 'codeable_type');
+        return $this->morphTo('verification_codeable', 'codeable_type', 'codeable_id');
     }
 }

@@ -36,3 +36,34 @@ paths:
               data:
                 type: object
                 default: { "code": "1234" }
+
+  /sellers/enter_verification_code:
+    post:
+      summary: enter verification code.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: The user to create.
+          schema:
+            type: object
+            required:
+              - mobile
+              - code
+            properties:
+              mobile:
+                type: string
+                default: "09391121001"
+              code:
+                type: integer
+
+      responses:
+        200:
+          description: A User object.
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                default: { "code": "1234" }

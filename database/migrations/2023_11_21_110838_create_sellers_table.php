@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('mobile')->unique();
             $table->string('full_name')->nullable();
             $table->string('store_name')->nullable();
+            $table->string('password')->nullable();
             $table->timestamps();
         });
     }
