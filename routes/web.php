@@ -11,8 +11,9 @@ Route::get('/', [HomeController::class, 'index']);
 
 
 //================================ Seller =====================================
-Route::get('sellers/login', [AuthController::class, 'show'])->name('seller.login');
-Route::get('sellers/code', [AuthController::class, 'showCode'])->name('seller.code.show');
+Route::get('sellers/login', [AuthController::class, 'showLogin'])->name('sellers.login');
+Route::get('sellers/code', [AuthController::class, 'showCode']);
+Route::get('sellers/password', [AuthController::class, 'showPassword'])->middleware(['auth:seller']);
 
 
 Route::view('/swagger', 'swagger');

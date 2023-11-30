@@ -17,6 +17,17 @@ class AuthTest extends TestCase
     ];
 
     /**
+     * ---------
+     */
+    /** @test */
+    public function check_login_page()
+    {
+        $res = $this->get('sellers/login');
+
+        $res->assertStatus(200);
+    }
+
+    /**
      * validation of submitted user login parameters
      */
     /** @test */
@@ -46,7 +57,6 @@ class AuthTest extends TestCase
         $this->assertNotEmpty($seller);
         $this->assertNotEmpty($seller->verificationCode->code);
         $res->assertStatus(201);
-        // $this->assertEquals(4, strlen($res['data']['code']));
     }
 
     /**
@@ -74,5 +84,28 @@ class AuthTest extends TestCase
 
         $res->assertStatus(200)->assertJson(['message' => 'password not set',]);
         $this->assertEquals(auth('seller')->user()->mobile, '09391121001');
+    }
+
+    /**
+     * ----------
+     */
+    /** @test */
+    public function storePassword(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $seller = Seller::factory()->create();
+
+        $this->actingAs($seller, 'seller')->postJson(
+            $this->urlPrefix . 'password',
+            [
+                'password' => '123456',
+                'password_confirmation' => '123456'
+            ]
+        );
+
+        $sellerPass = Seller::pluck('password')->first();
+
+        $this->assertNotEmpty($sellerPass);
     }
 }

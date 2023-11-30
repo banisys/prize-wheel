@@ -6,8 +6,12 @@ export default {
   components: {
 
   },
+  props: {
+    seller: Object,
+  },
   data: () => ({
-    code: '',
+    password: '',
+    passwordConfirmation: '',
     baseURL: '',
     assetsURL: '',
   }),
@@ -16,15 +20,12 @@ export default {
   },
   methods: {
     submit() {
-      axios.post(`${this.baseURL}/enter_verification_code`, {
-        mobile: this.$parent.mobile,
-        code: this.code,
+      axios.post(`${this.baseURL}/password`, {
+        password: this.$parent.password,
+        password_confirmation: this.passwordConfirmation,
       }).then((res) => {
 
-        if (res.status === 200) {
-          res.data.message === 'password set' && router.get('dashboard')
-          res.data.message === 'password not set' && router.get('password')
-        }
+        console.log(res.data);
 
       })
     }
@@ -34,7 +35,7 @@ export default {
     this.assetsURL = this.$root.assetsURL
   },
   mounted() {
-    !this.$parent.mobile && router.get('login')
+    !this.seller && router.get('login')
   }
 }
 </script>
@@ -44,10 +45,16 @@ export default {
     <div class="row">
       <div class="col-4"></div>
       <div class="col-3">
-        <label for="code" class="form-label">
-          کد ارسالی را وارد کنید
+        <label for="password" class="form-label">
+          کلمه عبور
         </label>
-        <input type="text" id="code" class="form-control ltr" v-model="code">
+        <input type="text" id="password" class="form-control ltr" v-model="password">
+
+        <label for="passwordConfirmation" class="form-label mt-3">
+          تکرار کلمه عبور
+        </label>
+        <input type="text" id="passwordConfirmation" class="form-control ltr" v-model="passwordConfirmation">
+
         <button type="button" class="btn btn-danger btn-sm mt-3" @click="submit">
           ادامه
         </button>

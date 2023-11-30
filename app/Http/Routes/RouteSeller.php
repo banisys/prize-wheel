@@ -9,11 +9,18 @@ class RouteSeller
 {
     public static function init(): void
     {
-        Route::prefix('v1/sellers')->controller(AuthController::class)->name('sellers.')->group(function () {
+        Route::post('v1/sellers/send_verification_code', [AuthController::class, 'sendVerificationCode']);
+        Route::post('v1/sellers/enter_verification_code', [AuthController::class, 'enterVerificationCode']);
 
-            Route::post('/send_verification_code', 'sendVerificationCode')->name('sendVerificationCode');
-            Route::post('/enter_verification_code', 'enterVerificationCode')->name('enterVerificationCode');
 
-        });
+        Route::prefix('v1/sellers')
+            ->controller(AuthController::class)
+            ->name('sellers.')
+            ->middleware(['auth:seller'])
+            ->group(function () {
+
+                Route::post('/password', 'passwordStore')->name('password.store');
+                
+            });
     }
 }

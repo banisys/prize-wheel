@@ -8,7 +8,7 @@ export default {
 
   },
   data: () => ({
-    mobile: null,
+    mobile: '',
     baseURL: '',
     assetsURL: '',
   }),
@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     submit() {
-      axios.post(`${this.baseURL}/sellers/send_verification_code`, {
+      axios.post(`${this.baseURL}/send_verification_code`, {
         mobile: this.mobile
       }).then((res) => {
         if (res.status === 201) {
@@ -28,7 +28,7 @@ export default {
     }
   },
   created() {
-    this.baseURL = this.$root.baseURL + '/api/v1'
+    this.baseURL = this.$root.baseURL + '/api/v1/sellers'
     this.assetsURL = this.$root.assetsURL
   },
   mounted() {

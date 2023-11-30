@@ -7,7 +7,6 @@ info:
 host: 127.0.0.1
 basePath: /api/v1
 
-
 paths:
   /sellers/send_verification_code:
     post:
@@ -57,6 +56,36 @@ paths:
                 default: "09391121001"
               code:
                 type: integer
+
+      responses:
+        200:
+          description: A User object.
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                default: { "code": "1234" }
+
+  /sellers/password:
+    post:
+      summary: enter verification code.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: The user to create.
+          schema:
+            type: object
+            required:
+              - password
+              - password_confirmation
+            properties:
+              password:
+                type: string
+              password_confirmation:
+                type: string
 
       responses:
         200:

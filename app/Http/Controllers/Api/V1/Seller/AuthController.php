@@ -13,7 +13,7 @@ use Inertia\Inertia;
 
 class AuthController extends Controller
 {
-    public function show()
+    public function showLogin()
     {
         Inertia::setRootView('seller');
 
@@ -30,20 +30,22 @@ class AuthController extends Controller
 
         $code = rand(1000, 9999);
 
-
         if ($seller->verificationCode) {
-            if ($seller->verificationCode->updated_at < Carbon::now()->subMinutes(3)) {
-                $seller->verificationCode()->update([
-                    'code' => $code
-                ]);
+            if ($seller->verificationCode->updated_at > Carbon::now()->subMinutes(2)) {
+                return response(Helper::responseTemplate(message: 'wait...'), 500);
             }
+
+            $seller->verificationCode()->update([
+                'code' => $code
+            ]);
+            // send SMS
+
         } else {
             $seller->verificationCode()->create([
                 'code' => $code
             ]);
+            // send SMS
         }
-
-        // send SMS
 
         return response(Helper::responseTemplate(message: 'success done'), 201);
     }
@@ -55,7 +57,7 @@ class AuthController extends Controller
         return Inertia::render('Code');
     }
 
-    public function enterVerificationCode(Request $req)
+    public function enterVerificationCode(Request $req): Response
     {
         $verificationCode = VerificationCode::whereHasMorph(
             'verificationCodeable',
@@ -76,17 +78,27 @@ class AuthController extends Controller
         ), 200);
     }
 
-    public function login(Request $req)
+    public function showPassword()
     {
-        $credentials = $req->validate([
-            'mobile' => ['required'],
+        Inertia::setRootView('seller');
+
+        $seller = auth('seller')->user()->only(['id', 'mobile']);
+
+        return Inertia::render('Password', [
+            'seller' => $seller
+        ]);
+    }
+
+    public function passwordStore(Request $req): Response
+    {
+        $req->validate([
+            'password' => 'required|confirmed|min:6'
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $req->session()->regenerate();
+        auth('seller')->user()->update([
+            'password' => $req->input('password')
+        ]);
 
-            return response()->json(Auth::user(), 200);
-        }
-        return response()->json('unauthorized', 401);
+        return response(Helper::responseTemplate(message: 'success done'), 201);
     }
 }
