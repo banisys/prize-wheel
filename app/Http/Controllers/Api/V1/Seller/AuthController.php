@@ -15,6 +15,9 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
+        if (auth()->guard('seller')->check())
+            return redirect()->route('sellers.show.dashboard');
+
         Inertia::setRootView('seller');
 
         return Inertia::render('Login');
@@ -31,9 +34,8 @@ class AuthController extends Controller
         $code = rand(1000, 9999);
 
         if ($seller->verificationCode) {
-            if ($seller->verificationCode->updated_at > Carbon::now()->subMinutes(2)) {
-                return response(Helper::responseTemplate(message: 'wait...'), 500);
-            }
+            if ($seller->verificationCode->updated_at > Carbon::now()->subMinutes(2))
+                return response(Helper::responseTemplate(message: 'wait...'), 503);
 
             $seller->verificationCode()->update([
                 'code' => $code
@@ -65,10 +67,14 @@ class AuthController extends Controller
             function ($query) use ($req) {
                 $query->where('mobile', $req->input('mobile'));
             }
-        )->pluck('code')->first();
+        )->first();
 
-        if ($verificationCode !== $req->input('code'))
-            return response(Helper::responseTemplate(message: 'code not correct'), 500);
+        if ($verificationCode->updated_at < Carbon::now()->subMinutes(2))
+            return response(Helper::responseTemplate(message: 'expired'), 410);
+
+
+        if ($verificationCode->code !== $req->input('code'))
+            return response(Helper::responseTemplate(message: 'code not correct'), 401);
 
         $seller = Seller::where('mobile', $req->input('mobile'))->first();
         auth('seller')->login($seller);
@@ -100,5 +106,12 @@ class AuthController extends Controller
         ]);
 
         return response(Helper::responseTemplate(message: 'success done'), 201);
+    }
+
+    public function showDashboard()
+    {
+        Inertia::setRootView('seller');
+
+        return Inertia::render('Dashboard');
     }
 }

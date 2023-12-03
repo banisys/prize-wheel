@@ -21,12 +21,10 @@ export default {
   methods: {
     submit() {
       axios.post(`${this.baseURL}/password`, {
-        password: this.$parent.password,
+        password: this.password,
         password_confirmation: this.passwordConfirmation,
       }).then((res) => {
-
-        console.log(res.data);
-
+        res.status === 200 && router.get('dashboard')
       })
     }
   },

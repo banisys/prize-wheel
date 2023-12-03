@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Seller;
+use Carbon\Carbon;
 
 class AuthTest extends TestCase
 {
@@ -20,11 +21,13 @@ class AuthTest extends TestCase
      * ---------
      */
     /** @test */
-    public function check_login_page()
+    public function show_login_page()
     {
-        $res = $this->get('sellers/login');
+        $this->get('sellers/login')->assertStatus(200);
 
-        $res->assertStatus(200);
+        $seller = Seller::factory()->create();
+        $this->actingAs($seller, 'seller')->get('sellers/login')
+            ->assertRedirectToRoute('sellers.show.dashboard');
     }
 
     /**
@@ -90,13 +93,42 @@ class AuthTest extends TestCase
      * ----------
      */
     /** @test */
-    public function storePassword(): void
+    public function enter_verification_codeـwithـaـlongـinterval(): void
+    {
+        $this->withoutExceptionHandling();
+        $this->postJson(
+            $this->urlPrefix . 'send_verification_code',
+            [
+                'mobile' => $this->seller['mobile']
+            ]
+        );
+
+        $seller = Seller::with('verificationCode')->first();
+
+        $seller->verificationCode->updated_at = (new Carbon($seller->verificationCode->updated_at))->subMinutes(5);
+        $seller->verificationCode->save(['timestamps' => FALSE]);
+
+
+        $this->postJson(
+            $this->urlPrefix . 'enter_verification_code',
+            [
+                'mobile' => $this->seller['mobile'],
+                'code' => $seller->verificationCode->code
+            ]
+        )->assertStatus(410);
+    }
+
+    /**
+     * ----------
+     */
+    /** @test */
+    public function store_password(): void
     {
         $this->withoutExceptionHandling();
 
         $seller = Seller::factory()->create();
 
-        $this->actingAs($seller, 'seller')->postJson(
+        $res = $this->actingAs($seller, 'seller')->postJson(
             $this->urlPrefix . 'password',
             [
                 'password' => '123456',
@@ -107,5 +139,19 @@ class AuthTest extends TestCase
         $sellerPass = Seller::pluck('password')->first();
 
         $this->assertNotEmpty($sellerPass);
+        $res->assertStatus(201);
+    }
+
+    /**
+     * ---------
+     */
+    /** @test */
+    public function show_dashboard_page()
+    {
+        $seller = Seller::factory()->create();
+
+        $res = $this->actingAs($seller, 'seller')->get('sellers/dashboard');
+
+        $res->assertStatus(200);
     }
 }

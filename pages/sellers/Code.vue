@@ -20,12 +20,12 @@ export default {
         mobile: this.$parent.mobile,
         code: this.code,
       }).then((res) => {
-
         if (res.status === 200) {
           res.data.message === 'password set' && router.get('dashboard')
           res.data.message === 'password not set' && router.get('password')
         }
-
+      }).catch((e) => {
+        alert(e.response.data.message)
       })
     }
   },

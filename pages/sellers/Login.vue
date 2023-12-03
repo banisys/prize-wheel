@@ -24,6 +24,8 @@ export default {
           this.$parent.mobile = this.mobile
           router.get('code')
         }
+      }).catch((e) => {
+        alert(e.response.data.message)
       })
     }
   },
