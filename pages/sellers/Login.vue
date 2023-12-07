@@ -20,10 +20,10 @@ export default {
       axios.post(`${this.baseURL}/send_verification_code`, {
         mobile: this.mobile
       }).then((res) => {
-        if (res.status === 201) {
-          this.$parent.mobile = this.mobile
-          router.get('code')
-        }
+        this.$parent.mobile = this.mobile
+        res.status === 201 && router.get('code')
+        res.status === 200 && router.get('password')
+
       }).catch((e) => {
         alert(e.response.data.message)
       })

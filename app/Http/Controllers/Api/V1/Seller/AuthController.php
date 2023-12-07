@@ -8,14 +8,16 @@ use App\Http\Controllers\Api\V1\Helper;
 use App\Models\Seller;
 use App\Models\VerificationCode;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 
 class AuthController extends Controller
 {
-    public function showLogin()
+    public function loginShow(): InertiaResponse | RedirectResponse
     {
-        if (auth()->guard('seller')->check())
+        if (auth('seller')->check())
             return redirect()->route('sellers.show.dashboard');
 
         Inertia::setRootView('seller');
@@ -29,7 +31,11 @@ class AuthController extends Controller
             'mobile' => 'required',
         ]);
 
-        $seller = Seller::firstOrCreate(['mobile' => $req->mobile]);
+        $seller = Seller::firstOrCreate(['mobile' => $req->input('mobile')]);
+
+        if ($seller->password && !$req->input('password_forgot'))
+            return response(Helper::responseTemplate(message: 'password is set'), 200);
+
 
         $code = rand(1000, 9999);
 
@@ -52,7 +58,7 @@ class AuthController extends Controller
         return response(Helper::responseTemplate(message: 'success done'), 201);
     }
 
-    public function showCode()
+    public function codeShow(): InertiaResponse | RedirectResponse
     {
         Inertia::setRootView('seller');
 
@@ -84,13 +90,16 @@ class AuthController extends Controller
         ), 200);
     }
 
-    public function showPassword()
+    public function passwordRegisterShow(): InertiaResponse | RedirectResponse
     {
+        // if (isset(auth('seller')->user()->password) && auth('seller')->user()->password)
+        //     return redirect()->route('sellers.show.dashboard');
+
         Inertia::setRootView('seller');
 
         $seller = auth('seller')->user()->only(['id', 'mobile']);
 
-        return Inertia::render('Password', [
+        return Inertia::render('PasswordRegister', [
             'seller' => $seller
         ]);
     }
@@ -108,10 +117,44 @@ class AuthController extends Controller
         return response(Helper::responseTemplate(message: 'success done'), 201);
     }
 
-    public function showDashboard()
+    public function showDashboard(): InertiaResponse | RedirectResponse
     {
         Inertia::setRootView('seller');
 
         return Inertia::render('Dashboard');
+    }
+
+    public function login(Request $req): Response
+    {
+        $credentials = $req->validate([
+            'mobile' => ['required'],
+            'password' => ['required']
+        ]);
+
+        if (auth('seller')->attempt($credentials)) {
+            return response(Helper::responseTemplate(message: 'login'), 200);
+        } else {
+            return response(Helper::responseTemplate(message: 'username and password do not match'), 401);
+        }
+    }
+
+    public function passwordShow(): InertiaResponse | RedirectResponse
+    {
+        if (isset(auth('seller')->user()->password) && auth('seller')->user()->password)
+            return redirect()->route('sellers.show.dashboard');
+
+        Inertia::setRootView('seller');
+
+        return Inertia::render('Password');
+    }
+
+    public function passwordForgotShow(): InertiaResponse | RedirectResponse
+    {
+        if (auth('seller')->check())
+            return redirect()->route('sellers.show.dashboard');
+
+        Inertia::setRootView('seller');
+
+        return Inertia::render('PasswordForgot');
     }
 }

@@ -20,13 +20,11 @@ export default {
   },
   methods: {
     submit() {
-      axios.post(`${this.baseURL}/login`, {
-        mobile: this.$parent.mobile,
+      axios.post(`${this.baseURL}/password`, {
         password: this.password,
-      }).then(res => {
-        res.status === 200 && router.get('dashboard')
-      }).catch((e) => {
-        alert(e.response.data.message)
+        password_confirmation: this.passwordConfirmation,
+      }).then((res) => {
+        res.status === 201 && router.get('dashboard')
       })
     }
   },
@@ -35,7 +33,7 @@ export default {
     this.assetsURL = this.$root.assetsURL
   },
   mounted() {
-    !this.$parent.mobile && router.get('login')
+    // !this.seller && router.get('login')
   }
 }
 </script>
@@ -49,6 +47,11 @@ export default {
           کلمه عبور
         </label>
         <input type="text" id="password" class="form-control ltr" v-model="password">
+
+        <label for="passwordConfirmation" class="form-label mt-3">
+          تکرار کلمه عبور
+        </label>
+        <input type="text" id="passwordConfirmation" class="form-control ltr" v-model="passwordConfirmation">
 
         <button type="button" class="btn btn-danger btn-sm mt-3" @click="submit">
           ادامه

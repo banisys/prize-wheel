@@ -11,6 +11,7 @@ class RouteSeller
     {
         Route::post('v1/sellers/send_verification_code', [AuthController::class, 'sendVerificationCode']);
         Route::post('v1/sellers/enter_verification_code', [AuthController::class, 'enterVerificationCode']);
+        Route::post('v1/sellers/login', [AuthController::class, 'login']);
 
 
         Route::prefix('v1/sellers')
@@ -20,7 +21,7 @@ class RouteSeller
             ->group(function () {
 
                 Route::post('/password', 'passwordStore')->name('password.store');
-                
+
             });
     }
 }

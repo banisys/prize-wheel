@@ -5,14 +5,15 @@ use App\Http\Controllers\Api\V1\Seller\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/swagger', 'swagger');
+
 //================================ Site =====================================
 Route::get('/', [HomeController::class, 'index']);
 
-
-
 //================================ Seller =====================================
-Route::get('sellers/login', [AuthController::class, 'showLogin'])->name('sellers.login')->middleware('throttle:4,1');
-Route::get('sellers/code', [AuthController::class, 'showCode']);
+Route::get('sellers/login', [AuthController::class, 'loginShow'])->name('sellers.login');
+Route::get('sellers/code', [AuthController::class, 'codeShow']);
+Route::get('sellers/password', [AuthController::class, 'passwordShow']);
+Route::get('sellers/password-forgot', [AuthController::class, 'passwordForgotShow']);
 
 
 Route::prefix('sellers')
@@ -21,7 +22,7 @@ Route::prefix('sellers')
     ->middleware(['auth:seller'])
     ->group(function () {
 
-        Route::get('password', 'showPassword')->name('show.password');
+        Route::get('password-register', 'passwordRegisterShow')->name('show.password.register');
         Route::get('dashboard', 'showDashboard')->name('show.dashboard');
 
     });

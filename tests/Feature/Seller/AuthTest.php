@@ -21,7 +21,7 @@ class AuthTest extends TestCase
      * ---------
      */
     /** @test */
-    public function show_login_page()
+    public function show_login_page(): void
     {
         $this->get('sellers/login')->assertStatus(200);
 
@@ -34,7 +34,7 @@ class AuthTest extends TestCase
      * validation of submitted user login parameters
      */
     /** @test */
-    public function validation_seller_login()
+    public function validation_seller_login(): void
     {
         $res = $this->postJson($this->urlPrefix . 'send_verification_code');
 
@@ -48,18 +48,17 @@ class AuthTest extends TestCase
     public function send_verification_code(): void
     {
         // $this->withoutExceptionHandling();
-        $res = $this->postJson(
+        $this->postJson(
             $this->urlPrefix . 'send_verification_code',
             [
                 'mobile' => $this->seller['mobile']
             ]
-        );
+        )->assertStatus(201);
 
         $seller = Seller::first();
 
         $this->assertNotEmpty($seller);
         $this->assertNotEmpty($seller->verificationCode->code);
-        $res->assertStatus(201);
     }
 
     /**
@@ -77,16 +76,18 @@ class AuthTest extends TestCase
 
         $seller = Seller::with('verificationCode')->first();
 
-        $res = $this->postJson(
+        $this->postJson(
             $this->urlPrefix . 'enter_verification_code',
             [
                 'mobile' => $this->seller['mobile'],
                 'code' => $seller->verificationCode->code
             ]
-        );
+        )
+            ->assertStatus(200)
+            ->assertJson(['message' => 'password not set']);
 
-        $res->assertStatus(200)->assertJson(['message' => 'password not set',]);
-        $this->assertEquals(auth('seller')->user()->mobile, '09391121001');
+
+        $this->assertEquals(auth('seller')->user()->mobile, $this->seller['mobile']);
     }
 
     /**
@@ -95,7 +96,6 @@ class AuthTest extends TestCase
     /** @test */
     public function enter_verification_codeـwithـaـlongـinterval(): void
     {
-        $this->withoutExceptionHandling();
         $this->postJson(
             $this->urlPrefix . 'send_verification_code',
             [
@@ -124,29 +124,26 @@ class AuthTest extends TestCase
     /** @test */
     public function store_password(): void
     {
-        $this->withoutExceptionHandling();
-
         $seller = Seller::factory()->create();
 
-        $res = $this->actingAs($seller, 'seller')->postJson(
+        $this->actingAs($seller, 'seller')->postJson(
             $this->urlPrefix . 'password',
             [
                 'password' => '123456',
                 'password_confirmation' => '123456'
             ]
-        );
+        )->assertStatus(201);
 
         $sellerPass = Seller::pluck('password')->first();
 
         $this->assertNotEmpty($sellerPass);
-        $res->assertStatus(201);
     }
 
     /**
      * ---------
      */
     /** @test */
-    public function show_dashboard_page()
+    public function show_dashboard_page(): void
     {
         $seller = Seller::factory()->create();
 
@@ -154,4 +151,53 @@ class AuthTest extends TestCase
 
         $res->assertStatus(200);
     }
+
+    /**
+     * ----------
+     */
+    /** @test */
+    public function login_when_password_before_set(): void
+    {
+        $seller = Seller::factory()->create([
+            'password' => 'password'
+        ]);
+
+        $this->actingAs($seller, 'seller')->postJson(
+            $this->urlPrefix . 'send_verification_code',
+            [
+                'mobile' => $seller->mobile
+            ]
+        )->assertStatus(200);
+    }
+
+    /**
+     * ----------
+     */
+    /** @test */
+    public function login_with_password(): void
+    {
+        $seller = Seller::factory()->create([
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'
+        ]);
+
+        $this->postJson(
+            $this->urlPrefix . 'login',
+            [
+                'mobile' => $seller->mobile,
+                'password' => 'password',
+            ]
+        )->assertStatus(200);
+
+        $this->assertNotEmpty(auth('seller')->user());
+    }
+
+    /**
+     * ---------
+     */
+    /** @test */
+    public function show_password_forgot_page(): void
+    {
+        $this->get('sellers/password-forgot')->assertStatus(200);
+    }
+
 }

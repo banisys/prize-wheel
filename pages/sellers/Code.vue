@@ -10,6 +10,7 @@ export default {
     code: '',
     baseURL: '',
     assetsURL: '',
+    passwordForgot: null
   }),
   computed: {
 
@@ -21,8 +22,15 @@ export default {
         code: this.code,
       }).then((res) => {
         if (res.status === 200) {
-          res.data.message === 'password set' && router.get('dashboard')
-          res.data.message === 'password not set' && router.get('password')
+
+          if (this.passwordForgot) {
+            router.get('password-register')
+          } else if (res.data.message === 'password set') {
+            router.get('dashboard')
+          } else if (res.data.message === 'password not set') {
+            router.get('password-register')
+          }
+
         }
       }).catch((e) => {
         alert(e.response.data.message)
@@ -32,9 +40,16 @@ export default {
   created() {
     this.baseURL = this.$root.baseURL + '/api/v1/sellers'
     this.assetsURL = this.$root.assetsURL
+
+    const url = new URL(window.location.href)
+    this.passwordForgot = url.searchParams.get("password_forgot")
   },
   mounted() {
-    !this.$parent.mobile && router.get('login')
+    if (this.passwordForgot && !this.$parent.mobile) {
+      router.get('password-forgot')
+    } else if (!this.$parent.mobile) {
+      router.get('login')
+    }
   }
 }
 </script>
