@@ -15,7 +15,7 @@ use Inertia\Response as InertiaResponse;
 
 class AuthController extends Controller
 {
-    public function loginShow(): InertiaResponse | RedirectResponse
+    public function loginShow(Request $req): InertiaResponse | RedirectResponse
     {
         if (auth('seller')->check())
             return redirect()->route('sellers.show.dashboard');
@@ -27,6 +27,9 @@ class AuthController extends Controller
 
     public function sendVerificationCode(Request $req): Response
     {
+        if (auth('seller')->check())
+            return response(Helper::responseTemplate(message: 'you are already logged in'), 400);
+
         $req->validate([
             'mobile' => 'required',
         ]);
@@ -67,6 +70,9 @@ class AuthController extends Controller
 
     public function enterVerificationCode(Request $req): Response
     {
+        if (auth('seller')->check())
+            return response(Helper::responseTemplate(message: 'you are already logged in'), 400);
+
         $verificationCode = VerificationCode::whereHasMorph(
             'verificationCodeable',
             Seller::class,
@@ -126,6 +132,9 @@ class AuthController extends Controller
 
     public function login(Request $req): Response
     {
+        if (auth('seller')->check())
+            return response(Helper::responseTemplate(message: 'you are already logged in'), 400);
+
         $credentials = $req->validate([
             'mobile' => ['required'],
             'password' => ['required']

@@ -19,7 +19,7 @@ export default {
     submit() {
       axios.post(`${this.baseURL}/send_verification_code`, {
         mobile: this.mobile
-      }).then((res) => {
+      }).then(res => {
         this.$parent.mobile = this.mobile
         res.status === 201 && router.get('code')
         res.status === 200 && router.get('password')

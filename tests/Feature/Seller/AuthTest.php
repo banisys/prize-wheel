@@ -162,7 +162,7 @@ class AuthTest extends TestCase
             'password' => 'password'
         ]);
 
-        $this->actingAs($seller, 'seller')->postJson(
+        $this->postJson(
             $this->urlPrefix . 'send_verification_code',
             [
                 'mobile' => $seller->mobile

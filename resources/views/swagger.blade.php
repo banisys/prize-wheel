@@ -12,7 +12,7 @@
 <body>
   <div id="swagger-api"></div>
 
-  @vite('resources/js/swagger.js')
+  @vite('resources/js/swagger/seller.js')
 </body>
 
 </html>
