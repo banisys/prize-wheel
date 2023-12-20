@@ -1,7 +1,11 @@
 <script>
 import p_10 from '../Components/p_10.vue'
+import { router } from '@inertiajs/vue3'
 
 export default {
+  props: {
+    wheel: Object,
+  },
   components: {
     p_10
   },
@@ -20,6 +24,8 @@ export default {
     // }
   },
   mounted() {
+
+    console.log(this.wheel.slug);
 
   }
 }

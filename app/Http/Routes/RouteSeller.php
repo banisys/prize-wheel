@@ -3,6 +3,7 @@
 namespace App\Http\Routes;
 
 use App\Http\Controllers\Api\V1\Seller\AuthController;
+use App\Http\Controllers\Api\V1\Seller\WheelController;
 use Illuminate\Support\Facades\Route;
 
 class RouteSeller
@@ -21,7 +22,16 @@ class RouteSeller
             ->group(function () {
 
                 Route::post('/password', 'passwordStore')->name('password.store');
+            });
 
+
+        Route::prefix('v1/wheels')
+            ->controller(WheelController::class)
+            ->name('v1.wheels.')
+            ->middleware(['auth:seller'])
+            ->group(function () {
+
+                Route::post('/create', 'store')->name('store');
             });
     }
 }

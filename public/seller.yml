@@ -1,15 +1,14 @@
 openapi: 3.0.0
 info:
   title: prize wheel
-  description: ''
+  description: ""
   version: 0.1.9
 
-
 servers:
-  - url: api/v1/sellers
+  - url: api/v1
 
 paths:
-  /send_verification_code:
+  /sellers/send_verification_code:
     post:
       requestBody:
         required: true
@@ -23,14 +22,14 @@ paths:
                   default: "09391121001"
       responses:
         200:
-          description: ''
+          description: ""
           content:
             application/json:
               schema:
                 type: object
                 default: { "code": "1234" }
 
-  /enter_verification_code:
+  /sellers/enter_verification_code:
     post:
       requestBody:
         required: true
@@ -47,14 +46,14 @@ paths:
 
       responses:
         200:
-          description: ''
+          description: ""
           content:
             application/json:
               schema:
                 type: object
                 default: { "code": "1234" }
 
-  /password:
+  /sellers/password:
     post:
       requestBody:
         required: true
@@ -71,14 +70,14 @@ paths:
                   default: "123456"
       responses:
         200:
-          description: ''
+          description: ""
           content:
             application/json:
               schema:
                 type: object
                 default: { "message": "login", "data": [] }
 
-  /login:
+  /sellers/login:
     post:
       requestBody:
         required: true
@@ -95,7 +94,29 @@ paths:
                   default: "123456"
       responses:
         200:
-          description: ''
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                default: { "message": "login", "data": [] }
+
+  /wheels/create:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                slice_num:
+                  type: integer
+                  default: 10
+
+      responses:
+        200:
+          description: ""
           content:
             application/json:
               schema:

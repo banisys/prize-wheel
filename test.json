@@ -1,0 +1,14 @@
+{
+    "visitId": {},
+    "page": {
+        "component": "wheels/Edit",
+        "props": {
+            "errors": {}
+        },
+        "url": "/wheels/10/edit",
+        "version": "110ce0fa255cb6adb0c0e18699bf55f0",
+        "scrollRegions": [],
+        "rememberedState": {}
+    },
+    "navigationType": "reload"
+}
