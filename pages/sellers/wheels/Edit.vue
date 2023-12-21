@@ -3,9 +3,7 @@ import p_10 from '../Components/p_10.vue'
 import { router } from '@inertiajs/vue3'
 
 export default {
-  props: {
-    wheel: Object,
-  },
+  props: ['wheel'],
   components: {
     p_10
   },
@@ -25,7 +23,7 @@ export default {
   },
   mounted() {
 
-    console.log(this.wheel.slug);
+    console.log(this.wheel);
 
   }
 }
@@ -33,8 +31,10 @@ export default {
 </script>
 
 <template>
-  <p_10 v-if="flag" />
+  <!-- <p_10 v-if="flag" /> -->
   <!-- <button @click="reset">reset</button> -->
+
+
 </template>
 
 <style scoped></style>

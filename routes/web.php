@@ -25,7 +25,6 @@ Route::prefix('sellers')
 
         Route::get('password-register', 'passwordRegisterShow')->name('show.password.register');
         Route::get('dashboard', 'showDashboard')->name('show.dashboard');
-
     });
 
-Route::resource('wheels', WheelController::class)->middleware('auth:seller');
+Route::resource('wheels', WheelController::class)->only(['index', 'edit'])->middleware('auth:seller');

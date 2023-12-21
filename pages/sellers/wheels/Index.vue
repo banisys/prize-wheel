@@ -1,10 +1,12 @@
 <script>
 import p_10 from '../Components/p_10.vue'
-import { router } from '@inertiajs/vue3'
+import { router, Link } from '@inertiajs/vue3'
 
 export default {
+  props: ['wheels'],
   components: {
-    p_10
+    p_10,
+    Link
   },
   data: () => ({
     sliceNum: 10,
@@ -29,19 +31,32 @@ export default {
   },
   mounted() {
 
+    console.log(this.wheels);
+
   }
 }
-
 </script>
 
 <template>
-  <div>
-    <select v-model="sliceNum">
-      <option value="10">10</option>
-      <option value="12">12</option>
-      <option value="15">15</option>
-    </select>
-    <button @click="submit">ایجاد</button>
+  <div class="container">
+    <div class="row">
+
+      <div v-for="item in wheels" class="col-3">
+        <p>{{ item.title }}</p>
+        <Link :href="`wheels/${item.slug}/edit`">ویرایش</Link>
+      </div>
+
+      <div class="col-3">
+        <p>ایجاد گردونه</p>
+        <select v-model="sliceNum">
+          <option value="10">10</option>
+          <option value="12">12</option>
+          <option value="15">15</option>
+        </select>
+        <button @click="submit">ایجاد</button>
+      </div>
+
+    </div>
   </div>
 </template>
 

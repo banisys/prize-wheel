@@ -15,9 +15,12 @@ class WheelController extends Controller
 {
     public function index(): InertiaResponse
     {
-        Inertia::setRootView('seller');
+        $wheels = Wheel::where('seller_id', auth('seller')->id())->get();
 
-        return Inertia::render('wheels/Index');
+        Inertia::setRootView('seller');
+        return Inertia::render('wheels/Index', [
+            'wheels' => $wheels
+        ]);
     }
 
     public function store(Request $req): Response
@@ -55,8 +58,6 @@ class WheelController extends Controller
     {
         Inertia::setRootView('seller');
 
-        return Inertia::render('wheels/Edit', $wheel);
+        return Inertia::render('wheels/Edit', ['wheel' => $wheel]);
     }
-
-
 }
