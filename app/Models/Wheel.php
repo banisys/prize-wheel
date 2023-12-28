@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Wheel extends Model
@@ -21,8 +22,9 @@ class Wheel extends Model
         'slug',
         'slice_num',
         'try',
-        'try_at',
-        'period_at'
+        'days_left_to_try_again',
+        'period_at',
+        'login_method'
     ];
 
     /**
@@ -39,5 +41,13 @@ class Wheel extends Model
     public function slices(): HasMany
     {
         return $this->hasMany(Slice::class);
+    }
+
+    /**
+     * The roles that belong to the user.
+     */
+    public function userRequirements(): BelongsToMany
+    {
+        return $this->belongsToMany(UserRequirement::class);
     }
 }

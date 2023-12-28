@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Seller;
+use Carbon\Carbon;
 
 class WheelTest extends TestCase
 {
@@ -60,5 +61,33 @@ class WheelTest extends TestCase
         );
 
         $this->actingAs($seller, 'seller')->get("wheels/{$res['data']['slug']}/edit")->assertStatus(200);
+    }
+
+    /**
+     * ---------
+     */
+    /** @test */
+    public function update_wheel(): void
+    {
+        $seller = Seller::factory()->create();
+
+        $res = $this->actingAs($seller, 'seller')->postJson(
+            $this->urlPrefix . 'create',
+            [
+                'slice_num' => 10,
+            ]
+        );
+
+        $res = $this->actingAs($seller, 'seller')->putJson(
+            $this->urlPrefix . "wheels/{$res['data']['slug']}",
+            [
+                'title' => 'test',
+                'try' => 2,
+                'try_again' => 30,
+                'period_at' => '2023-12-26',
+                'login_method' => 1,
+            ]
+        )->assertStatus(200);
+
     }
 }

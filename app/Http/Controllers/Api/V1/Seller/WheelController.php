@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\V1\Seller;
 use App\Helper\General;
 use App\Http\Controllers\Api\V1\Helper;
 use App\Http\Controllers\Controller;
+use App\Models\Slice;
+use App\Models\UserRequirement;
 use App\Models\Wheel;
 use Illuminate\Http\Request;
 use Inertia\Response as InertiaResponse;
@@ -54,10 +56,39 @@ class WheelController extends Controller
         ], 'success done'), 201);
     }
 
-    public function edit(Wheel $wheel): InertiaResponse
+    public function edit($wheel): InertiaResponse
     {
+        $wheel = Wheel::where('slug', $wheel)->with([
+            'slices' => function ($query) {
+                $query->select(
+                    'id',
+                    'wheel_id',
+                    'title',
+                    'priority'
+                );
+            },
+            'userRequirements' => function ($query) {
+                $query->select('id');
+            },
+        ])->first();
+
         Inertia::setRootView('seller');
 
-        return Inertia::render('wheels/Edit', ['wheel' => $wheel]);
+        return Inertia::render('wheels/Edit', [
+            'wheel' => $wheel->makeHidden(['created_at', 'updated_at'])->toArray(),
+            'userRequirements' => UserRequirement::all()
+        ]);
+    }
+
+    public function update(Wheel $wheel, Request $req)
+    {
+        info($req);
+        $wheel->update($req->toArray());
+
+        foreach ($req->input('slices') as $slice) {
+            Slice::find($slice['id'])->update($slice);
+        }
+
+        $wheel->userRequirements()->attach($req->input('user_requirements'));
     }
 }

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user_requirement_wheel', function (Blueprint $table) {
-            $table->integer('user_requirement');
+            $table->integer('user_requirement_id');
             $table->integer('wheel_id');
         });
     }

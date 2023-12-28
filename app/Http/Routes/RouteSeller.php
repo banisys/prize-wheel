@@ -32,6 +32,7 @@ class RouteSeller
             ->group(function () {
 
                 Route::post('/create', 'store')->name('store');
+                Route::put('/{wheel}', 'update')->name('update');
             });
     }
 }

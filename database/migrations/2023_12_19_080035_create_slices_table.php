@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('wheel_id');
             $table->string('title');
-            $table->smallInteger('priority');
+            $table->tinyInteger('priority');
             $table->timestamps();
         });
     }

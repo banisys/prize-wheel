@@ -16,10 +16,11 @@ return new class extends Migration
             $table->string('slug');
             $table->integer('seller_id');
             $table->string('title')->default('بدون عنوان');
-            $table->smallInteger('slice_num');
-            $table->smallInteger('try')->nullable();
-            $table->timestamp('try_at')->nullable();
+            $table->tinyInteger('slice_num');
+            $table->tinyInteger('try')->nullable();
+            $table->integer('days_left_to_try_again')->nullable();
             $table->timestamp('period_at')->nullable();
+            $table->tinyInteger('login_method')->default(1); // 1= mobile | 2= mobile(auth) | 3= token
             $table->timestamps();
         });
     }
