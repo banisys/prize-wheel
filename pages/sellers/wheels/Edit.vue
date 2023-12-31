@@ -1,7 +1,4 @@
 <template>
-  <!-- <p_10 v-if="flag" /> -->
-  <!-- <button @click="reset">reset</button> -->
-
   <div class="container mt-5">
     <div class="row">
       <div class="col-3">
@@ -18,21 +15,24 @@
 
         <div class="mt-4">
           <label for="try_again" class="form-label">بازی مجدد بعد از (روز)</label>
-          <input type="number" min="1" max="365" class="form-control" id="try_again"
+          <input type="number" min="1" max="365" class="form-control" id="try_again" :disabled="!flagDaysLeftToTryAgain"
             v-model="form.days_left_to_try_again">
         </div>
 
         <div class="mt-4 form-check">
-          <input type="checkbox" class="form-check-input" id="cancel_try_again">
+          <input type="checkbox" class="form-check-input" id="cancel_try_again" @change="changeCheckBoxDaysLeftToTryAgain"
+            :checked="!flagDaysLeftToTryAgain">
           <label class="form-check-label" for="cancel_try_again">بازی مجدد نداشته باشد</label>
         </div>
 
-        <div class="mt-4 form-check">
-          <date-picker v-model="form.period_at" type="datetime" label="تاریخ انقضا"></date-picker>
+        <div class="mt-4 form-check p-0">
+          <date-picker :disabled="!flagPeriodAt" v-model="form.period_at" type="datetime"
+            label="تاریخ انقضا"></date-picker>
         </div>
 
         <div class="mt-4 form-check">
-          <input type="checkbox" class="form-check-input" id="expiration">
+          <input type="checkbox" class="form-check-input" id="expiration" @change="changeCheckBoxperiodAt"
+            :checked="!flagPeriodAt">
           <label class="form-check-label" for="expiration">تاریخ انقضا نداشته باشد</label>
         </div>
 
@@ -65,18 +65,29 @@
           <p class="fw-bold">اطلاعات دریافتی از کاربر:</p>
           <div class="mt-4 form-check" v-for="item in userRequirements">
 
-            <input type="checkbox" class="form-check-input" :id="item.name" @change="form.user_requirements.push(item.id)"
-              :checked="userRequirementsSelected.includes(item.id)">
+            <input type="checkbox" class="form-check-input" :id="item.name"
+              @change="changeUserRequirements($event, item.id)" :checked="userRequirementsSelected.includes(item.id)">
             <label class="form-check-label" :for="item.name">{{ item.title }}</label>
 
           </div>
         </div>
 
       </div>
-      <div class="col-3">
-        <div class="mt-3" v-for="item in wheel.slices">
-          <input type="text" class="form-control" id="title" v-model="item.title">
+      <div class="col-4">
+        <div class="row mt-4" v-for="item in form.slices">
+          <div class="col-10">
+            <input type="text" class="form-control" id="title" v-model="item.title">
+          </div>
+          <div class="col-2 p-0">
+            <input type="number" class="form-control col-2" id="title" v-model="item.priority">
+          </div>
         </div>
+      </div>
+
+      <div class="col-5">
+        <p_10 v-if="wheel.slice_num === 10" :slices="wheel.slices" />
+        <p_12 v-if="wheel.slice_num === 12" :slices="wheel.slices" />
+        <p_15 v-if="wheel.slice_num === 15" :slices="wheel.slices" />
       </div>
     </div>
 
@@ -106,6 +117,9 @@ export default {
     baseURL: '',
     assetsURL: '',
     userRequirementsSelected: [],
+    holderDaysLeftToTryAgain: null,
+    flagDaysLeftToTryAgain: true,
+    flagPeriodAt: true,
     form: {
       title: '',
       try: null,
@@ -117,16 +131,17 @@ export default {
     }
   }),
   computed: {
-
   },
   methods: {
-    // reset() {
-    //   this.flag = 0
-    //   setTimeout(() => {
-    //     this.flag = 1
-    //   }, 1000);
-    // }
     submit() {
+      let sumPriority = 0
+      this.form.slices.forEach(item => sumPriority += item.priority)
+
+      if (sumPriority !== 100) {
+        alert('مجموع احتمالات باید عدد 100 شود.')
+        return
+      }
+
       let periodAtDate = null
       let periodAtHour = null
       let periodJalali = null
@@ -196,6 +211,22 @@ export default {
         jd = 1 + ((days - 186) % 30);
       }
       return [jy, jm, jd];
+    },
+    changeUserRequirements(e, id) {
+      if (e.target.checked) {
+        this.form.user_requirements.push(id)
+      } else {
+        const index = this.form.user_requirements.indexOf(id);
+        index !== -1 && this.form.user_requirements.splice(index, 1)
+      }
+    },
+    changeCheckBoxDaysLeftToTryAgain(e) {
+      this.flagDaysLeftToTryAgain = !e.target.checked
+      this.form.days_left_to_try_again = e.target.checked ? null : this.holderDaysLeftToTryAgain
+    },
+    changeCheckBoxperiodAt(e) {
+      this.flagPeriodAt = !e.target.checked
+      this.form.period_at = e.target.checked ? null : this.holderPeriodAt
     }
   },
   created() {
@@ -213,20 +244,28 @@ export default {
       this.form.user_requirements.push(userRequirement.id)
     })
 
-    let periodAtDate = null
-    let periodAtHour = null
-    let periodGregorian = null
+    if (this.form.period_at) {
+      let periodAtDate = null
+      let periodAtHour = null
+      let periodGregorian = null
 
-    periodAtDate = this.form.period_at.split(" ")[0].split('-')
-    periodAtHour = this.form.period_at.split(" ")[1]
+      periodAtDate = this.form.period_at.split(" ")[0].split('-')
+      periodAtHour = this.form.period_at.split(" ")[1]
 
-    periodGregorian = this.gregorianToJalali(
-      parseInt(periodAtDate[0]),
-      parseInt(periodAtDate[1]),
-      parseInt(periodAtDate[2])
-    ).join('/')
+      periodGregorian = this.gregorianToJalali(
+        parseInt(periodAtDate[0]),
+        parseInt(periodAtDate[1]),
+        parseInt(periodAtDate[2])
+      ).join('/')
 
-    this.form.period_at = `${periodGregorian} ${periodAtHour}`
+      this.form.period_at = `${periodGregorian} ${periodAtHour}`
+    }
+
+    this.holderDaysLeftToTryAgain = this.form.days_left_to_try_again
+    this.holderPeriodAt = this.form.period_at
+
+    this.flagDaysLeftToTryAgain = this.form.days_left_to_try_again ? true : false
+    this.flagPeriodAt = this.form.period_at ? true : false
   }
 }
 </script>

@@ -80,15 +80,26 @@ class WheelController extends Controller
         ]);
     }
 
-    public function update(Wheel $wheel, Request $req)
+    public function update(Wheel $wheel, Request $req): Response
     {
-        info($req);
+        $req->validate([
+            'title' => 'required|min:1|max:80',
+            'try' => 'required|max:1',
+            'days_left_to_try_again' => 'max:3',
+            'login_method' => 'required',
+            'slices' => 'required',
+            'slices.*.title' => 'max:80',
+            'user_requirements' => 'required',
+        ]);
+
         $wheel->update($req->toArray());
 
         foreach ($req->input('slices') as $slice) {
             Slice::find($slice['id'])->update($slice);
         }
 
-        $wheel->userRequirements()->attach($req->input('user_requirements'));
+        $wheel->userRequirements()->sync($req->input('user_requirements'));
+
+        return response(Helper::responseTemplate(message: 'success done'), 201);
     }
 }

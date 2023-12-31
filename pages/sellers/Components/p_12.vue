@@ -1,13 +1,3 @@
-<script>
-import Layout from '../Components/Layout.vue'
-
-export default {
-  components: {
-    Layout
-  }
-}
-</script>
-
 <template>
   <div class="layout">
     <div class="w-container">
@@ -26,6 +16,17 @@ export default {
     </div>
   </div>
 </template>
+
+
+<script>
+import Layout from '../Components/Layout.vue'
+
+export default {
+  components: {
+    Layout
+  }
+}
+</script>
 
 <style scoped>
 .layout {
@@ -116,5 +117,4 @@ export default {
   rotate: 330deg;
   transform-origin: bottom
 }
-
 </style>

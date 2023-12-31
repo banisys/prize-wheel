@@ -5,7 +5,8 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Seller;
-use Carbon\Carbon;
+use App\Models\Slice;
+use App\Models\UserRequirement;
 
 class WheelTest extends TestCase
 {
@@ -79,15 +80,17 @@ class WheelTest extends TestCase
         );
 
         $res = $this->actingAs($seller, 'seller')->putJson(
-            $this->urlPrefix . "wheels/{$res['data']['slug']}",
+            $this->urlPrefix . "{$res['data']['slug']}",
             [
-                'title' => 'test',
+                'title' => '111',
+                'slice_num' => 10,
                 'try' => 2,
-                'try_again' => 30,
-                'period_at' => '2023-12-26',
-                'login_method' => 1,
+                'days_left_to_try_again' => 30,
+                'period_at' => '2023-12-31 09:57:00',
+                'login_method' => 2,
+                'slices' => Slice::all(),
+                'user_requirements' => UserRequirement::take(1)->pluck('id')
             ]
-        )->assertStatus(200);
-
+        )->assertStatus(201);
     }
 }
