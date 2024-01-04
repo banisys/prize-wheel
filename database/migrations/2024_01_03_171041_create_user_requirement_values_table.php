@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('user_requirement_values', function (Blueprint $table) {
             $table->id();
-            $table->string('mobile')->unique();
+            $table->integer('user_id')->nullable();
+            $table->integer('user_requirement_id')->nullable();
+            $table->string('value');
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('user_requirement_values');
     }
 };

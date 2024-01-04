@@ -1,6 +1,7 @@
 <?php
 
-\App\Http\Routes\RouteSeller::init();
+\App\Http\Routes\SellerRoutes::init();
+\App\Http\Routes\SiteRoutes::init();
 
 
 

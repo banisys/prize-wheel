@@ -102,4 +102,5 @@ class WheelController extends Controller
 
         return response(Helper::responseTemplate(message: 'success done'), 201);
     }
+  
 }

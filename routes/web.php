@@ -2,13 +2,11 @@
 
 use App\Http\Controllers\Api\V1\Site\HomeController;
 use App\Http\Controllers\Api\V1\Seller\AuthController;
-use App\Http\Controllers\Api\V1\Seller\WheelController;
+use App\Http\Controllers\Api\V1\Seller\WheelController as SellerWheelController;
+use App\Http\Controllers\Api\V1\Site\WheelController as SiteWheelController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/swagger', 'swagger');
-
-//================================ Site =====================================
-Route::get('/', [HomeController::class, 'index']);
 
 //================================ Seller =====================================
 Route::get('sellers/login', [AuthController::class, 'loginShow'])->name('sellers.login');
@@ -27,4 +25,7 @@ Route::prefix('sellers')
         Route::get('dashboard', 'showDashboard')->name('show.dashboard');
     });
 
-Route::resource('wheels', WheelController::class)->only(['index', 'edit'])->middleware('auth:seller');
+Route::resource('wheels', SellerWheelController::class)->only(['index', 'edit'])->middleware('auth:seller');
+
+//================================ Site =====================================
+Route::get('{wheel}', [SiteWheelController::class, 'index']);

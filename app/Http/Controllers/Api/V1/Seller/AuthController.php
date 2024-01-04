@@ -15,7 +15,7 @@ use Inertia\Response as InertiaResponse;
 
 class AuthController extends Controller
 {
-    public function loginShow(Request $req): InertiaResponse | RedirectResponse
+    public function loginShow(): InertiaResponse | RedirectResponse
     {
         if (auth('seller')->check())
             return redirect()->route('sellers.show.dashboard');
@@ -49,14 +49,12 @@ class AuthController extends Controller
             $seller->verificationCode()->update([
                 'code' => $code
             ]);
-            // send SMS
-
         } else {
             $seller->verificationCode()->create([
                 'code' => $code
             ]);
-            // send SMS
         }
+        // send SMS
 
         return response(Helper::responseTemplate(message: 'success done'), 201);
     }

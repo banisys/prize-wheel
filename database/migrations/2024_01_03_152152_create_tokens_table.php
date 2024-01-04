@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('tokens', function (Blueprint $table) {
             $table->id();
-            $table->string('mobile')->unique();
+            $table->integer('user_id')->nullable();
+            $table->string('value')->unique();
             $table->timestamps();
         });
     }
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('tokens');
     }
 };

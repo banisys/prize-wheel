@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\V1\Seller\AuthController;
 use App\Http\Controllers\Api\V1\Seller\WheelController;
 use Illuminate\Support\Facades\Route;
 
-class RouteSeller
+class SellerRoutes
 {
     public static function init(): void
     {

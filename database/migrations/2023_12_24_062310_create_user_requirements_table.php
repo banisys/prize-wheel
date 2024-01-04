@@ -24,10 +24,6 @@ return new class extends Migration
                 'title' => 'نام',
             ],
             [
-                'name' => 'mobile',
-                'title' => 'موبایل',
-            ],
-            [
                 'name' => 'gender',
                 'title' => 'جنسیت',
             ],
