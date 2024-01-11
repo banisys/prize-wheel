@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserRequirementValue extends Model
+class Prize extends Model
 {
     use HasFactory;
 
@@ -14,8 +14,8 @@ class UserRequirementValue extends Model
      */
     protected $fillable = [
         'user_id',
-        'user_requirement_id',
         'wheel_id',
-        'value',
+        'title',
+        'priority'
     ];
 }

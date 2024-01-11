@@ -31,7 +31,7 @@ export default {
   },
   mounted() {
 
-    console.log(this.wheels);
+    // console.log(this.wheels);
 
   }
 }

@@ -19,8 +19,8 @@ return new class extends Migration
             $table->tinyInteger('slice_num');
             $table->tinyInteger('try')->default(1);
             $table->integer('days_left_to_try_again')->nullable();
-            $table->timestamp('period_at')->nullable();
             $table->tinyInteger('login_method')->default(1); // 1= mobile | 2= mobile(auth) | 3= token
+            $table->timestamp('expiration_at')->nullable();
             $table->timestamps();
         });
     }

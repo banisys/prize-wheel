@@ -11,30 +11,71 @@ use Inertia\Response as InertiaResponse;
 use Inertia\Inertia;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Api\V1\Helper;
+use App\Models\DateLeftToTryAgain;
+use App\Models\Prize;
+use App\Models\UserRequirement;
+use App\Models\UserRequirementValue;
 use Carbon\Carbon;
 
 class WheelController extends Controller
 {
-    public function index(Wheel $wheel): InertiaResponse
+    public function index($wheel): InertiaResponse
     {
         Inertia::setRootView('site');
+
+        if ($this->checkExpiration($wheel))
+            return Inertia::render('Index', [
+                'expiration' => 1
+            ]);
+
+        $wheel = Wheel::where('slug', $wheel)->with([
+            'slices' => function ($query) {
+                $query->select(
+                    'id',
+                    'wheel_id',
+                    'title',
+                    'priority'
+                );
+            },
+            'userRequirements',
+        ])->firstOrFail();
+
+        $user = auth()->user();
+
+        $UserRequirementValueExists = UserRequirementValue::where([
+            'user_id' => optional($user)->id,
+            'wheel_id' => $wheel->id,
+        ])->exists();
+
         return Inertia::render('Index', [
-            'wheel' => $wheel->load('userRequirements')
+            'wheel' => $wheel->makeHidden(['created_at', 'updated_at'])->toArray(),
+            'user' => $user,
+            'user_requirement_value_exists' => $UserRequirementValueExists
         ]);
     }
 
-    public function stepOneLoign(Request $req): Response
+    public function loign(Request $req): Response
     {
+        $req->validate([
+            'wheel_id' => 'required',
+            'login_method' => 'required',
+            'mobile' => 'required',
+        ]);
+
         if ($req->input('login_method') === 1) {
 
             $user = User::firstOrCreate(['mobile' => $req->input('mobile')]);
             auth()->login($user);
 
-            // add user with to data
+            $userRequirementValueExists = UserRequirementValue::where([
+                'user_id' => $user->id,
+                'wheel_id' => $req->input('wheel_id'),
+            ])->exists();
+
 
 
             return response(Helper::responseTemplate([
-                'user' => $user->load('userRequirementValues')
+                'user_requirement_value_exists' => $userRequirementValueExists,
             ], 'login'), 200);
         } else if ($req->input('login_method') === 2) {
 
@@ -58,17 +99,22 @@ class WheelController extends Controller
             return response(Helper::responseTemplate(message: 'success done'), 201);
         } else if ($req->input('login_method') === 3) {
 
-            $token = Token::where($req->input('token'))->first();
+            $token = Token::where($req->input('token'))->whereNull('user_id')->first();
 
             if (!$token)
                 return response(Helper::responseTemplate(message: 'token not exist'), 401);
 
             $user = User::firstOrCreate(['mobile' => $req->input('mobile')]);
-            $token->update('user_id');
+            $token->update(['user_id' => $user->id]);
             auth()->login($user);
 
+            $userRequirementValueExists = UserRequirementValue::where([
+                'user_id' => $user->id,
+                'wheel_id' => $req->input('wheel_id'),
+            ])->exists();
+
             return response(Helper::responseTemplate([
-                'user' => $user->load('userRequirementValues')
+                'user_requirement_value_exists' => $userRequirementValueExists
             ], 'login'), 200);
         }
     }
@@ -99,5 +145,132 @@ class WheelController extends Controller
         return response(Helper::responseTemplate([
             'user' => $user->load('userRequirementValues')
         ], 'login'), 200);
+    }
+
+    public function userRequirementStore(Request $req): Response
+    {
+        $req->validate([
+            'user_requirement' => 'required',
+            'user_requirement.name' => 'max:30',
+            'user_requirement.gender' => 'max:1',
+            'user_requirement.email' => 'max:60'
+        ]);
+
+        $userId = auth()->user()->id;
+
+        $UserRequirementValueExists = UserRequirementValue::where([
+            'user_id' => $userId,
+            'wheel_id' => $req->input('wheel_id'),
+        ])->exists();
+
+        if ($UserRequirementValueExists)
+            return response(Helper::responseTemplate(message: 'user requirement value exists'), 400);
+
+        foreach ($req->input('user_requirement') as $key => $item) {
+            UserRequirementValue::create([
+                'user_id' => $userId,
+                'user_requirement_id' => UserRequirement::where('name', $key)->pluck('id')->first(),
+                'wheel_id' => $req->input('wheel_id'),
+                'value' => $item,
+            ]);
+        }
+
+        return response(Helper::responseTemplate(message: 'success done'), 201);
+    }
+
+    public function prizeStore(Request $req): Response
+    {
+        $req->validate([
+            'wheel_id' => 'required',
+            'title' => 'required',
+            'priority' => 'required'
+        ]);
+
+        $userId = auth()->user()->id;
+
+        Prize::create([
+            'user_id' => $userId,
+            'wheel_id' => $req->input('wheel_id'),
+            'title' => $req->input('title'),
+            'priority' => $req->input('priority')
+        ]);
+
+
+
+        $dateLeftToTryAgain = DateLeftToTryAgain::where([
+            'user_id' => $userId,
+            'wheel_id' => $req->input('wheel_id'),
+        ])->pluck('date_at')->first();
+
+        if (!$dateLeftToTryAgain) {
+            DateLeftToTryAgain::create([
+                'user_id' => $userId,
+                'wheel_id' => $req->input('wheel_id'),
+                'date_at' => now()
+            ]);
+        } else {
+            // $latestPrizeDate = Prize::where([
+            //     'user_id' => $userId,
+            //     'wheel_id' => $req->input('wheel_id'),
+            // ])->pluck('created_at')->latest()->first();
+
+
+            if ($dateLeftToTryAgain < now()) {
+
+                Prize::where([
+                    'user_id' => $userId,
+                    'wheel_id' => $req->input('wheel_id'),
+                ])->update([
+                    'old' => 1
+                ]);
+
+                DateLeftToTryAgain::where([
+                    'user_id' => $userId,
+                    'wheel_id' => $req->input('wheel_id'),
+                ])->update([
+                    'date_at' => 1
+                ]);
+
+            }
+        }
+
+        return response(Helper::responseTemplate(message: 'success done'), 201);
+    }
+
+    public function wheelDataFetch(Wheel $wheel): Response
+    {
+        $userId = auth()->user()->id;
+
+        $latestPrizeDate = Prize::where([
+            'user_id' => $userId,
+            'wheel_id' => $wheel->id,
+        ])->latest()->pluck('created_at')->first();
+
+        $dateLeftToTryAgain = new Carbon($latestPrizeDate);
+        $dateLeftToTryAgain->addDays($wheel->days_left_to_try_again);
+
+        $prizeCount = Prize::where([
+            'user_id' => $userId,
+            'wheel_id' => $wheel->id,
+        ])->where('created_at', '<', $dateLeftToTryAgain)->count();
+
+        info($prizeCount);
+        info($latestPrizeDate);
+        info($dateLeftToTryAgain);
+
+
+        return response(Helper::responseTemplate([
+            'remain_try' => $wheel->try - $prizeCount
+        ], 'success done'), 200);
+    }
+
+    private function checkExpiration($slug)
+    {
+        $wheel = Wheel::where('slug', $slug)->first();
+
+        if ($wheel->expiration_at === null) return 0;
+        if ($wheel->expiration_at >= now()) return 0;
+
+        return 1;
     }
 }

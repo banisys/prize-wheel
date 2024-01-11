@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_requirement_values', function (Blueprint $table) {
+        Schema::create('prizes', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->integer('user_requirement_id');
             $table->integer('wheel_id');
-            $table->string('value');
+            $table->string('title');
+            $table->integer('priority');
+            $table->tinyInteger('old')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_requirement_values');
+        Schema::dropIfExists('prizes');
     }
 };

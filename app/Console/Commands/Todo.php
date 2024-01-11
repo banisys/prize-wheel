@@ -26,9 +26,6 @@ class Todo extends Command
      */
     public function handle()
     {
-        // foreach (['name', 'mobile', 'gender', 'email'] as $item)
-        //     UserRequirement::create(['title' => $item]);
-
-        // UserRequirement::create(['title' => '$item']);
+        dd(now());
     }
 }

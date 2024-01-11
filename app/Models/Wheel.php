@@ -23,7 +23,7 @@ class Wheel extends Model
         'slice_num',
         'try',
         'days_left_to_try_again',
-        'period_at',
+        'expiration_at',
         'login_method'
     ];
 

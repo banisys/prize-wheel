@@ -1,25 +1,23 @@
 <template>
-  <div class="layout mt-20">
-    <div class="w-container">
+  <div class="w-container">
 
-      <template v-for="(item, index) in slices">
-        <div :id="`s-${index + 1}`" class="slide">
-          <p> {{ item.title }}</p>
-        </div>
-      </template>
+    <template v-for="(item, index) in slices">
+      <div :id="`s-${index + 1}`" class="slide">
+        <p> {{ item.title }}</p>
+      </div>
+    </template>
 
-    </div>
   </div>
-</template>
+</template>w-container
 
 <script>
 import Layout from './Layout.vue'
 
 export default {
-  props: ['slices'],
   components: {
     Layout
   },
+  props: ['slices'],
   data: () => ({
     numDeg: 1800,
     slides: [
@@ -85,7 +83,7 @@ export default {
   },
   mounted() {
 
-    console.log(this.slices);
+    // console.log(this.slices);
 
   }
 }

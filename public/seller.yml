@@ -122,3 +122,118 @@ paths:
               schema:
                 type: object
                 default: { "message": "login", "data": [] }
+
+  /wheels/{wheel}:
+    put:
+      parameters:
+        - in: path
+          name: wheel
+          schema:
+            type: string
+          required: true
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  default: title_1
+                try:
+                  type: integer
+                  default: 3
+                days_left_to_try_again:
+                  type: integer
+                  default: 30
+                expiration_at:
+                  type: string
+                  default: "2024-10-07 12:18:26"
+                login_method:
+                  type: integer
+                  default: 1
+                slices:
+                  type: array
+                  default:
+                    - id: 1
+                      wheel_id: 1
+                      title: "item1"
+                      priority: 10
+                    - id: 2
+                      wheel_id: 1
+                      title: "item2"
+                      priority: 10
+                    - id: 3
+                      wheel_id: 1
+                      title: "item3"
+                      priority: 10
+                    - id: 4
+                      wheel_id: 1
+                      title: "item4"
+                      priority: 10
+                    - id: 5
+                      wheel_id: 1
+                      title: "item5"
+                      priority: 10
+                    - id: 6
+                      wheel_id: 1
+                      title: "item6"
+                      priority: 10
+                    - id: 7
+                      wheel_id: 1
+                      title: "item7"
+                      priority: 10
+                    - id: 8
+                      wheel_id: 1
+                      title: "item8"
+                      priority: 10
+                    - id: 9
+                      wheel_id: 1
+                      title: "item9"
+                      priority: 10
+                    - id: 10
+                      wheel_id: 1
+                      title: "item10"
+                      priority: 10
+                user_requirements:
+                  type: array
+                  default: [1, 2]
+
+      responses:
+        201:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                default: { "message": "success done", "data": [] }
+
+
+  /users/login:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login_method:
+                  type: integer
+                  default: 1
+                mobile:
+                  type: string
+                  default: "09391121001"
+                token:
+                  type: string
+
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                default: { "message": "login", "data": [] }

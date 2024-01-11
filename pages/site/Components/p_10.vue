@@ -1,68 +1,28 @@
+<template>
+  <div class="w-container">
+    <template v-for="(item, index) in slices">
+      <div :id="`s-${index + 1}`" class="slide">
+        <p> {{ item.title }}</p>
+      </div>
+    </template>
+  </div>
+</template>
+
+
 <script>
-import Layout from '../Components/Layout.vue'
+import Layout from './Layout.vue'
 
 export default {
   components: {
     Layout
   },
+  props: ['slices'],
   data: () => ({
     numDeg: 1800,
-    slides: [
-      {
-        id: 1,
-        title: 1,
-        priority: 40
-      },
-      {
-        id: 2,
-        title: 2,
-        priority: 40
-      },
-      {
-        id: 3,
-        title: 3,
-        priority: 20
-      },
-      {
-        id: 4,
-        title: 4,
-        priority: 0
-      },
-      {
-        id: 5,
-        title: 5,
-        priority: 0
-      },
-      {
-        id: 6,
-        title: 6,
-        priority: 0
-      },
-      {
-        id: 7,
-        title: 7,
-        priority: 0
-      },
-      {
-        id: 8,
-        title: 8,
-        priority: 0
-      },
-      {
-        id: 9,
-        title: 9,
-        priority: 0
-      },
-      {
-        id: 10,
-        title: 10,
-        priority: 0
-      },
-    ]
   }),
   computed: {
     reverseSlides() {
-      return this.slides.reverse()
+      return this.slices.reverse()
     }
   },
   methods: {
@@ -106,38 +66,21 @@ export default {
       this.numDeg = this.numDeg + random
       document.querySelector('.w-container').style.transform = `rotate(${this.numDeg}deg)`
 
-      console.log(win)
-    },
-    reset() {
-      document.querySelector('.w-container').style.transition = 'none'
-      document.querySelector('.w-container').style.transform = 'none'
+    //   console.log(win)
+
+      this.$emit('win', win)
     }
   },
   mounted() {
+
+    // console.log(this.slices);
 
   }
 }
 
 </script>
 
-<template>
-  <div class="layout mt-20">
-    <div class="w-container">
-      <div id="s-1" class="slide">1</div>
-      <div id="s-2" class="slide">2</div>
-      <div id="s-3" class="slide">3</div>
-      <div id="s-4" class="slide">4</div>
-      <div id="s-5" class="slide">5</div>
-      <div id="s-6" class="slide">6</div>
-      <div id="s-7" class="slide">7</div>
-      <div id="s-8" class="slide">8</div>
-      <div id="s-9" class="slide">9</div>
-      <div id="s-10" class="slide">10</div>
-    </div>
-  </div>
-  <button @click="start">click</button>
-  <button @click="reset">reset</button>
-</template>
+
 
 <style scoped>
 .layout {
@@ -166,60 +109,70 @@ export default {
 }
 
 #s-1 {
-  background: red;
+  /* background: red; */
 }
 
 #s-2 {
-  background: green;
+  /* background: green; */
   rotate: 36deg;
   transform-origin: bottom
 }
 
 #s-3 {
-  background: rgb(0, 234, 255);
+  /* background: rgb(0, 234, 255); */
   rotate: 72deg;
   transform-origin: bottom
 }
 
 #s-4 {
-  background: green;
+  /* background: green; */
   rotate: 108deg;
   transform-origin: bottom
 }
 
 #s-5 {
-  background: red;
+  /* background: red; */
   rotate: 144deg;
   transform-origin: bottom
 }
 
 #s-6 {
-  background: green;
+  /* background: green; */
   rotate: 180deg;
   transform-origin: bottom
 }
 
 #s-7 {
-  background: red;
+  /* background: red; */
   rotate: 216deg;
   transform-origin: bottom
 }
 
 #s-8 {
-  background: green;
+  /* background: green; */
   rotate: 252deg;
   transform-origin: bottom
 }
 
 #s-9 {
-  background: red;
+  /* background: red; */
   rotate: 288deg;
   transform-origin: bottom
 }
 
 #s-10 {
-  background: green;
+  /* background: green; */
   rotate: 324deg;
   transform-origin: bottom
+}
+
+.w-container div {
+  border: 1px solid rgb(227, 227, 227);
+}
+
+.slide p {
+  transform: rotate(-90deg);
+  margin-top: 60%;
+  margin-bottom: 0;
 }
 </style>

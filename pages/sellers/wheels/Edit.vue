@@ -26,13 +26,13 @@
         </div>
 
         <div class="mt-4 form-check p-0">
-          <date-picker :disabled="!flagPeriodAt" v-model="form.period_at" type="datetime"
+          <date-picker :disabled="!flagExpirationAt" v-model="form.expiration_at" type="datetime"
             label="تاریخ انقضا"></date-picker>
         </div>
 
         <div class="mt-4 form-check">
-          <input type="checkbox" class="form-check-input" id="expiration" @change="changeCheckBoxperiodAt"
-            :checked="!flagPeriodAt">
+          <input type="checkbox" class="form-check-input" id="expiration" @change="changeCheckBoxExpirationAt"
+            :checked="!flagExpirationAt">
           <label class="form-check-label" for="expiration">تاریخ انقضا نداشته باشد</label>
         </div>
 
@@ -103,6 +103,8 @@
 
 <script>
 import p_10 from '../Components/p_10.vue'
+import p_12 from '../Components/p_12.vue'
+import p_15 from '../Components/p_15.vue'
 import { router } from '@inertiajs/vue3'
 import DatePicker from 'vue3-persian-datetime-picker'
 
@@ -110,6 +112,8 @@ export default {
   props: ['wheel', 'userRequirements'],
   components: {
     p_10,
+    p_12,
+    p_15,
     DatePicker
   },
   data: () => ({
@@ -119,14 +123,14 @@ export default {
     userRequirementsSelected: [],
     holderDaysLeftToTryAgain: null,
     flagDaysLeftToTryAgain: true,
-    flagPeriodAt: true,
+    flagExpirationAt: true,
     form: {
       title: '',
       try: null,
       days_left_to_try_again: null,
-      period_at: null,
+      expiration_at: '',
       login_method: null,
-      slices: {},
+      slices: [],
       user_requirements: []
     }
   }),
@@ -142,25 +146,25 @@ export default {
         return
       }
 
-      let periodAtDate = null
-      let periodAtHour = null
-      let periodJalali = null
+      let expirationAtDate = null
+      let expirationAtHour = null
+      let expirationJalali = null
 
-      if (this.form.period_at) {
-        periodAtDate = this.form.period_at.split(" ")[0].split('/')
-        periodAtHour = this.form.period_at.split(" ")[1]
+      if (this.form.expiration_at) {
+        expirationAtDate = this.form.expiration_at.split(" ")[0].split('/')
+        expirationAtHour = this.form.expiration_at.split(" ")[1]
 
-        periodJalali = this.jalaliToGregorian(
-          parseInt(periodAtDate[0]),
-          parseInt(periodAtDate[1]),
-          parseInt(periodAtDate[2])
+        expirationJalali = this.jalaliToGregorian(
+          parseInt(expirationAtDate[0]),
+          parseInt(expirationAtDate[1]),
+          parseInt(expirationAtDate[2])
         ).join('-')
       }
 
       axios.put(`${this.baseURL}/wheels/${this.wheel.slug}`,
         {
           ...this.form,
-          period_at: this.form.period_at && `${periodJalali} ${periodAtHour}`
+          expiration_at: this.form.expiration_at && `${expirationJalali} ${expirationAtHour}`
         }
       ).then(res => {
 
@@ -224,9 +228,9 @@ export default {
       this.flagDaysLeftToTryAgain = !e.target.checked
       this.form.days_left_to_try_again = e.target.checked ? null : this.holderDaysLeftToTryAgain
     },
-    changeCheckBoxperiodAt(e) {
-      this.flagPeriodAt = !e.target.checked
-      this.form.period_at = e.target.checked ? null : this.holderPeriodAt
+    changeCheckBoxExpirationAt(e) {
+      this.flagExpirationAt = !e.target.checked
+      this.form.expiration_at = e.target.checked ? null : this.holderExpirationAt
     }
   },
   created() {
@@ -244,28 +248,28 @@ export default {
       this.form.user_requirements.push(userRequirement.id)
     })
 
-    if (this.form.period_at) {
-      let periodAtDate = null
-      let periodAtHour = null
-      let periodGregorian = null
+    if (this.form.expiration_at) {
+      let expirationAtDate = null
+      let expirationAtHour = null
+      let expirationGregorian = null
 
-      periodAtDate = this.form.period_at.split(" ")[0].split('-')
-      periodAtHour = this.form.period_at.split(" ")[1]
+      expirationAtDate = this.form.expiration_at.split(" ")[0].split('-')
+      expirationAtHour = this.form.expiration_at.split(" ")[1]
 
-      periodGregorian = this.gregorianToJalali(
-        parseInt(periodAtDate[0]),
-        parseInt(periodAtDate[1]),
-        parseInt(periodAtDate[2])
+      expirationGregorian = this.gregorianToJalali(
+        parseInt(expirationAtDate[0]),
+        parseInt(expirationAtDate[1]),
+        parseInt(expirationAtDate[2])
       ).join('/')
 
-      this.form.period_at = `${periodGregorian} ${periodAtHour}`
+      this.form.expiration_at = `${expirationGregorian} ${expirationAtHour}`
     }
 
     this.holderDaysLeftToTryAgain = this.form.days_left_to_try_again
-    this.holderPeriodAt = this.form.period_at
+    this.holderExpirationAt = this.form.expiration_at
 
     this.flagDaysLeftToTryAgain = this.form.days_left_to_try_again ? true : false
-    this.flagPeriodAt = this.form.period_at ? true : false
+    this.flagExpirationAt = this.form.expiration_at ? true : false
   }
 }
 </script>
