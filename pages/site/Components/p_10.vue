@@ -1,10 +1,11 @@
 <template>
-  <div class="w-container">
+  <div class="w-container" style="position: relative;">
     <template v-for="(item, index) in slices">
       <div :id="`s-${index + 1}`" class="slide">
         <p> {{ item.title }}</p>
       </div>
     </template>
+    <!-- <img src="/360.png" alt="" style="width: 100%;position: absolute;top: 0"> -->
   </div>
 </template>
 
@@ -19,6 +20,7 @@ export default {
   props: ['slices'],
   data: () => ({
     numDeg: 1800,
+    // numDeg: 0,
   }),
   computed: {
     reverseSlides() {
@@ -27,7 +29,7 @@ export default {
   },
   methods: {
     start() {
-      document.querySelector('.w-container').style.transition = '10s cubic-bezier(.08, .46, .4, 1.01)'
+    //   document.querySelector('.w-container').style.transition = '10s cubic-bezier(.08, .46, .4, 1.01)'
 
       const standDeg = {
         0: [5, 6, 7, 8],
@@ -53,20 +55,18 @@ export default {
       const random = stack[Math.floor(Math.random() * stack.length)]
 
       let win =
-        0 < random && random < 36 ? this.reverseSlides[0] :
-          36 < random && random < 72 ? this.reverseSlides[1] :
-            72 < random && random < 108 ? this.reverseSlides[2] :
-              108 < random && random < 144 ? this.reverseSlides[3] :
-                144 < random && random < 180 ? this.reverseSlides[4] :
-                  180 < random && random < 216 ? this.reverseSlides[5] :
-                    216 < random && random < 252 ? this.reverseSlides[6] :
-                      252 < random && random < 288 ? this.reverseSlides[7] :
-                        288 < random && random < 324 ? this.reverseSlides[8] : this.reverseSlides[9]
+        0 < random && random < 36 ? this.reverseSlides[9] :
+          36 < random && random < 72 ? this.reverseSlides[8] :
+            72 < random && random < 108 ? this.reverseSlides[7] :
+              108 < random && random < 144 ? this.reverseSlides[6] :
+                144 < random && random < 180 ? this.reverseSlides[5] :
+                  180 < random && random < 216 ? this.reverseSlides[4] :
+                    216 < random && random < 252 ? this.reverseSlides[3] :
+                      252 < random && random < 288 ? this.reverseSlides[2] :
+                        288 < random && random < 324 ? this.reverseSlides[1] : this.reverseSlides[0]
 
       this.numDeg = this.numDeg + random
       document.querySelector('.w-container').style.transform = `rotate(${this.numDeg}deg)`
-
-    //   console.log(win)
 
       this.$emit('win', win)
     }
@@ -77,7 +77,6 @@ export default {
 
   }
 }
-
 </script>
 
 

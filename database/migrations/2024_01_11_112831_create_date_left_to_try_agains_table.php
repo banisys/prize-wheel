@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id');
             $table->integer('wheel_id');
-            $table->timestamp('date_at')->nullable();
+            $table->timestamp('date_at');
         });
     }
 

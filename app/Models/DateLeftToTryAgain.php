@@ -8,4 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 class DateLeftToTryAgain extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'user_id',
+        'wheel_id',
+        'date_at',
+    ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 }

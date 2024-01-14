@@ -1,3 +1,26 @@
+<template>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-4"></div>
+        <div class="col-3">
+          <label for="password" class="form-label">
+            کلمه عبور
+          </label>
+          <input type="password" id="password" class="form-control ltr" v-model="password">
+
+          <label for="passwordConfirmation" class="form-label mt-3">
+            تکرار کلمه عبور
+          </label>
+          <input type="password" id="passwordConfirmation" class="form-control ltr" v-model="passwordConfirmation">
+
+          <button type="button" class="btn btn-danger btn-sm mt-3" @click="submit">
+            ادامه
+          </button>
+        </div>
+      </div>
+    </div>
+  </template>
+
 <script>
 import axios from 'axios';
 import { router } from '@inertiajs/vue3'
@@ -37,28 +60,5 @@ export default {
   }
 }
 </script>
-
-<template>
-  <div class="container mt-5">
-    <div class="row">
-      <div class="col-4"></div>
-      <div class="col-3">
-        <label for="password" class="form-label">
-          کلمه عبور
-        </label>
-        <input type="text" id="password" class="form-control ltr" v-model="password">
-
-        <label for="passwordConfirmation" class="form-label mt-3">
-          تکرار کلمه عبور
-        </label>
-        <input type="text" id="passwordConfirmation" class="form-control ltr" v-model="passwordConfirmation">
-
-        <button type="button" class="btn btn-danger btn-sm mt-3" @click="submit">
-          ادامه
-        </button>
-      </div>
-    </div>
-  </div>
-</template>
 
 <style scoped></style>

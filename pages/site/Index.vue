@@ -1,6 +1,6 @@
 <template>
   <div class="expiration" v-if="expiration"></div>
-  <div class="container" v-else>
+  <div class="container mt-5" v-else>
     <div class="row">
       <div class="col-6">
 
@@ -51,8 +51,15 @@
         <div v-if="stepStart">
 
           <h1>{{ remainTry }}</h1>
-          days left to try again
-          gifts list
+          <h2 v-if="wheel.date_left_to_try_again">{{ dateLeftToTryAgain(wheel.date_left_to_try_again.date_at) }}</h2>
+
+          <ul>
+            <li v-for="item in prizes">
+
+              {{ item.title }}
+
+            </li>
+          </ul>
 
           <button type="button" class="btn btn-danger btn-sm mt-3" v-if="flagStart" @click="start">
             شروع
@@ -67,9 +74,19 @@
       </div>
 
       <div class="col-6">
-        <p_10 v-if="wheel.slice_num === 10 && flagWheel" :slices="wheel.slices" ref="prizeWheel" @win="submitWin" />
-        <p_12 v-if="wheel.slice_num === 12 && flagWheel" :slices="wheel.slices" ref="prizeWheel" @win="submitWin" />
-        <p_15 v-if="wheel.slice_num === 15 && flagWheel" :slices="wheel.slices" ref="prizeWheel" @win="submitWin" />
+
+        <Transition>
+          <p_10 v-if="wheel.slice_num === 10 && flagWheel" :slices="wheel.slices" ref="prizeWheel" @win="submitWin" />
+        </Transition>
+
+        <Transition>
+          <p_12 v-if="wheel.slice_num === 12 && flagWheel" :slices="wheel.slices" ref="prizeWheel" @win="submitWin" />
+        </Transition>
+
+        <Transition>
+          <p_15 v-if="wheel.slice_num === 15 && flagWheel" :slices="wheel.slices" ref="prizeWheel" @win="submitWin" />
+        </Transition>
+
       </div>
 
     </div>
@@ -112,13 +129,14 @@ export default {
     flagReStart: 0,
 
     remainTry: 0,
+    prizes: []
   }),
   computed: {
 
   },
   watch: {
     stepStart(newStepStart, oldStepStart) {
-      newStepStart === 1 && this.fetchStepSrartData()
+      newStepStart === 1 && this.fetchStepStartData()
     }
   },
   methods: {
@@ -223,34 +241,89 @@ export default {
       this.flagWheel = 0
       setTimeout(() => {
         this.flagWheel = 1
-      }, 1000);
+        this.flagReStart = 0
+        this.flagStart = 1
+      }, 500)
     },
     submitWin(win) {
+
       this.flagStart = 0
+      this.flagReStart = 0
       let _this = this
+
       axios.post(`${this.baseURL}/prizes`, win).then(res => {
 
+        setTimeout(() => {
+          _this.remainTry = res.data.data.remain_try
+          _this.prizes = res.data.data.prizes.data
+
+          _this.flagReStart = 1
+
+          if (_this.remainTry < 1) {
+            _this.flagStart = 0
+            _this.flagReStart = 0
+          }
+        }, 10000)
 
 
       }).catch(e => {
         alert(e.response.data.message)
       })
-
     },
-    fetchStepSrartData() {
+    fetchStepStartData() {
       let _this = this
       axios.get(`${this.baseURL}/users/wheel_data/${this.wheel.slug}`).then(res => {
 
         _this.remainTry = res.data.data.remain_try
+        _this.prizes = res.data.data.prizes.data
 
         if (_this.remainTry < 1) {
           _this.flagStart = 0
         }
 
-
       }).catch(e => {
         alert(e.response.data.message)
       })
+    },
+    gregorianToJalali(gy, gm, gd) {
+      var g_d_m, jy, jm, jd, gy2, days;
+      g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+      gy2 = (gm > 2) ? (gy + 1) : gy;
+      days = 355666 + (365 * gy) + ~~((gy2 + 3) / 4) - ~~((gy2 + 99) / 100) + ~~((gy2 + 399) / 400) + gd + g_d_m[gm - 1];
+      jy = -1595 + (33 * ~~(days / 12053));
+      days %= 12053;
+      jy += 4 * ~~(days / 1461);
+      days %= 1461;
+      if (days > 365) {
+        jy += ~~((days - 1) / 365);
+        days = (days - 1) % 365;
+      }
+      if (days < 186) {
+        jm = 1 + ~~(days / 31);
+        jd = 1 + (days % 31);
+      } else {
+        jm = 7 + ~~((days - 186) / 30);
+        jd = 1 + ((days - 186) % 30);
+      }
+      return [jy, jm, jd];
+    },
+    dateLeftToTryAgain(dateAt) {
+      if (dateAt) {
+        let expirationAtDate = null
+        let expirationAtHour = null
+        let expirationGregorian = null
+
+        expirationAtDate = dateAt.split(" ")[0].split('-')
+        expirationAtHour = dateAt.split(" ")[1]
+
+        expirationGregorian = this.gregorianToJalali(
+          parseInt(expirationAtDate[0]),
+          parseInt(expirationAtDate[1]),
+          parseInt(expirationAtDate[2])
+        ).join('/')
+
+        return `${expirationGregorian} ${expirationAtHour}`
+      }
     }
   },
   created() {
@@ -258,6 +331,7 @@ export default {
     this.assetsURL = this.$root.assetsURL
   },
   mounted() {
+
     if (this.expiration === 1) return
 
     if (this.user) {
@@ -286,5 +360,15 @@ export default {
   background: wheat;
   position: absolute;
   top: 0;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

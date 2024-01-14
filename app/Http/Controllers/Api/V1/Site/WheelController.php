@@ -38,6 +38,7 @@ class WheelController extends Controller
                 );
             },
             'userRequirements',
+            'dateLeftToTryAgain'
         ])->firstOrFail();
 
         $user = auth()->user();
@@ -47,10 +48,16 @@ class WheelController extends Controller
             'wheel_id' => $wheel->id,
         ])->exists();
 
+        $prizes = Prize::where([
+            'user_id' => $user->id,
+            'wheel_id' => $wheel->id
+        ])->orderBy('created_at', 'desc')->paginate(10);
+
         return Inertia::render('Index', [
             'wheel' => $wheel->makeHidden(['created_at', 'updated_at'])->toArray(),
             'user' => $user,
-            'user_requirement_value_exists' => $UserRequirementValueExists
+            'user_requirement_value_exists' => $UserRequirementValueExists,
+            'prizes' => $prizes
         ]);
     }
 
@@ -71,8 +78,6 @@ class WheelController extends Controller
                 'user_id' => $user->id,
                 'wheel_id' => $req->input('wheel_id'),
             ])->exists();
-
-
 
             return response(Helper::responseTemplate([
                 'user_requirement_value_exists' => $userRequirementValueExists,
@@ -195,82 +200,85 @@ class WheelController extends Controller
             'priority' => $req->input('priority')
         ]);
 
+        $wheel = Wheel::find($req->input('wheel_id'));
+        $remainTry = $this->remainTryCalculation($wheel);
 
+        $prizes = Prize::where([
+            'user_id' => auth()->user()->id,
+            'wheel_id' => $wheel->id
+        ])->orderBy('created_at', 'desc')->paginate(10);
 
-        $dateLeftToTryAgain = DateLeftToTryAgain::where([
-            'user_id' => $userId,
-            'wheel_id' => $req->input('wheel_id'),
-        ])->pluck('date_at')->first();
-
-        if (!$dateLeftToTryAgain) {
-            DateLeftToTryAgain::create([
-                'user_id' => $userId,
-                'wheel_id' => $req->input('wheel_id'),
-                'date_at' => now()
-            ]);
-        } else {
-            // $latestPrizeDate = Prize::where([
-            //     'user_id' => $userId,
-            //     'wheel_id' => $req->input('wheel_id'),
-            // ])->pluck('created_at')->latest()->first();
-
-
-            if ($dateLeftToTryAgain < now()) {
-
-                Prize::where([
-                    'user_id' => $userId,
-                    'wheel_id' => $req->input('wheel_id'),
-                ])->update([
-                    'old' => 1
-                ]);
-
-                DateLeftToTryAgain::where([
-                    'user_id' => $userId,
-                    'wheel_id' => $req->input('wheel_id'),
-                ])->update([
-                    'date_at' => 1
-                ]);
-
-            }
-        }
-
-        return response(Helper::responseTemplate(message: 'success done'), 201);
+        return response(Helper::responseTemplate([
+            'remain_try' => $remainTry,
+            'prizes' => $prizes
+        ], 'success done'), 201);
     }
 
     public function wheelDataFetch(Wheel $wheel): Response
     {
-        $userId = auth()->user()->id;
+        $remainTry = $this->remainTryCalculation($wheel);
 
-        $latestPrizeDate = Prize::where([
-            'user_id' => $userId,
-            'wheel_id' => $wheel->id,
-        ])->latest()->pluck('created_at')->first();
-
-        $dateLeftToTryAgain = new Carbon($latestPrizeDate);
-        $dateLeftToTryAgain->addDays($wheel->days_left_to_try_again);
-
-        $prizeCount = Prize::where([
-            'user_id' => $userId,
-            'wheel_id' => $wheel->id,
-        ])->where('created_at', '<', $dateLeftToTryAgain)->count();
-
-        info($prizeCount);
-        info($latestPrizeDate);
-        info($dateLeftToTryAgain);
-
+        $prizes = Prize::where([
+            'user_id' => auth()->user()->id,
+            'wheel_id' => $wheel->id
+        ])->orderBy('created_at', 'desc')->paginate(10);
 
         return response(Helper::responseTemplate([
-            'remain_try' => $wheel->try - $prizeCount
+            'remain_try' => $remainTry,
+            'prizes' => $prizes
         ], 'success done'), 200);
     }
 
     private function checkExpiration($slug)
     {
-        $wheel = Wheel::where('slug', $slug)->first();
+        $wheel = Wheel::where('slug', $slug)->firstOrfail();
 
         if ($wheel->expiration_at === null) return 0;
         if ($wheel->expiration_at >= now()) return 0;
 
         return 1;
+    }
+
+    private function remainTryCalculation($wheel)
+    {
+        if ($wheel->days_left_to_try_again) {
+
+            $userId = auth()->user()->id;
+            $dateLeftToTryAgain = DateLeftToTryAgain::where([
+                'user_id' => $userId,
+                'wheel_id' => $wheel->id,
+            ])->pluck('date_at')->first();
+
+            if (!$dateLeftToTryAgain) {
+                DateLeftToTryAgain::create([
+                    'user_id' => $userId,
+                    'wheel_id' => $wheel->id,
+                    'date_at' => now()->addDays($wheel->days_left_to_try_again)
+                ]);
+            } else {
+                if ($dateLeftToTryAgain < now()) {
+                    Prize::where([
+                        'user_id' => $userId,
+                        'wheel_id' => $wheel->id,
+                    ])->update([
+                        'old' => 1
+                    ]);
+
+                    DateLeftToTryAgain::where([
+                        'user_id' => $userId,
+                        'wheel_id' => $wheel->id,
+                    ])->update([
+                        'date_at' => now()->addDays($wheel->days_left_to_try_again)
+                    ]);
+                }
+            }
+        }
+
+        $prizeCount = Prize::where([
+            'user_id' => auth()->user()->id,
+            'wheel_id' => $wheel->id,
+        ])->whereNull('old')->count();
+
+        return $wheel->try - $prizeCount;
     }
 }

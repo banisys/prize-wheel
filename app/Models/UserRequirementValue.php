@@ -18,4 +18,11 @@ class UserRequirementValue extends Model
         'wheel_id',
         'value',
     ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 }

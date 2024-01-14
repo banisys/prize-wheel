@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Wheel extends Model
 {
@@ -49,5 +50,13 @@ class Wheel extends Model
     public function userRequirements(): BelongsToMany
     {
         return $this->belongsToMany(UserRequirement::class);
+    }
+
+    /**
+     * Get the date associated with the wheel.
+     */
+    public function dateLeftToTryAgain(): HasOne
+    {
+        return $this->hasOne(DateLeftToTryAgain::class);
     }
 }
