@@ -48,16 +48,10 @@ class WheelController extends Controller
             'wheel_id' => $wheel->id,
         ])->exists();
 
-        $prizes = Prize::where([
-            'user_id' => $user->id,
-            'wheel_id' => $wheel->id
-        ])->orderBy('created_at', 'desc')->paginate(10);
-
         return Inertia::render('Index', [
             'wheel' => $wheel->makeHidden(['created_at', 'updated_at'])->toArray(),
             'user' => $user,
             'user_requirement_value_exists' => $UserRequirementValueExists,
-            'prizes' => $prizes
         ]);
     }
 
@@ -191,6 +185,13 @@ class WheelController extends Controller
             'priority' => 'required'
         ]);
 
+        $wheel = Wheel::find($req->input('wheel_id'));
+        $remainTry = $this->remainTryCalculation($wheel);
+
+        if (!$remainTry)
+            return response(Helper::responseTemplate('there is no retry'), 400);
+
+
         $userId = auth()->user()->id;
 
         Prize::create([
@@ -200,16 +201,13 @@ class WheelController extends Controller
             'priority' => $req->input('priority')
         ]);
 
-        $wheel = Wheel::find($req->input('wheel_id'));
-        $remainTry = $this->remainTryCalculation($wheel);
-
         $prizes = Prize::where([
-            'user_id' => auth()->user()->id,
+            'user_id' => $userId,
             'wheel_id' => $wheel->id
-        ])->orderBy('created_at', 'desc')->paginate(10);
+        ])->latest()->paginate(10);
 
         return response(Helper::responseTemplate([
-            'remain_try' => $remainTry,
+            'remain_try' => $remainTry - 1,
             'prizes' => $prizes
         ], 'success done'), 201);
     }
@@ -221,7 +219,7 @@ class WheelController extends Controller
         $prizes = Prize::where([
             'user_id' => auth()->user()->id,
             'wheel_id' => $wheel->id
-        ])->orderBy('created_at', 'desc')->paginate(10);
+        ])->latest()->paginate(10);
 
         return response(Helper::responseTemplate([
             'remain_try' => $remainTry,

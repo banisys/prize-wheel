@@ -19,4 +19,9 @@ class Prize extends Model
         'priority',
         'old'
     ];
+
+    public function getCreatedAtAttribute()
+    {
+        return $this->attributes['created_at'];
+    }
 }

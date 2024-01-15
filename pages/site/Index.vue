@@ -51,13 +51,12 @@
         <div v-if="stepStart">
 
           <h1>{{ remainTry }}</h1>
-          <h2 v-if="wheel.date_left_to_try_again">{{ dateLeftToTryAgain(wheel.date_left_to_try_again.date_at) }}</h2>
+          <h2 v-if="wheel.date_left_to_try_again">{{ convertToJalali(wheel.date_left_to_try_again.date_at) }}</h2>
 
           <ul>
             <li v-for="item in prizes">
-
-              {{ item.title }}
-
+              <p>{{ item.title }}</p>
+              <p class="ltr">{{ convertToJalali(item.created_at, true) }}</p>
             </li>
           </ul>
 
@@ -74,7 +73,6 @@
       </div>
 
       <div class="col-6">
-
         <Transition>
           <p_10 v-if="wheel.slice_num === 10 && flagWheel" :slices="wheel.slices" ref="prizeWheel" @win="submitWin" />
         </Transition>
@@ -86,7 +84,6 @@
         <Transition>
           <p_15 v-if="wheel.slice_num === 15 && flagWheel" :slices="wheel.slices" ref="prizeWheel" @win="submitWin" />
         </Transition>
-
       </div>
 
     </div>
@@ -307,22 +304,26 @@ export default {
       }
       return [jy, jm, jd];
     },
-    dateLeftToTryAgain(dateAt) {
-      if (dateAt) {
-        let expirationAtDate = null
-        let expirationAtHour = null
-        let expirationGregorian = null
+    convertToJalali(date, hour = true) {
+      if (date) {
+        let atDate = null
+        let atHour = null
+        let atGregorian = null
 
-        expirationAtDate = dateAt.split(" ")[0].split('-')
-        expirationAtHour = dateAt.split(" ")[1]
+        atDate = date.split(" ")[0].split('-')
+        atHour = date.split(" ")[1]
 
-        expirationGregorian = this.gregorianToJalali(
-          parseInt(expirationAtDate[0]),
-          parseInt(expirationAtDate[1]),
-          parseInt(expirationAtDate[2])
+        atGregorian = this.gregorianToJalali(
+          parseInt(atDate[0]),
+          parseInt(atDate[1]),
+          parseInt(atDate[2])
         ).join('/')
 
-        return `${expirationGregorian} ${expirationAtHour}`
+        const splitHour = atHour.split(':');
+
+        atHour = `${splitHour[0]}:${splitHour[1]}`
+
+        return hour ? `${atGregorian} ${atHour}` : atGregorian
       }
     }
   },
@@ -331,7 +332,6 @@ export default {
     this.assetsURL = this.$root.assetsURL
   },
   mounted() {
-
     if (this.expiration === 1) return
 
     if (this.user) {

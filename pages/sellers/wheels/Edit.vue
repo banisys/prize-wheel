@@ -13,28 +13,31 @@
           <input type="number" min="1" max="5" class="form-control" id="try" v-model="form.try">
         </div>
 
-        <div class="mt-4">
-          <label for="try_again" class="form-label">بازی مجدد بعد از (روز)</label>
-          <input type="number" min="1" max="365" class="form-control" id="try_again" :disabled="!flagDaysLeftToTryAgain"
-            v-model="form.days_left_to_try_again">
-        </div>
-
         <div class="mt-4 form-check">
           <input type="checkbox" class="form-check-input" id="cancel_try_again" @change="changeCheckBoxDaysLeftToTryAgain"
             :checked="!flagDaysLeftToTryAgain">
           <label class="form-check-label" for="cancel_try_again">بازی مجدد نداشته باشد</label>
         </div>
 
-        <div class="mt-4 form-check p-0">
-          <date-picker :disabled="!flagExpirationAt" v-model="form.expiration_at" type="datetime"
-            label="تاریخ انقضا"></date-picker>
-        </div>
+        <Transition>
+          <div class="mt-4" v-if="flagDaysLeftToTryAgain">
+            <label for="try_again" class="form-label">بازی مجدد بعد از (روز)</label>
+            <input type="number" min="1" max="365" class="form-control" id="try_again"
+              v-model="form.days_left_to_try_again">
+          </div>
+        </Transition>
 
         <div class="mt-4 form-check">
           <input type="checkbox" class="form-check-input" id="expiration" @change="changeCheckBoxExpirationAt"
             :checked="!flagExpirationAt">
           <label class="form-check-label" for="expiration">تاریخ انقضا نداشته باشد</label>
         </div>
+
+        <Transition>
+          <div class="mt-4 form-check p-0" v-if="flagExpirationAt">
+            <date-picker v-model="form.expiration_at" type="datetime" label="تاریخ انقضا"></date-picker>
+          </div>
+        </Transition>
 
         <div class="p-3 border mt-4 rounded">
           <p class="fw-bold">روش ورود کاربر</p>
@@ -274,4 +277,14 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>
