@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserRequirementValue extends Model
 {
@@ -25,4 +26,12 @@ class UserRequirementValue extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * Get the user requirement that owns the value.
+     */
+    public function userRequirement(): BelongsTo
+    {
+        return $this->belongsTo(UserRequirement::class);
+    }
 }

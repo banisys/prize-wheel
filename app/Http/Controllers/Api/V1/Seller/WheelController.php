@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Seller;
 use App\Helper\General;
 use App\Http\Controllers\Api\V1\Helper;
 use App\Http\Controllers\Controller;
+use App\Models\Prize;
 use App\Models\Slice;
 use App\Models\UserRequirement;
 use App\Models\Wheel;
@@ -103,4 +104,18 @@ class WheelController extends Controller
         return response(Helper::responseTemplate(message: 'success done'), 201);
     }
 
+    public function show($wheel): InertiaResponse
+    {
+        $wheelTitle = Wheel::where('slug', $wheel)->pluck('title')->first();
+
+        $prizes = Prize::where('wheel_id', $wheel->id)
+            ->with(['user.userRequirementValues.userRequirement'])
+            ->latest()->paginate(10);
+
+        Inertia::setRootView('seller');
+        return Inertia::render('wheels/Show', [
+            'wheel_title' => $wheelTitle,
+            'prizes' => $prizes,
+        ]);
+    }
 }

@@ -1,3 +1,32 @@
+<template>
+  <div class="container">
+    <div class="row">
+
+      <div v-for="item in wheels" class="col-3">
+        <p>{{ item.title }}</p>
+        <p>
+          <Link :href="`wheels/${item.slug}/edit`">ویرایش</Link>
+        </p>
+        <p>
+          <Link :href="`wheels/${item.slug}`">نتایج بازی ها</Link>
+        </p>
+      </div>
+
+      <div class="col-3">
+        <p>ایجاد گردونه</p>
+        <select v-model="sliceNum">
+          <option value="10">10</option>
+          <option value="12">12</option>
+          <option value="15">15</option>
+        </select>
+        <button @click="submit">ایجاد</button>
+      </div>
+
+    </div>
+  </div>
+</template>
+
+
 <script>
 import p_10 from '../Components/p_10.vue'
 import { router, Link } from '@inertiajs/vue3'
@@ -37,27 +66,6 @@ export default {
 }
 </script>
 
-<template>
-  <div class="container">
-    <div class="row">
 
-      <div v-for="item in wheels" class="col-3">
-        <p>{{ item.title }}</p>
-        <Link :href="`wheels/${item.slug}/edit`">ویرایش</Link>
-      </div>
-
-      <div class="col-3">
-        <p>ایجاد گردونه</p>
-        <select v-model="sliceNum">
-          <option value="10">10</option>
-          <option value="12">12</option>
-          <option value="15">15</option>
-        </select>
-        <button @click="submit">ایجاد</button>
-      </div>
-
-    </div>
-  </div>
-</template>
 
 <style scoped></style>

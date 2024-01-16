@@ -25,7 +25,7 @@ Route::prefix('sellers')
         Route::get('dashboard', 'showDashboard')->name('show.dashboard');
     });
 
-Route::resource('wheels', SellerWheelController::class)->only(['index', 'edit'])->middleware('auth:seller');
+Route::resource('wheels', SellerWheelController::class)->only(['index', 'edit', 'show'])->middleware('auth:seller');
 
 //================================ Site =====================================
 Route::get('{wheel}', [SiteWheelController::class, 'index']);
