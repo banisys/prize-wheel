@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Prize;
 use App\Models\Slice;
+use App\Models\User;
 use App\Models\UserRequirement;
 use App\Models\Wheel;
 use Illuminate\Http\Request;
@@ -104,18 +105,58 @@ class WheelController extends Controller
         return response(Helper::responseTemplate(message: 'success done'), 201);
     }
 
-    public function show($wheel): InertiaResponse
+    public function show(Wheel $wheel): InertiaResponse
     {
-        $wheelTitle = Wheel::where('slug', $wheel)->pluck('title')->first();
+        $users = User::whereHas('prizes', function ($q) use ($wheel) {
+            $q->where('wheel_id', $wheel->id);
+        })->with([
+            'prizes' => function ($q) use ($wheel) {
+                $q->where('wheel_id', $wheel->id);
+            },
+            'userRequirementValues' => function ($q) use ($wheel) {
+                $q->where('wheel_id', $wheel->id)->with('userRequirement');
+            }
+        ])->latest()->paginate(10);
 
-        $prizes = Prize::where('wheel_id', $wheel->id)
-            ->with(['user.userRequirementValues.userRequirement'])
-            ->latest()->paginate(10);
+
+        $prizes = Prize::select('title')->where('wheel_id', $wheel->id)->get()->groupBy('title');
+
+        $sumNumberOfEachPrize = [];
+        foreach ($prizes as $key => $prize) $sumNumberOfEachPrize[$key] = count($prize);
+
+
 
         Inertia::setRootView('seller');
         return Inertia::render('wheels/Show', [
-            'wheel_title' => $wheelTitle,
-            'prizes' => $prizes,
+            'wheel' => $wheel->only(['slug', 'title']),
+            'users' => $users,
+            'sum_number_of_each_prize' => $sumNumberOfEachPrize,
         ]);
+    }
+
+    public function search(Wheel $wheel, Request $req): Response
+    {
+        $users = User::whereHas('prizes', function ($q) use ($wheel) {
+            $q->where('wheel_id', $wheel->id);
+        })->with([
+            'prizes' => function ($q) use ($wheel) {
+                $q->where('wheel_id', $wheel->id);
+            },
+            'userRequirementValues' => function ($q) use ($wheel) {
+                $q->where('wheel_id', $wheel->id)->with('userRequirement');
+            }
+        ])
+            ->when($req->input('mobile'), function ($q) use ($req) {
+                $q->where('mobile', $req->input('mobile'));
+            })
+            ->latest()->paginate(10);
+
+        return response(Helper::responseTemplate([
+            'users' => $users,
+        ], 'success done'), 200);
+    }
+
+    public function calPrizeStatistics(Wheel $wheel, Request $req)
+    {
     }
 }

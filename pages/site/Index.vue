@@ -128,13 +128,13 @@ export default {
     remainTry: 0,
     prizes: []
   }),
+  watch: {
+    stepStart(newValue, oldValue) {
+      newValue === 1 && this.fetchStepStartData()
+    }
+  },
   computed: {
 
-  },
-  watch: {
-    stepStart(newStepStart, oldStepStart) {
-      newStepStart === 1 && this.fetchStepStartData()
-    }
   },
   methods: {
     submitStep1() {

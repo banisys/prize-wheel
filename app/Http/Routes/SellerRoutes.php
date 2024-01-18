@@ -33,6 +33,7 @@ class SellerRoutes
 
                 Route::post('/create', 'store')->name('store');
                 Route::put('/{wheel}', 'update')->name('update');
+                Route::get('/{wheel}/search', 'search')->name('search');
             });
     }
 }

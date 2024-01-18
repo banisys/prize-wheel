@@ -39,4 +39,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserRequirementValue::class);
     }
+
+    /**
+     * Get the prizes for the user.
+     */
+    public function prizes(): HasMany
+    {
+        return $this->hasMany(Prize::class);
+    }
 }
