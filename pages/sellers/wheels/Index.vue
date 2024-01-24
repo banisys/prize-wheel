@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     submit() {
-      axios.post(`${this.baseURL}/create`, {
+      axios.post(`${this.baseURL}`, {
         slice_num: this.sliceNum,
       }).then(res => {
         res.status === 201 && router.get(`wheels/${res.data.data.slug}/edit`)

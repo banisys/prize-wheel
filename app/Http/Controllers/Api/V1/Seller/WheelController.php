@@ -67,11 +67,11 @@ class WheelController extends Controller
                     'wheel_id',
                     'title',
                     'priority'
-                );
+                )->withCount('discountCodes');
             },
             'userRequirements' => function ($query) {
                 $query->select('id');
-            },
+            }
         ])->first();
 
         Inertia::setRootView('seller');
@@ -86,12 +86,12 @@ class WheelController extends Controller
     {
         $req->validate([
             'title' => 'required|min:1|max:80',
+            'description' => 'min:1|max:380',
             'try' => 'required|max:1',
             'days_left_to_try_again' => 'max:3',
             'login_method' => 'required',
             'slices' => 'required',
             'slices.*.title' => 'max:80',
-            'user_requirements' => 'required',
         ]);
 
         $wheel->update($req->toArray());

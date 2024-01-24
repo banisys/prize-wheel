@@ -16,6 +16,8 @@ return new class extends Migration
             $table->integer('user_id');
             $table->integer('wheel_id');
             $table->string('title');
+            $table->string('token')->nullable();
+            $table->string('description');
             $table->integer('priority');
             $table->tinyInteger('old')->nullable();
             $table->timestamps();

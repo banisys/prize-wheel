@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('slices', function (Blueprint $table) {
+        Schema::create('discount_codes', function (Blueprint $table) {
             $table->id();
             $table->integer('wheel_id');
-            $table->string('title');
-            $table->string('description')->nullable();
-            $table->integer('inventory')->nullable();
-            $table->tinyInteger('priority');
-            $table->timestamps();
+            $table->integer('slice_id');
+            $table->integer('user_id')->nullable();
+            $table->string('code');
         });
     }
 
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('slices');
+        Schema::dropIfExists('discount_codes');
     }
 };

@@ -39,7 +39,7 @@ class WheelTest extends TestCase
         $seller = Seller::factory()->create();
 
         $this->actingAs($seller, 'seller')->postJson(
-            $this->urlPrefix . 'create',
+            'api/v1/wheels',
             [
                 'slice_num' => 10,
             ]
@@ -55,7 +55,7 @@ class WheelTest extends TestCase
         $seller = Seller::factory()->create();
 
         $res = $this->actingAs($seller, 'seller')->postJson(
-            $this->urlPrefix . 'create',
+            $this->urlPrefix,
             [
                 'slice_num' => 10,
             ]
@@ -73,7 +73,7 @@ class WheelTest extends TestCase
         $seller = Seller::factory()->create();
 
         $res = $this->actingAs($seller, 'seller')->postJson(
-            $this->urlPrefix . 'create',
+            $this->urlPrefix,
             [
                 'slice_num' => 10,
             ]

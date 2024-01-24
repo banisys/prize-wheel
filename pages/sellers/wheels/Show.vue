@@ -87,8 +87,6 @@
 
 
 <script>
-
-
 export default {
   props: ['wheel', 'users', 'sum_number_of_each_prize'],
   components: {

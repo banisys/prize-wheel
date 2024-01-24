@@ -56,6 +56,7 @@
           <ul>
             <li v-for="item in prizes">
               <p>{{ item.title }}</p>
+              <p>{{ item.description }}</p>
               <p class="ltr">{{ convertToJalali(item.created_at, true) }}</p>
             </li>
           </ul>
