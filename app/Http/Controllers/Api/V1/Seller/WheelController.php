@@ -62,12 +62,7 @@ class WheelController extends Controller
     {
         $wheel = Wheel::where('slug', $wheel)->with([
             'slices' => function ($query) {
-                $query->select(
-                    'id',
-                    'wheel_id',
-                    'title',
-                    'priority'
-                )->withCount('discountCodes');
+                $query->withCount('discountCodes');
             },
             'userRequirements' => function ($query) {
                 $query->select('id');
@@ -158,5 +153,18 @@ class WheelController extends Controller
 
     public function calPrizeStatistics(Wheel $wheel, Request $req)
     {
+    }
+
+    public function destroy(Wheel $wheel)
+    {
+        $wheel->slices->delete();
+        $wheel->userRequirements->delete();
+        $wheel->userRequirementValues->delete();
+        $wheel->dateLeftToTryAgain->delete();
+        $wheel->discountCodes->delete();
+        $wheel->prizes->delete();
+        $wheel->tokens->delete();
+        $wheel->delete();
+
     }
 }

@@ -27,17 +27,44 @@
           </div>
         </Transition>
 
-        <div class="mt-4 form-check">
-          <input type="checkbox" class="form-check-input" id="expiration" @change="changeCheckBoxExpirationAt"
-            :checked="!flagExpirationAt">
-          <label class="form-check-label" for="expiration">تاریخ انقضا نداشته باشد</label>
+
+
+
+
+
+        <div class="mt-4 border p-3 rounded">
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="start" @change="changeCheckBoxStartAt"
+              :checked="!flagStartAt">
+            <label class="form-check-label" for="start">تاریخ شروع نداشته باشد</label>
+          </div>
+
+          <Transition>
+            <div class="mt-4 form-check p-0" v-if="flagStartAt">
+              <date-picker v-model="form.start_at" type="datetime" label="تاریخ شروع"></date-picker>
+            </div>
+          </Transition>
         </div>
 
-        <Transition>
-          <div class="mt-4 form-check p-0" v-if="flagExpirationAt">
-            <date-picker v-model="form.expiration_at" type="datetime" label="تاریخ انقضا"></date-picker>
+
+
+
+
+
+
+        <div class="mt-4 border p-3 rounded">
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="end" @change="changeCheckBoxEndAt" :checked="!flagEndAt">
+            <label class="form-check-label" for="end">تاریخ انقضا نداشته باشد</label>
           </div>
-        </Transition>
+
+          <Transition>
+            <div class="mt-4 form-check p-0" v-if="flagEndAt">
+              <date-picker v-model="form.end_at" type="datetime" label="تاریخ انقضا"></date-picker>
+            </div>
+          </Transition>
+        </div>
+
 
         <div class="p-3 border mt-4 rounded">
           <p class="fw-bold">روش ورود کاربر</p>
@@ -148,7 +175,6 @@
           ({{ item.discount_codes_count }})
         </button>
         <input v-else type="number" class="form-control" v-model="item.inventory">
-
       </div>
 
       <div class="col-2">
@@ -235,12 +261,14 @@ export default {
     userRequirementsSelected: [],
     holderDaysLeftToTryAgain: null,
     flagDaysLeftToTryAgain: true,
-    flagExpirationAt: true,
+    flagStartAt: true,
+    flagEndAt: true,
     form: {
       title: '',
       try: null,
       days_left_to_try_again: null,
-      expiration_at: '',
+      start_at: '',
+      end_at: '',
       login_method: null,
       slices: [],
       user_requirements: []
@@ -252,6 +280,9 @@ export default {
 
     page: 1,
     per_page: null,
+
+    holderStartAt: null,
+    holderEndAt: null,
   }),
   computed: {
   },
@@ -265,25 +296,41 @@ export default {
         return
       }
 
-      let expirationAtDate = null
-      let expirationAtHour = null
-      let expirationJalali = null
+      let startAtDate = null
+      let startAtHour = null
+      let startJalali = null
 
-      if (this.form.expiration_at) {
-        expirationAtDate = this.form.expiration_at.split(" ")[0].split('/')
-        expirationAtHour = this.form.expiration_at.split(" ")[1]
+      if (this.form.start_at) {
+        startAtDate = this.form.start_at.split(" ")[0].split('/')
+        startAtHour = this.form.start_at.split(" ")[1]
 
-        expirationJalali = this.jalaliToGregorian(
-          parseInt(expirationAtDate[0]),
-          parseInt(expirationAtDate[1]),
-          parseInt(expirationAtDate[2])
+        startJalali = this.jalaliToGregorian(
+          parseInt(startAtDate[0]),
+          parseInt(startAtDate[1]),
+          parseInt(startAtDate[2])
+        ).join('-')
+      }
+
+      let endAtDate = null
+      let endAtHour = null
+      let endJalali = null
+
+      if (this.form.end_at) {
+        endAtDate = this.form.end_at.split(" ")[0].split('/')
+        endAtHour = this.form.end_at.split(" ")[1]
+
+        endJalali = this.jalaliToGregorian(
+          parseInt(endAtDate[0]),
+          parseInt(endAtDate[1]),
+          parseInt(endAtDate[2])
         ).join('-')
       }
 
       axios.put(`${this.baseURL}/wheels/${this.wheel.slug}`,
         {
           ...this.form,
-          expiration_at: this.form.expiration_at && `${expirationJalali} ${expirationAtHour}`
+          start_at: this.form.start_at && `${startJalali} ${startAtHour}`,
+          end_at: this.form.end_at && `${endJalali} ${endAtHour}`
         }
       ).then(res => {
 
@@ -347,9 +394,13 @@ export default {
       this.flagDaysLeftToTryAgain = !e.target.checked
       this.form.days_left_to_try_again = e.target.checked ? null : this.holderDaysLeftToTryAgain
     },
-    changeCheckBoxExpirationAt(e) {
-      this.flagExpirationAt = !e.target.checked
-      this.form.expiration_at = e.target.checked ? null : this.holderExpirationAt
+    changeCheckBoxStartAt(e) {
+      this.flagStartAt = !e.target.checked
+      this.form.start_at = e.target.checked ? null : this.holderStartAt
+    },
+    changeCheckBoxEndAt(e) {
+      this.flagEndAt = !e.target.checked
+      this.form.end_at = e.target.checked ? null : this.holderEndAt
     },
     discountCodeFileChanged(e) {
       const target = e.target
@@ -370,9 +421,7 @@ export default {
 
       axios.post(`${this.baseURL}/discount_codes`, formData, config).then(res => {
 
-        console.log(res.data.data.slices);
-
-        _this.form.slices = res.data.data.slicesن
+        _this.form.slices = res.data.data.slices
 
       }).catch(e => {
         alert(e.response.data.message)
@@ -423,9 +472,6 @@ export default {
     this.assetsURL = this.$root.assetsURL
   },
   mounted() {
-
-    console.log(this.wheel);
-
     this.form = this.wheel
 
     const wheelUserRequirements = this.wheel.user_requirements
@@ -436,28 +482,47 @@ export default {
       this.form.user_requirements.push(userRequirement.id)
     })
 
-    if (this.form.expiration_at) {
-      let expirationAtDate = null
-      let expirationAtHour = null
-      let expirationGregorian = null
+    if (this.form.start_at) {
+      let startAtDate = null
+      let startAtHour = null
+      let startGregorian = null
 
-      expirationAtDate = this.form.expiration_at.split(" ")[0].split('-')
-      expirationAtHour = this.form.expiration_at.split(" ")[1]
+      startAtDate = this.form.start_at.split(" ")[0].split('-')
+      startAtHour = this.form.start_at.split(" ")[1]
 
-      expirationGregorian = this.gregorianToJalali(
-        parseInt(expirationAtDate[0]),
-        parseInt(expirationAtDate[1]),
-        parseInt(expirationAtDate[2])
+      startGregorian = this.gregorianToJalali(
+        parseInt(startAtDate[0]),
+        parseInt(startAtDate[1]),
+        parseInt(startAtDate[2])
       ).join('/')
 
-      this.form.expiration_at = `${expirationGregorian} ${expirationAtHour}`
+      this.form.start_at = `${startGregorian} ${startAtHour}`
+    }
+
+    if (this.form.end_at) {
+      let endAtDate = null
+      let endAtHour = null
+      let endGregorian = null
+
+      endAtDate = this.form.end_at.split(" ")[0].split('-')
+      endAtHour = this.form.end_at.split(" ")[1]
+
+      endGregorian = this.gregorianToJalali(
+        parseInt(endAtDate[0]),
+        parseInt(endAtDate[1]),
+        parseInt(endAtDate[2])
+      ).join('/')
+
+      this.form.end_at = `${endGregorian} ${endAtHour}`
     }
 
     this.holderDaysLeftToTryAgain = this.form.days_left_to_try_again
-    this.holderExpirationAt = this.form.expiration_at
+    this.holderEndAt = this.form.end_at
+    this.holderStartAt = this.form.start_at
 
     this.flagDaysLeftToTryAgain = this.form.days_left_to_try_again ? true : false
-    this.flagExpirationAt = this.form.expiration_at ? true : false
+    this.flagEndAt = this.form.end_at ? true : false
+    this.flagStartAt = this.form.start_at ? true : false
   }
 }
 </script>

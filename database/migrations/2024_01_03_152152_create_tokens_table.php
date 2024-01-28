@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('tokens', function (Blueprint $table) {
             $table->id();
+            $table->integer('wheel_id');
             $table->integer('user_id')->nullable();
             $table->string('value')->unique();
             $table->timestamps();

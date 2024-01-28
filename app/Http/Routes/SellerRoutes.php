@@ -34,6 +34,8 @@ class SellerRoutes
 
                 Route::post('/', 'store')->name('store');
                 Route::put('/{wheel}', 'update')->name('update');
+                Route::delete('/{wheel}', 'destroy')->name('destroy');
+
                 Route::get('/{wheel}/search', 'search')->name('search');
             });
 

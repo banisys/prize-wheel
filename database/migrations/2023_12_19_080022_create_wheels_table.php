@@ -13,14 +13,16 @@ return new class extends Migration
     {
         Schema::create('wheels', function (Blueprint $table) {
             $table->id();
-            $table->string('slug');
             $table->integer('seller_id');
+            $table->string('slug');
             $table->string('title')->default('بدون عنوان');
             $table->tinyInteger('slice_num');
             $table->tinyInteger('try')->default(1);
             $table->integer('days_left_to_try_again')->nullable();
             $table->tinyInteger('login_method')->default(1); // 1= mobile | 2= mobile(auth) | 3= token
-            $table->timestamp('expiration_at')->nullable();
+            $table->tinyInteger('status')->default(1); // 0= inactive | 1= active
+            $table->timestamp('start_at')->nullable();
+            $table->timestamp('end_at')->nullable();
             $table->timestamps();
         });
     }

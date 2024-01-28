@@ -1,15 +1,16 @@
 <template>
   <div class="container">
-    <div class="row">
+    <div class="row mt-5">
 
       <div v-for="item in wheels" class="col-3">
-        <p>{{ item.title }}</p>
+        <h6>{{ item.title }}</h6>
         <p>
           <Link :href="`wheels/${item.slug}/edit`">ویرایش</Link>
         </p>
         <p>
           <Link :href="`wheels/${item.slug}`">نتایج بازی ها</Link>
         </p>
+        <button class="btn btn-danger btn-sm" @click="deleteWheel(item.slug)">حذف</button>
       </div>
 
       <div class="col-3">
@@ -19,7 +20,7 @@
           <option value="12">12</option>
           <option value="15">15</option>
         </select>
-        <button @click="submit">ایجاد</button>
+        <button @click="submitCreate">ایجاد</button>
       </div>
 
     </div>
@@ -46,11 +47,18 @@ export default {
 
   },
   methods: {
-    submit() {
+    submitCreate() {
       axios.post(`${this.baseURL}`, {
         slice_num: this.sliceNum,
       }).then(res => {
         res.status === 201 && router.get(`wheels/${res.data.data.slug}/edit`)
+      })
+    },
+    deleteWheel(wheelSlug) {
+      let _this = this
+      axios.delete(`${this.baseURL}/${wheelSlug}`).then(res => {
+        _this.wheels = res.status === 201 &&
+          _this.wheels.filter(wheel => wheel.slug !== wheelSlug)
       })
     }
   },

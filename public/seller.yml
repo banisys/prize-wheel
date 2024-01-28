@@ -148,7 +148,7 @@ paths:
                 days_left_to_try_again:
                   type: integer
                   default: 30
-                expiration_at:
+                end_at:
                   type: string
                   default: "2024-10-07 12:18:26"
                 login_method:

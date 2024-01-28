@@ -19,6 +19,7 @@ class Slice extends Model
         'wheel_id',
         'title',
         'description',
+        'inventory',
         'priority',
     ];
 

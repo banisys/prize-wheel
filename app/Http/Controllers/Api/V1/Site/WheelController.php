@@ -23,10 +23,10 @@ class WheelController extends Controller
     {
         Inertia::setRootView('site');
 
-        if ($this->checkExpiration($wheel))
-            return Inertia::render('Index', [
-                'expiration' => 1
-            ]);
+        $statusDate = $this->checkStatusDate($wheel);
+
+        if ($statusDate['not_started'] || $statusDate['finished'])
+            return Inertia::render('Index', $statusDate);
 
         $wheel = Wheel::where('slug', $wheel)->with([
             'slices' => function ($query) {
@@ -227,14 +227,19 @@ class WheelController extends Controller
         ], 'success done'), 200);
     }
 
-    private function checkExpiration($slug)
+    private function checkStatusDate($slug)
     {
         $wheel = Wheel::where('slug', $slug)->firstOrfail();
 
-        if ($wheel->expiration_at === null) return 0;
-        if ($wheel->expiration_at >= now()) return 0;
+        $res = [
+            'not_started' => 0,
+            'finished' => 0
+        ];
 
-        return 1;
+        if ($wheel->start_at !== null && $wheel->start_at > now()) $res['not_started'] = 1;
+        if ($wheel->end_at !== null && $wheel->end_at < now()) $res['finished'] = 1;
+
+        return $res;
     }
 
     private function remainTryCalculation($wheel)

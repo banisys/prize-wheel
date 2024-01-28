@@ -1,5 +1,5 @@
 <template>
-  <div class="expiration" v-if="expiration"></div>
+  <div class="end" v-if="not_started || finished"></div>
   <div class="container mt-5" v-else>
     <div class="row">
       <div class="col-6">
@@ -102,7 +102,7 @@ export default {
     p_12,
     p_15,
   },
-  props: ['user', 'wheel', 'user_requirement_value_exists', 'expiration'],
+  props: ['user', 'wheel', 'user_requirement_value_exists', 'not_started', 'finished'],
   data: () => ({
     baseURL: '',
     assetsURL: '',
@@ -333,7 +333,8 @@ export default {
     this.assetsURL = this.$root.assetsURL
   },
   mounted() {
-    if (this.expiration === 1) return
+    if (this.not_started || this.finished) return
+
 
     if (this.user) {
       if (this.wheel.user_requirements.length && !this.user_requirement_value_exists) {
@@ -355,7 +356,7 @@ export default {
 
 
 <style scoped>
-.expiration {
+.end {
   height: 100vh;
   width: 100%;
   background: wheat;

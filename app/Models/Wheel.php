@@ -24,7 +24,8 @@ class Wheel extends Model
         'slice_num',
         'try',
         'days_left_to_try_again',
-        'expiration_at',
+        'start_at',
+        'end_at',
         'login_method'
     ];
 
@@ -53,10 +54,42 @@ class Wheel extends Model
     }
 
     /**
+     * Get the user requirement values for the wheel.
+     */
+    public function userRequirementValues(): HasMany
+    {
+        return $this->hasMany(UserRequirementValue::class);
+    }
+
+    /**
      * Get the date associated with the wheel.
      */
     public function dateLeftToTryAgain(): HasOne
     {
         return $this->hasOne(DateLeftToTryAgain::class);
+    }
+
+    /**
+     * Get the discount code for the wheel.
+     */
+    public function discountCodes(): HasMany
+    {
+        return $this->hasMany(DiscountCode::class);
+    }
+
+    /**
+     * Get the prizes for the wheel.
+     */
+    public function prizes(): HasMany
+    {
+        return $this->hasMany(Prize::class);
+    }
+
+    /**
+     * Get the prizes for the wheel.
+     */
+    public function tokens(): HasMany
+    {
+        return $this->hasMany(Token::class);
     }
 }

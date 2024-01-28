@@ -86,7 +86,7 @@ class WheelTest extends TestCase
                 'slice_num' => 10,
                 'try' => 2,
                 'days_left_to_try_again' => 30,
-                'expiration_at' => '2023-12-31 09:57:00',
+                'end_at' => '2023-12-31 09:57:00',
                 'login_method' => 2,
                 'slices' => Slice::all(),
                 'user_requirements' => UserRequirement::take(1)->pluck('id')

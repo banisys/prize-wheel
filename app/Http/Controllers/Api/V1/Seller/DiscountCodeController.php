@@ -27,6 +27,12 @@ class DiscountCodeController extends Controller
 
         DB::transaction(function () use ($req, $file) {
 
+            Slice::where('wheel_id', $req->input('wheel_id'))
+                ->update([
+                    'inventory' => null
+                ]);
+
+
             DiscountCode::where([
                 'wheel_id' => $req->input('wheel_id'),
                 'slice_id' => $req->input('slice_id'),
@@ -50,12 +56,7 @@ class DiscountCodeController extends Controller
             }
         });
 
-        $slices = Slice::select(
-            'id',
-            'wheel_id',
-            'title',
-            'priority'
-        )->where('wheel_id', $req->input('wheel_id'))
+        $slices = Slice::where('wheel_id', $req->input('wheel_id'))
             ->withCount('discountCodes')->get();
 
         return response(Helper::responseTemplate([
