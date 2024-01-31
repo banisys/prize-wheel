@@ -23,11 +23,6 @@ class WheelController extends Controller
     {
         Inertia::setRootView('site');
 
-        $statusDate = $this->checkStatusDate($wheel);
-
-        if ($statusDate['not_started'] || $statusDate['finished'])
-            return Inertia::render('Index', $statusDate);
-
         $wheel = Wheel::where('slug', $wheel)->with([
             'slices' => function ($query) {
                 $query->select(
@@ -40,6 +35,16 @@ class WheelController extends Controller
             'userRequirements',
             'dateLeftToTryAgain'
         ])->firstOrFail();
+
+        $statusDate = $this->checkStatusDate($wheel);
+
+        if ($statusDate['not_started'] || $statusDate['finished'])
+            return Inertia::render('Index', [
+                ...$statusDate,
+                'wheel' => $wheel
+            ]);
+
+
 
         $user = auth()->user();
 
@@ -227,19 +232,17 @@ class WheelController extends Controller
         ], 'success done'), 200);
     }
 
-    private function checkStatusDate($slug)
+    private function checkStatusDate($wheel)
     {
-        $wheel = Wheel::where('slug', $slug)->firstOrfail();
-
-        $res = [
+        $status = [
             'not_started' => 0,
             'finished' => 0
         ];
 
-        if ($wheel->start_at !== null && $wheel->start_at > now()) $res['not_started'] = 1;
-        if ($wheel->end_at !== null && $wheel->end_at < now()) $res['finished'] = 1;
+        if ($wheel->start_at !== null && $wheel->start_at > now()) $status['not_started'] = 1;
+        if ($wheel->end_at !== null && $wheel->end_at < now()) $status['finished'] = 1;
 
-        return $res;
+        return $status;
     }
 
     private function remainTryCalculation($wheel)

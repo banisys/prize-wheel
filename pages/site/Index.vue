@@ -1,5 +1,37 @@
 <template>
-  <div class="end" v-if="not_started || finished"></div>
+  <div v-if="wheel.status === 0">
+    <h1 class="text-center mt-5">
+      گردونه موقتا غیر فعال است
+    </h1>
+  </div>
+
+  <div class="text-center mt-5" v-else-if="not_started">
+    <h1>شماره معکوس تا شروع：</h1>
+    <h1 class="mt-5">
+      <vue-countdown :transform="transformSlotProps" :time="start_at" v-slot="{ days, hours, minutes, seconds }">
+        <div style="direction: ltr;">
+          <div style="display: block;">
+            روز
+            <Flip :value="days" />
+          </div>
+          <div class="mt-4">
+            <Flip :value="hours" /> :
+            <Flip :value="minutes" /> :
+            <Flip :value="seconds" />
+          </div>
+        </div>
+      </vue-countdown>
+    </h1>
+  </div>
+
+  <div v-else-if="finished">
+    <h1 class="text-center mt-5">
+      گردونه در تاریخ
+      {{ convertToJalali(wheel.end_at) }}
+      به پایان رسیده است
+    </h1>
+  </div>
+
   <div class="container mt-5" v-else>
     <div class="row">
       <div class="col-6">
@@ -95,12 +127,16 @@
 import p_10 from './Components/p_10.vue'
 import p_12 from './Components/p_12.vue'
 import p_15 from './Components/p_15.vue'
+import VueCountdown from '@chenfengyuan/vue-countdown'
+import Flip from "./Components/Flip.vue";
 
 export default {
   components: {
     p_10,
     p_12,
     p_15,
+    VueCountdown,
+    Flip
   },
   props: ['user', 'wheel', 'user_requirement_value_exists', 'not_started', 'finished'],
   data: () => ({
@@ -127,7 +163,9 @@ export default {
     flagReStart: 0,
 
     remainTry: 0,
-    prizes: []
+    prizes: [],
+
+    start_at: null
   }),
   watch: {
     stepStart(newValue, oldValue) {
@@ -326,13 +364,27 @@ export default {
 
         return hour ? `${atGregorian} ${atHour}` : atGregorian
       }
-    }
+    },
+    transformSlotProps(props) {
+      const formattedProps = {};
+
+      Object.entries(props).forEach(([key, value]) => {
+        formattedProps[key] = value < 10 ? `0${value}` : String(value);
+      });
+
+      return formattedProps;
+    },
   },
   created() {
     this.baseURL = this.$root.baseURL + '/api/v1'
     this.assetsURL = this.$root.assetsURL
   },
   mounted() {
+    const now = new Date()
+    const start_at = new Date(this.wheel.start_at)
+
+    this.start_at = start_at - now
+
     if (this.not_started || this.finished) return
 
 
