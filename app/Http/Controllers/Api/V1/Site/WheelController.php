@@ -7,8 +7,6 @@ use App\Models\Token;
 use App\Models\Wheel;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Inertia\Response as InertiaResponse;
-use Inertia\Inertia;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Api\V1\Helper;
 use App\Models\DateLeftToTryAgain;
@@ -19,47 +17,6 @@ use Carbon\Carbon;
 
 class WheelController extends Controller
 {
-    public function index($wheel): InertiaResponse
-    {
-        Inertia::setRootView('site');
-
-        $wheel = Wheel::where('slug', $wheel)->with([
-            'slices' => function ($query) {
-                $query->select(
-                    'id',
-                    'wheel_id',
-                    'title',
-                    'priority'
-                );
-            },
-            'userRequirements',
-            'dateLeftToTryAgain'
-        ])->firstOrFail();
-
-        $statusDate = $this->checkStatusDate($wheel);
-
-        if ($statusDate['not_started'] || $statusDate['finished'])
-            return Inertia::render('Index', [
-                ...$statusDate,
-                'wheel' => $wheel
-            ]);
-
-
-
-        $user = auth()->user();
-
-        $UserRequirementValueExists = UserRequirementValue::where([
-            'user_id' => optional($user)->id,
-            'wheel_id' => $wheel->id,
-        ])->exists();
-
-        return Inertia::render('Index', [
-            'wheel' => $wheel->makeHidden(['created_at', 'updated_at'])->toArray(),
-            'user' => $user,
-            'user_requirement_value_exists' => $UserRequirementValueExists,
-        ]);
-    }
-
     public function loign(Request $req): Response
     {
         $req->validate([
@@ -187,7 +144,7 @@ class WheelController extends Controller
         $req->validate([
             'wheel_id' => 'required',
             'title' => 'required',
-            'priority' => 'required'
+            'probability' => 'required'
         ]);
 
         $wheel = Wheel::find($req->input('wheel_id'));
@@ -203,7 +160,7 @@ class WheelController extends Controller
             'user_id' => $userId,
             'wheel_id' => $req->input('wheel_id'),
             'title' => $req->input('title'),
-            'priority' => $req->input('priority')
+            'probability' => $req->input('probability')
         ]);
 
         $prizes = Prize::where([
@@ -230,19 +187,6 @@ class WheelController extends Controller
             'remain_try' => $remainTry,
             'prizes' => $prizes
         ], 'success done'), 200);
-    }
-
-    private function checkStatusDate($wheel)
-    {
-        $status = [
-            'not_started' => 0,
-            'finished' => 0
-        ];
-
-        if ($wheel->start_at !== null && $wheel->start_at > now()) $status['not_started'] = 1;
-        if ($wheel->end_at !== null && $wheel->end_at < now()) $status['finished'] = 1;
-
-        return $status;
     }
 
     private function remainTryCalculation($wheel)

@@ -5,6 +5,7 @@ namespace App\Http\Routes;
 use App\Http\Controllers\Api\V1\Seller\AuthController;
 use App\Http\Controllers\Api\V1\Seller\DiscountCodeController;
 use App\Http\Controllers\Api\V1\Seller\WheelController;
+use App\Http\Controllers\Api\V1\Seller\SliceController;
 use Illuminate\Support\Facades\Route;
 
 class SellerRoutes
@@ -50,7 +51,8 @@ class SellerRoutes
                 Route::post('/', 'store')->name('store');
                 Route::get('/{slice_id}', 'fetch')->name('fetch');
                 Route::delete('/{slice_id}', 'destroy')->name('destroy');
-
             });
+
+        Route::put('v1/slices/{slice}', [SliceController::class, 'update']);
     }
 }

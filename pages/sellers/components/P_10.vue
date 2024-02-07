@@ -2,16 +2,17 @@
   <div class="w-container">
 
     <template v-for="(item, index) in slices">
-      <div :id="`s-${index + 1}`" class="slide">
+      <div :id="`s-${index + 1}`" class="slide" @click="clickOnSlice(item.id)">
         <p> {{ item.title }}</p>
       </div>
     </template>
 
   </div>
-</template>w-container
+</template>
 
 <script>
 import Layout from './Layout.vue'
+import { router } from '@inertiajs/vue3'
 
 export default {
   components: {
@@ -24,54 +25,56 @@ export default {
       {
         id: 1,
         title: 1,
-        priority: 40
+        probability: 40
       },
       {
         id: 2,
         title: 2,
-        priority: 40
+        probability: 40
       },
       {
         id: 3,
         title: 3,
-        priority: 20
+        probability: 20
       },
       {
         id: 4,
         title: 4,
-        priority: 0
+        probability: 0
       },
       {
         id: 5,
         title: 5,
-        priority: 0
+        probability: 0
       },
       {
         id: 6,
         title: 6,
-        priority: 0
+        probability: 0
       },
       {
         id: 7,
         title: 7,
-        priority: 0
+        probability: 0
       },
       {
         id: 8,
         title: 8,
-        priority: 0
+        probability: 0
       },
       {
         id: 9,
         title: 9,
-        priority: 0
+        probability: 0
       },
       {
         id: 10,
         title: 10,
-        priority: 0
+        probability: 0
       },
-    ]
+    ],
+    baseURL: '',
+    assetsURL: '',
   }),
   computed: {
     reverseSlides() {
@@ -79,7 +82,13 @@ export default {
     }
   },
   methods: {
-
+    clickOnSlice(sliceId) {
+      router.get(`${this.baseURL}/slices/${sliceId}/edit`)
+    }
+  },
+  created() {
+    this.baseURL = this.$root.baseURL
+    this.assetsURL = this.$root.assetsURL
   },
   mounted() {
 
@@ -114,6 +123,7 @@ export default {
   position: absolute;
   opacity: 1;
   text-align: center;
+  cursor: pointer;
 }
 
 #s-1 {

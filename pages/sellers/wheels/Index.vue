@@ -29,7 +29,7 @@
 
 
 <script>
-import p_10 from '../Components/p_10.vue'
+import p_10 from '../components/P_10.vue'
 import { router, Link } from '@inertiajs/vue3'
 
 export default {

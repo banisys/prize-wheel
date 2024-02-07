@@ -29,25 +29,27 @@ export default {
   },
   methods: {
     start() {
-    //   document.querySelector('.w-container').style.transition = '10s cubic-bezier(.08, .46, .4, 1.01)'
+      //   document.querySelector('.w-container').style.transition = '10s cubic-bezier(.08, .46, .4, 1.01)'
 
       const standDeg = {
         0: [5, 6, 7, 8],
         1: [50, 51, 53, 54],
         2: [85, 86, 87, 88],
-        3: [130, 131, 132, 133],
-        4: [163, 164, 165, 166],
-        5: [200, 201, 202, 203],
-        6: [230, 231, 232, 233],
-        7: [270, 271, 272, 273],
-        8: [310, 311, 312, 313],
-        9: [350, 351, 352, 353]
+        3: [95, 100, 105, 110],
+        4: [125, 130, 135, 140],
+        5: [155, 160, 165, 170],
+        6: [185, 190, 195, 200],
+        7: [215, 220, 225, 230],
+        8: [245, 250, 255, 260],
+        9: [275, 280, 285, 290],
+        10: [305, 310, 315, 320],
+        11: [340, 345, 350, 353]
       }
 
       const stack = []
 
       this.reverseSlides.forEach((item, index) => {
-        for (let i = 0; i < item.priority; i++) {
+        for (let i = 0; i < item.probability; i++) {
           stack.push(standDeg[index][Math.floor(Math.random() * 4)])
         }
       })
@@ -55,15 +57,17 @@ export default {
       const random = stack[Math.floor(Math.random() * stack.length)]
 
       let win =
-        0 < random && random < 36 ? this.reverseSlides[9] :
-          36 < random && random < 72 ? this.reverseSlides[8] :
-            72 < random && random < 108 ? this.reverseSlides[7] :
-              108 < random && random < 144 ? this.reverseSlides[6] :
-                144 < random && random < 180 ? this.reverseSlides[5] :
-                  180 < random && random < 216 ? this.reverseSlides[4] :
-                    216 < random && random < 252 ? this.reverseSlides[3] :
-                      252 < random && random < 288 ? this.reverseSlides[2] :
-                        288 < random && random < 324 ? this.reverseSlides[1] : this.reverseSlides[0]
+        0 < random && random < 30 ? this.reverseSlides[11] :
+          30 < random && random < 60 ? this.reverseSlides[10] :
+            60 < random && random < 90 ? this.reverseSlides[9] :
+              90 < random && random < 120 ? this.reverseSlides[8] :
+                120 < random && random < 150 ? this.reverseSlides[7] :
+                  150 < random && random < 180 ? this.reverseSlides[6] :
+                    180 < random && random < 210 ? this.reverseSlides[5] :
+                      210 < random && random < 240 ? this.reverseSlides[4] :
+                        240 < random && random < 270 ? this.reverseSlides[3] :
+                          270 < random && random < 300 ? this.reverseSlides[2] :
+                            300 < random && random < 330 ? this.reverseSlides[1] : this.reverseSlides[0]
 
       this.numDeg = this.numDeg + random
       document.querySelector('.w-container').style.transform = `rotate(${this.numDeg}deg)`
@@ -98,7 +102,7 @@ export default {
 }
 
 .slide {
-  width: 163px;
+  width: 134px;
   height: 250px;
   clip-path: polygon(0 0, 50% 100%, 100% 0);
   clip: auto;
@@ -113,55 +117,67 @@ export default {
 
 #s-2 {
   /* background: green; */
-  rotate: 36deg;
+  rotate: 30deg;
   transform-origin: bottom
 }
 
 #s-3 {
   /* background: rgb(0, 234, 255); */
-  rotate: 72deg;
+  rotate: 60deg;
   transform-origin: bottom
 }
 
 #s-4 {
   /* background: green; */
-  rotate: 108deg;
+  rotate: 90deg;
   transform-origin: bottom
 }
 
 #s-5 {
   /* background: red; */
-  rotate: 144deg;
+  rotate: 120deg;
   transform-origin: bottom
 }
 
 #s-6 {
   /* background: green; */
-  rotate: 180deg;
+  rotate: 150deg;
   transform-origin: bottom
 }
 
 #s-7 {
   /* background: red; */
-  rotate: 216deg;
+  rotate: 180deg;
   transform-origin: bottom
 }
 
 #s-8 {
   /* background: green; */
-  rotate: 252deg;
+  rotate: 210deg;
   transform-origin: bottom
 }
 
 #s-9 {
   /* background: red; */
-  rotate: 288deg;
+  rotate: 240deg;
   transform-origin: bottom
 }
 
 #s-10 {
   /* background: green; */
-  rotate: 324deg;
+  rotate: 270deg;
+  transform-origin: bottom
+}
+
+#s-11 {
+  /* background: green; */
+  rotate: 300deg;
+  transform-origin: bottom
+}
+
+#s-12 {
+  /* background: green; */
+  rotate: 330deg;
   transform-origin: bottom
 }
 

@@ -8,23 +8,10 @@ use App\Http\Controllers\Api\V1\Helper;
 use App\Models\Seller;
 use App\Models\VerificationCode;
 use Carbon\Carbon;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
-use Inertia\Inertia;
-use Inertia\Response as InertiaResponse;
 
 class AuthController extends Controller
 {
-    public function loginShow(): InertiaResponse | RedirectResponse
-    {
-        if (auth('seller')->check())
-            return redirect()->route('sellers.show.dashboard');
-
-        Inertia::setRootView('seller');
-
-        return Inertia::render('Login');
-    }
-
     public function sendVerificationCode(Request $req): Response
     {
         if (auth('seller')->check())
@@ -59,13 +46,6 @@ class AuthController extends Controller
         return response(Helper::responseTemplate(message: 'success done'), 201);
     }
 
-    public function codeShow(): InertiaResponse | RedirectResponse
-    {
-        Inertia::setRootView('seller');
-
-        return Inertia::render('Code');
-    }
-
     public function enterVerificationCode(Request $req): Response
     {
         if (auth('seller')->check())
@@ -94,20 +74,6 @@ class AuthController extends Controller
         ), 200);
     }
 
-    public function passwordRegisterShow(): InertiaResponse | RedirectResponse
-    {
-        // if (isset(auth('seller')->user()->password) && auth('seller')->user()->password)
-        //     return redirect()->route('sellers.show.dashboard');
-
-        Inertia::setRootView('seller');
-
-        $seller = auth('seller')->user()->only(['id', 'mobile']);
-
-        return Inertia::render('PasswordRegister', [
-            'seller' => $seller
-        ]);
-    }
-
     public function passwordStore(Request $req): Response
     {
         $req->validate([
@@ -119,13 +85,6 @@ class AuthController extends Controller
         ]);
 
         return response(Helper::responseTemplate(message: 'success done'), 201);
-    }
-
-    public function showDashboard(): InertiaResponse | RedirectResponse
-    {
-        Inertia::setRootView('seller');
-
-        return Inertia::render('Dashboard');
     }
 
     public function login(Request $req): Response
@@ -143,25 +102,5 @@ class AuthController extends Controller
         } else {
             return response(Helper::responseTemplate(message: 'username and password do not match'), 401);
         }
-    }
-
-    public function passwordShow(): InertiaResponse | RedirectResponse
-    {
-        if (isset(auth('seller')->user()->password) && auth('seller')->user()->password)
-            return redirect()->route('sellers.show.dashboard');
-
-        Inertia::setRootView('seller');
-
-        return Inertia::render('Password');
-    }
-
-    public function passwordForgotShow(): InertiaResponse | RedirectResponse
-    {
-        if (auth('seller')->check())
-            return redirect()->route('sellers.show.dashboard');
-
-        Inertia::setRootView('seller');
-
-        return Inertia::render('PasswordForgot');
     }
 }

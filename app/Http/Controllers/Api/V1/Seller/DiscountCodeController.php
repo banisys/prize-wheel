@@ -9,10 +9,11 @@ use App\Models\Slice;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
 
 class DiscountCodeController extends Controller
 {
-    public function store(Request $req)
+    public function store(Request $req): Response
     {
         $req->validate([
             'wheel_id' => 'required|integer',
@@ -56,15 +57,14 @@ class DiscountCodeController extends Controller
             }
         });
 
-        $slices = Slice::where('wheel_id', $req->input('wheel_id'))
-            ->withCount('discountCodes')->get();
+        $slice = Slice::withCount('discountCodes')->find($req->input('slice_id'));
 
         return response(Helper::responseTemplate([
-            'slices' => $slices
+            'slice' => $slice
         ], 'success done'), 201);
     }
 
-    public function fetch($slice_id)
+    public function fetch($slice_id): Response
     {
         $discountCodes = DiscountCode::with('user')
             ->where('slice_id', $slice_id)->paginate(20);
@@ -74,10 +74,18 @@ class DiscountCodeController extends Controller
         ], 'success done'), 201);
     }
 
-    public function destroy($slice_id)
+    public function destroy($slice_id): Response
     {
         DiscountCode::where('slice_id', $slice_id)->whereNull('user_id')->delete();
 
-        return $this->fetch($slice_id);
+        $discountCodes = DiscountCode::with('user')
+            ->where('slice_id', $slice_id)->paginate(20);
+
+        $slice = Slice::withCount('discountCodes')->find($slice_id);
+
+        return response(Helper::responseTemplate([
+            'discount_codes' => $discountCodes,
+            'slice' => $slice
+        ], 'success done'), 201);
     }
 }

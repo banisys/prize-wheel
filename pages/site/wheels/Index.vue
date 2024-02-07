@@ -51,8 +51,10 @@
         <div v-if="stepToken">
           <label for="mobile" class="form-label">شماره موبایل</label>
           <input type="text" id="mobile" class="form-control ltr" placeholder="091********" v-model="mobile">
-          <label for="mobile" class="form-label">توکن</label>
-          <input type="text" id="mobile" class="form-control ltr" v-model="token">
+
+          <label for="token" class="form-label mt-4">توکن</label>
+          <input type="text" id="token" class="form-control ltr" v-model="token">
+
           <button type="button" class="btn btn-danger btn-sm mt-3" @click="submitStep1">مرحله بعد</button>
         </div>
 
@@ -124,11 +126,11 @@
 </template>
 
 <script>
-import p_10 from './Components/p_10.vue'
-import p_12 from './Components/p_12.vue'
-import p_15 from './Components/p_15.vue'
 import VueCountdown from '@chenfengyuan/vue-countdown'
-import Flip from "./Components/Flip.vue";
+import p_10 from './components/P_10.vue'
+import p_12 from './components/P_12.vue'
+import p_15 from './components/P_15.vue'
+import Flip from "./components/Flip.vue"
 
 export default {
   components: {

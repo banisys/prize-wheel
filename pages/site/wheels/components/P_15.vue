@@ -1,3 +1,13 @@
+<script>
+import Layout from '../components/Layout.vue'
+
+export default {
+  components: {
+    Layout
+  }
+}
+</script>
+
 <template>
   <div class="layout">
     <div class="w-container">
@@ -19,16 +29,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import Layout from '../Components/Layout.vue'
-
-export default {
-  components: {
-    Layout
-  }
-}
-</script>
 
 <style scoped>
 .layout {

@@ -20,7 +20,8 @@ class Slice extends Model
         'title',
         'description',
         'inventory',
-        'priority',
+        'probability',
+        'status'
     ];
 
     /**
@@ -31,11 +32,4 @@ class Slice extends Model
         return $this->hasMany(DiscountCode::class);
     }
 
-    /**
-     * Get the discount codes for the slice.
-     */
-    public function discountCodesCount()
-    {
-        return $this->hasMany(DiscountCode::class)->count();
-    }
 }

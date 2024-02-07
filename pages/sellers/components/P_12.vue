@@ -24,62 +24,62 @@ export default {
       {
         id: 1,
         title: 1,
-        priority: 40
+        probability: 40
       },
       {
         id: 2,
         title: 2,
-        priority: 40
+        probability: 40
       },
       {
         id: 3,
         title: 3,
-        priority: 20
+        probability: 20
       },
       {
         id: 4,
         title: 4,
-        priority: 0
+        probability: 0
       },
       {
         id: 5,
         title: 5,
-        priority: 0
+        probability: 0
       },
       {
         id: 6,
         title: 6,
-        priority: 0
+        probability: 0
       },
       {
         id: 7,
         title: 7,
-        priority: 0
+        probability: 0
       },
       {
         id: 8,
         title: 8,
-        priority: 0
+        probability: 0
       },
       {
         id: 9,
         title: 9,
-        priority: 0
+        probability: 0
       },
       {
         id: 10,
         title: 10,
-        priority: 0
+        probability: 0
       },
       {
         id: 11,
         title: 11,
-        priority: 0
+        probability: 0
       },
       {
         id: 12,
         title: 12,
-        priority: 0
+        probability: 0
       },
     ]
   }),

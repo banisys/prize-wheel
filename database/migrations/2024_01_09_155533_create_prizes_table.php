@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('title');
             $table->string('token')->nullable();
             $table->string('description');
-            $table->integer('priority');
-            $table->tinyInteger('old')->nullable();
+            $table->integer('probability');
+            $table->unsignedTinyInteger('old')->nullable();
             $table->timestamps();
         });
     }

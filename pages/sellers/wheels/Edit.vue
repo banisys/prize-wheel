@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <div class="container my-5">
     <div class="row">
       <div class="col-12">
 
@@ -27,11 +27,6 @@
           </div>
         </Transition>
 
-
-
-
-
-
         <div class="mt-4 border p-3 rounded">
           <div class="form-check">
             <input type="checkbox" class="form-check-input" id="start" @change="changeCheckBoxStartAt"
@@ -46,12 +41,6 @@
           </Transition>
         </div>
 
-
-
-
-
-
-
         <div class="mt-4 border p-3 rounded">
           <div class="form-check">
             <input type="checkbox" class="form-check-input" id="end" @change="changeCheckBoxEndAt" :checked="!flagEndAt">
@@ -64,7 +53,6 @@
             </div>
           </Transition>
         </div>
-
 
         <div class="p-3 border mt-4 rounded">
           <p class="fw-bold">روش ورود کاربر</p>
@@ -89,6 +77,11 @@
               توکن
             </label>
           </div>
+
+
+          <Link :href="`${}/tokens/${wheel.slug}`">مدیریت توکن ها</Link>
+
+
         </div>
 
         <div class="p-3 border mt-4 rounded">
@@ -103,84 +96,6 @@
         </div>
 
       </div>
-    </div>
-
-    <div class="row mt-5">
-      <div class="col-3">
-        افزودن فایل اکسل کد های تخفیف برای
-      </div>
-      <div class="col-4">
-        <div class="form-check">
-          <select class="form-select" v-model="discountCodeSliceId">
-            <option :value="null" disabled hidden>انتخاب کنید...</option>
-            <option v-for="item in form.slices" :value="item.id">
-              {{ item.title }}
-            </option>
-          </select>
-        </div>
-      </div>
-
-      <div class="col-4">
-        <input type="file" class="form-control" @change="discountCodeFileChanged($event)">
-      </div>
-
-      <div class="col-1">
-        <button type="button" class="btn btn-success btn-sm" @click="submitDiscountCode">
-          افزودن
-        </button>
-      </div>
-    </div>
-
-    <div class="row mt-5">
-      <div class="col-4">
-        عنوان
-      </div>
-
-      <div class="col-1">
-        اولویت
-      </div>
-
-      <div class="col-4">
-        توضیحات
-      </div>
-
-      <div class="col-1">
-        موجودی
-      </div>
-
-      <div class="col-2">
-
-      </div>
-
-    </div>
-
-    <div class="row mt-3" v-for="item in form.slices">
-      <div class="col-4">
-        <input type="text" class="form-control" v-model="item.title">
-      </div>
-
-      <div class="col-1">
-        <input type="number" class="form-control" v-model="item.priority">
-      </div>
-
-      <div class="col-4">
-        <textarea type="number" class="form-control" rows="1" v-model="item.description">
-            </textarea>
-      </div>
-
-      <div class="col-2">
-        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#discountCodeModal"
-          v-if="item.discount_codes_count" @click="fetchDiscountCodes(item)">
-          کد های تخفیف
-          ({{ item.discount_codes_count }})
-        </button>
-        <input v-else type="number" class="form-control" v-model="item.inventory">
-      </div>
-
-      <div class="col-2">
-
-      </div>
-
     </div>
 
     <div class="row mt-5">
@@ -199,52 +114,15 @@
       </div>
     </div>
 
-
-  </div>
-
-
-  <div class="modal fade" id="discountCodeModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          <h1 class="modal-title fs-5">{{ sliceSelected.title }}</h1>
-          <button type="button" class="btn btn-success btn-sm" @click="deleteDiscountCode">
-            حذف کدهای بدون کاربر
-          </button>
-        </div>
-        <div class="modal-body">
-
-
-          <table class="table">
-            <thead>
-              <tr>
-                <th style="width: 10%">ردیف</th>
-                <th style="width: 10%">کد</th>
-                <th style="width: 10%">کاربر</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(item, index) in discountCodes">
-                <th>{{ ((page - 1) * per_page) + (index + 1) }}</th>
-                <td>{{ item.code }}</td>
-                <td>{{ item.user?.mobile }}</td>
-              </tr>
-            </tbody>
-          </table>
-
-
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
-import p_10 from '../Components/p_10.vue'
-import p_12 from '../Components/p_12.vue'
-import p_15 from '../Components/p_15.vue'
+import p_10 from '../components/P_10.vue'
+import p_12 from '../components/P_12.vue'
+import p_15 from '../components/P_15.vue'
 import DatePicker from 'vue3-persian-datetime-picker'
+import { Link } from '@inertiajs/vue3'
 
 export default {
   props: ['wheel', 'userRequirements'],
@@ -270,13 +148,11 @@ export default {
       start_at: '',
       end_at: '',
       login_method: null,
-      slices: [],
       user_requirements: []
     },
     discountCodeSliceId: null,
     discountCodeFile: null,
-    discountCodes: [],
-    sliceSelected: {},
+
 
     page: 1,
     per_page: null,
@@ -288,13 +164,6 @@ export default {
   },
   methods: {
     submit() {
-      let sumPriority = 0
-      this.form.slices.forEach(item => sumPriority += item.priority)
-
-      if (sumPriority !== 100) {
-        alert('مجموع احتمالات باید عدد 100 شود.')
-        return
-      }
 
       let startAtDate = null
       let startAtHour = null
@@ -401,70 +270,6 @@ export default {
     changeCheckBoxEndAt(e) {
       this.flagEndAt = !e.target.checked
       this.form.end_at = e.target.checked ? null : this.holderEndAt
-    },
-    discountCodeFileChanged(e) {
-      const target = e.target
-      this.discountCodeFile = (target && target.files) && target.files[0]
-    },
-    submitDiscountCode() {
-      const config = {
-        headers: { 'content-type': 'multipart/form-data' },
-      }
-
-      let formData = new FormData
-
-      formData.append('wheel_id', this.wheel.id)
-      formData.append('slice_id', this.discountCodeSliceId)
-      formData.append('file', this.discountCodeFile)
-
-      let _this = this
-
-      axios.post(`${this.baseURL}/discount_codes`, formData, config).then(res => {
-
-        _this.form.slices = res.data.data.slices
-
-      }).catch(e => {
-        alert(e.response.data.message)
-      })
-
-    },
-    fetchDiscountCodes(slice) {
-
-      this.sliceSelected = slice
-
-      let _this = this
-
-      axios.get(`${this.baseURL}/discount_codes/${slice.id}`
-      ).then(res => {
-
-        _this.discountCodes = res.data.data.discount_codes.data
-
-      }).catch(e => {
-        alert(e.response.data.message)
-      })
-    },
-    deleteDiscountCode() {
-      let _this = this
-      axios.delete(`${this.baseURL}/discount_codes/${this.sliceSelected.id}`
-      ).then(res => {
-
-        _this.discountCodes = res.data.data.discount_codes.data
-
-        if (!_this.discountCodes.length) {
-
-
-          _this.form.slices.forEach((slice, index) => {
-
-            if (slice.id === _this.sliceSelected.id) {
-
-              _this.form.slices[index].discount_codes_count = 0
-            }
-          })
-        }
-
-      }).catch(e => {
-        alert(e.response.data.message)
-      })
     }
   },
   created() {
