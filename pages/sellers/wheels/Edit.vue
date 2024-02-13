@@ -78,9 +78,7 @@
             </label>
           </div>
 
-
-          <Link :href="`${}/tokens/${wheel.slug}`">مدیریت توکن ها</Link>
-
+          <Link :href="`${$root.baseURL}/tokens/${wheel.slug}`">مدیریت توکن ها</Link>
 
         </div>
 
@@ -130,12 +128,11 @@ export default {
     p_10,
     p_12,
     p_15,
-    DatePicker
+    DatePicker,
+    Link
   },
   data: () => ({
     flag: 1,
-    baseURL: '',
-    assetsURL: '',
     userRequirementsSelected: [],
     holderDaysLeftToTryAgain: null,
     flagDaysLeftToTryAgain: true,
@@ -164,7 +161,6 @@ export default {
   },
   methods: {
     submit() {
-
       let startAtDate = null
       let startAtHour = null
       let startJalali = null
@@ -195,7 +191,7 @@ export default {
         ).join('-')
       }
 
-      axios.put(`${this.baseURL}/wheels/${this.wheel.slug}`,
+      axios.put(`${this.$root.apiURL}/wheels/${this.wheel.slug}`,
         {
           ...this.form,
           start_at: this.form.start_at && `${startJalali} ${startAtHour}`,
@@ -271,10 +267,6 @@ export default {
       this.flagEndAt = !e.target.checked
       this.form.end_at = e.target.checked ? null : this.holderEndAt
     }
-  },
-  created() {
-    this.baseURL = this.$root.baseURL + '/api/v1'
-    this.assetsURL = this.$root.assetsURL
   },
   mounted() {
     this.form = this.wheel
