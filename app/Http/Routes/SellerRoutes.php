@@ -12,18 +12,15 @@ class SellerRoutes
 {
     public static function init(): void
     {
-        Route::post('v1/sellers/send_verification_code', [AuthController::class, 'sendVerificationCode']);
-        Route::post('v1/sellers/enter_verification_code', [AuthController::class, 'enterVerificationCode']);
-        Route::post('v1/sellers/login', [AuthController::class, 'login']);
-
-
         Route::prefix('v1/sellers')
             ->controller(AuthController::class)
             ->name('sellers.')
-            ->middleware(['auth:seller'])
             ->group(function () {
+                Route::post('send_verification_code', 'sendVerificationCode');
+                Route::post('enter_verification_code', 'enterVerificationCode');
+                Route::post('login', 'login');
 
-                Route::post('/password', 'passwordStore')->name('password.store');
+                Route::post('/password', 'passwordStore')->name('password.store')->middleware(['auth:seller']);
             });
 
 

@@ -19,7 +19,7 @@ class WheelController extends Controller
     {
         $wheels = Wheel::where('seller_id', auth('seller')->id())->get();
 
-        Inertia::setRootView('seller');
+        Inertia::setRootView('layout-inertia.seller');
         return Inertia::render('wheels/Index', [
             'wheels' => $wheels
         ]);
@@ -36,7 +36,7 @@ class WheelController extends Controller
             }
         ])->first();
 
-        Inertia::setRootView('seller');
+        Inertia::setRootView('layout-inertia.seller');
 
         return Inertia::render('wheels/Edit', [
             'wheel' => $wheel->makeHidden(['created_at', 'updated_at'])->toArray(),
@@ -65,7 +65,7 @@ class WheelController extends Controller
 
 
 
-        Inertia::setRootView('seller');
+        Inertia::setRootView('layout-inertia.seller');
         return Inertia::render('wheels/Show', [
             'wheel' => $wheel->only(['slug', 'title']),
             'users' => $users,
@@ -75,7 +75,7 @@ class WheelController extends Controller
 
     public function editSlice($slice): InertiaResponse
     {
-        Inertia::setRootView('seller');
+        Inertia::setRootView('layout-inertia.seller');
 
         $slice = Slice::withCount('discountCodes')->findOrfail($slice);
         $sumProbability = Slice::where('wheel_id', $slice->wheel_id)->sum('probability');

@@ -93,9 +93,6 @@ export default {
 
   },
   data: () => ({
-    baseURL: '',
-    assetsURL: '',
-
     page: 1,
     per_page: null,
 
@@ -123,7 +120,7 @@ export default {
   methods: {
     submitSearch() {
       let _this = this
-      axios.get(`${this.baseURL}/${this.wheel.slug}/search`, {
+      axios.get(`${this.$root.apiUrl}/wheels/${this.wheel.slug}/search`, {
         params: this.search
       }).then(res => {
 
@@ -190,8 +187,7 @@ export default {
     }
   },
   created() {
-    this.baseURL = this.$root.baseURL + '/api/v1/wheels'
-    this.assetsURL = this.$root.assetsURL
+
   },
   mounted() {
 

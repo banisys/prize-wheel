@@ -30,15 +30,13 @@ export default {
   data: () => ({
     password: '',
     passwordConfirmation: '',
-    baseURL: '',
-    assetsURL: '',
   }),
   computed: {
 
   },
   methods: {
     submit() {
-      axios.post(`${this.baseURL}/login`, {
+      axios.post(`${this.$root.apiUrl}/sellers/login`, {
         mobile: this.$parent.mobile,
         password: this.password,
       }).then(res => {
@@ -49,8 +47,7 @@ export default {
     }
   },
   created() {
-    this.baseURL = this.$root.baseURL + '/api/v1/sellers'
-    this.assetsURL = this.$root.assetsURL
+
   },
   mounted() {
     !this.$parent.mobile && router.get('login')

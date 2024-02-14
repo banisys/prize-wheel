@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\Site\HomeController;
-use App\Http\Controllers\Seller\WheelController;
+use App\Http\Controllers\Seller\WheelController as SellerWheelController;
+use App\Http\Controllers\Site\WheelController as SiteWheelController;
 use App\Http\Controllers\Seller\AuthController;
 use App\Http\Controllers\Seller\TokenController;
 use Illuminate\Support\Facades\Route;
@@ -27,9 +28,8 @@ Route::prefix('sellers')
     });
 
 
-
-Route::resource('wheels', WheelController::class)->only(['index', 'edit', 'show'])->middleware('auth:seller');
-Route::get('slices/{slice}/edit', [WheelController::class, 'editSlice']);
+Route::resource('wheels', SellerWheelController::class)->only(['index', 'edit', 'show'])->middleware('auth:seller');
+Route::get('slices/{slice}/edit', [SellerWheelController::class, 'editSlice']);
 
 
 
@@ -40,5 +40,5 @@ Route::get('tokens/{wheel}', [TokenController::class, 'index'])->middleware('aut
 
 
 //================================ Site =====================================
-Route::get('/', [HomeController::class, 'home']);
-Route::get('{wheel}', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index']);
+Route::get('{wheel}', [SiteWheelController::class, 'wheelShow']);

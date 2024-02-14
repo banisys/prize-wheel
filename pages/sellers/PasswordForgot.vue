@@ -26,15 +26,14 @@ export default {
   },
   data: () => ({
     mobile: '',
-    baseURL: '',
-    assetsURL: '',
+   
   }),
   computed: {
 
   },
   methods: {
     submit() {
-      axios.post(`${this.baseURL}/send_verification_code?password_forgot=true`, {
+      axios.post(`${this.$root.apiUrl}/sellers/send_verification_code?password_forgot=true`, {
         mobile: this.mobile
       }).then(res => {
         this.$parent.mobile = this.mobile
@@ -46,8 +45,7 @@ export default {
     }
   },
   created() {
-    this.baseURL = this.$root.baseURL + '/api/v1/sellers'
-    this.assetsURL = this.$root.assetsURL
+
   },
   mounted() {
 

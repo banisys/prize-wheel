@@ -143,9 +143,6 @@ export default {
   },
   props: ['user', 'wheel', 'user_requirement_value_exists', 'not_started', 'finished'],
   data: () => ({
-    baseURL: '',
-    assetsURL: '',
-
     stepToken: 0,
     stepMobile: 0,
     stepCode: 0,
@@ -182,7 +179,7 @@ export default {
   methods: {
     submitStep1() {
       let _this = this
-      axios.post(`${this.baseURL}/users/loign`, {
+      axios.post(`${this.$root.apiUrl}/users/loign`, {
         wheel_id: this.wheel.id,
         login_method: this.wheel.login_method,
         mobile: this.mobile,
@@ -224,7 +221,7 @@ export default {
     },
     submitStep2() {
       let _this = this
-      axios.post(`${this.baseURL}/users/enter_verification_code`, {
+      axios.post(`${this.$root.apiUrl}/users/enter_verification_code`, {
         mobile: this.mobile,
         code: this.code
       }).then(res => {
@@ -260,7 +257,7 @@ export default {
 
 
       let _this = this
-      axios.post(`${this.baseURL}/users/user_requirement`, {
+      axios.post(`${this.$root.apiUrl}/users/user_requirement`, {
         wheel_id: this.wheel.id,
         user_requirement: this.userRequirement
       }).then(res => {
@@ -292,7 +289,7 @@ export default {
       this.flagRemainTry = 0
       let _this = this
 
-      axios.post(`${this.baseURL}/prizes`, win).then(res => {
+      axios.post(`${this.$root.apiUrl}/prizes`, win).then(res => {
 
         setTimeout(() => {
           _this.remainTry = res.data.data.remain_try
@@ -315,7 +312,7 @@ export default {
     },
     fetchStepStartData() {
       let _this = this
-      axios.get(`${this.baseURL}/users/wheel_data/${this.wheel.slug}`).then(res => {
+      axios.get(`${this.$root.apiUrl}/users/wheel_data/${this.wheel.slug}`).then(res => {
 
         _this.remainTry = res.data.data.remain_try
         _this.prizes = res.data.data.prizes.data
@@ -383,8 +380,7 @@ export default {
     },
   },
   created() {
-    this.baseURL = this.$root.baseURL + '/api/v1'
-    this.assetsURL = this.$root.assetsURL
+
   },
   mounted() {
     const now = new Date()

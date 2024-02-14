@@ -43,9 +43,6 @@ export default {
   },
   data: () => ({
     sliceNum: 10,
-    baseURL: '',
-    assetsURL: '',
-
     _wheels: [],
   }),
   computed: {
@@ -53,7 +50,7 @@ export default {
   },
   methods: {
     submitCreate() {
-      axios.post(`${this.baseURL}`, {
+      axios.post(`${this.$root.apiUrl}/wheels`, {
         slice_num: this.sliceNum,
       }).then(res => {
         res.status === 201 && router.get(`wheels/${res.data.data.slug}/edit`)
@@ -61,7 +58,7 @@ export default {
     },
     deleteWheel(wheelSlug) {
       let _this = this
-      axios.delete(`${this.baseURL}/${wheelSlug}`).then(res => {
+      axios.delete(`${this.$root.apiUrl}/wheels/${wheelSlug}`).then(res => {
         const w = Object.values(JSON.parse(JSON.stringify(_this._wheels)))
 
         _this._wheels = res.status === 201 &&
@@ -71,8 +68,7 @@ export default {
     }
   },
   created() {
-    this.baseURL = this.$root.baseURL + '/api/v1/wheels'
-    this.assetsURL = this.$root.assetsURL
+
   },
   mounted() {
     this._wheels = { ...this.wheels }

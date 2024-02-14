@@ -73,8 +73,6 @@ export default {
         probability: 0
       },
     ],
-    baseURL: '',
-    assetsURL: '',
   }),
   computed: {
     reverseSlides() {
@@ -83,12 +81,11 @@ export default {
   },
   methods: {
     clickOnSlice(sliceId) {
-      router.get(`${this.baseURL}/slices/${sliceId}/edit`)
+      router.get(`${this.$root.apiUrl}/slices/${sliceId}/edit`)
     }
   },
   created() {
-    this.baseURL = this.$root.baseURL
-    this.assetsURL = this.$root.assetsURL
+   
   },
   mounted() {
 

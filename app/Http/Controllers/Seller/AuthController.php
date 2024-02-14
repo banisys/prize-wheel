@@ -15,14 +15,14 @@ class AuthController extends Controller
         if (auth('seller')->check())
             return redirect()->route('sellers.show.dashboard');
 
-        Inertia::setRootView('seller');
+        Inertia::setRootView('layout-inertia.seller');
 
         return Inertia::render('Login');
     }
 
     public function codeShow(): InertiaResponse | RedirectResponse
     {
-        Inertia::setRootView('seller');
+        Inertia::setRootView('layout-inertia.seller');
 
         return Inertia::render('Code');
     }
@@ -32,7 +32,7 @@ class AuthController extends Controller
         // if (isset(auth('seller')->user()->password) && auth('seller')->user()->password)
         //     return redirect()->route('sellers.show.dashboard');
 
-        Inertia::setRootView('seller');
+        Inertia::setRootView('layout-inertia.seller');
 
         $seller = auth('seller')->user()->only(['id', 'mobile']);
 
@@ -43,7 +43,7 @@ class AuthController extends Controller
 
     public function showDashboard(): InertiaResponse | RedirectResponse
     {
-        Inertia::setRootView('seller');
+        Inertia::setRootView('layout-inertia.seller');
 
         return Inertia::render('Dashboard');
     }
@@ -53,7 +53,7 @@ class AuthController extends Controller
         if (isset(auth('seller')->user()->password) && auth('seller')->user()->password)
             return redirect()->route('sellers.show.dashboard');
 
-        Inertia::setRootView('seller');
+        Inertia::setRootView('layout-inertia.seller');
 
         return Inertia::render('Password');
     }
@@ -63,7 +63,7 @@ class AuthController extends Controller
         if (auth('seller')->check())
             return redirect()->route('sellers.show.dashboard');
 
-        Inertia::setRootView('seller');
+        Inertia::setRootView('layout-inertia.seller');
 
         return Inertia::render('PasswordForgot');
     }

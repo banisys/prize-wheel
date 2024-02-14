@@ -15,7 +15,7 @@ class TokenController extends Controller
     {
         $tokens = Token::where('wheel_id', $wheel->id)->paginate(20);
 
-        Inertia::setRootView('seller');
+        Inertia::setRootView('layout-inertia.seller');
         return Inertia::render('tokens/Index', [
             'tokens' => $tokens
         ]);

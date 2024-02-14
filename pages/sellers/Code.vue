@@ -8,8 +8,6 @@ export default {
   },
   data: () => ({
     code: '',
-    baseURL: '',
-    assetsURL: '',
     passwordForgot: null
   }),
   computed: {
@@ -17,7 +15,7 @@ export default {
   },
   methods: {
     submit() {
-      axios.post(`${this.baseURL}/enter_verification_code`, {
+      axios.post(`${this.$root.apiUrl}/sellers/enter_verification_code`, {
         mobile: this.$parent.mobile,
         code: this.code,
       }).then((res) => {
@@ -38,9 +36,6 @@ export default {
     }
   },
   created() {
-    this.baseURL = this.$root.baseURL + '/api/v1/sellers'
-    this.assetsURL = this.$root.assetsURL
-
     const url = new URL(window.location.href)
     this.passwordForgot = url.searchParams.get("password_forgot")
   },

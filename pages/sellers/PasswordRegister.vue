@@ -35,15 +35,13 @@ export default {
   data: () => ({
     password: '',
     passwordConfirmation: '',
-    baseURL: '',
-    assetsURL: '',
   }),
   computed: {
 
   },
   methods: {
     submit() {
-      axios.post(`${this.baseURL}/password`, {
+      axios.post(`${this.$root.apiUrl}/sellers/password`, {
         password: this.password,
         password_confirmation: this.passwordConfirmation,
       }).then((res) => {
@@ -52,8 +50,7 @@ export default {
     }
   },
   created() {
-    this.baseURL = this.$root.baseURL + '/api/v1/sellers'
-    this.assetsURL = this.$root.assetsURL
+
   },
   mounted() {
     // !this.seller && router.get('login')
