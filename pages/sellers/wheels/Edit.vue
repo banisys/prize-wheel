@@ -78,7 +78,9 @@
             </label>
           </div>
 
+
           <Link :href="`${$root.baseURL}/tokens/${wheel.slug}`">مدیریت توکن ها</Link>
+
 
         </div>
 

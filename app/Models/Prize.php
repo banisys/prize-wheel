@@ -17,6 +17,8 @@ class Prize extends Model
         'user_id',
         'wheel_id',
         'title',
+        'token',
+        'description',
         'probability',
         'old'
     ];

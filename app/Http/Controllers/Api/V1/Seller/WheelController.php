@@ -5,14 +5,9 @@ namespace App\Http\Controllers\Api\V1\Seller;
 use App\Helper\General;
 use App\Http\Controllers\Api\V1\Helper;
 use App\Http\Controllers\Controller;
-use App\Models\Prize;
-use App\Models\Slice;
 use App\Models\User;
-use App\Models\UserRequirement;
 use App\Models\Wheel;
 use Illuminate\Http\Request;
-use Inertia\Response as InertiaResponse;
-use Inertia\Inertia;
 use Illuminate\Http\Response;
 
 class WheelController extends Controller
@@ -95,14 +90,15 @@ class WheelController extends Controller
 
     public function destroy(Wheel $wheel)
     {
-        $wheel->slices->delete();
-        $wheel->userRequirements->delete();
-        $wheel->userRequirementValues->delete();
-        $wheel->dateLeftToTryAgain->delete();
-        $wheel->discountCodes->delete();
-        $wheel->prizes->delete();
-        $wheel->tokens->delete();
+        $wheel->slices()->delete();
+        $wheel->userRequirements()->detach();
+        $wheel->userRequirementValues()->delete();
+        $wheel->dateLeftToTryAgain()->delete();
+        $wheel->discountCodes()->delete();
+        $wheel->prizes()->delete();
+        $wheel->tokens()->delete();
         $wheel->delete();
 
+        return response(Helper::responseTemplate(message: 'success done'), 201);
     }
 }
