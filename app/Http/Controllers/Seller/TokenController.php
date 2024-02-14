@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Token;
 use App\Models\Wheel;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 
 class TokenController extends Controller
 {

@@ -12,7 +12,8 @@ createInertiaApp({
       render: () => h(App, props),
       data: () => ({
         baseURL: import.meta.env.VITE_APP_BASE_URL,
-        assetsURL: import.meta.env.VITE_APP_ASSETS_URL
+        assetsURL: import.meta.env.VITE_APP_ASSETS_URL,
+        apiURL: import.meta.env.VITE_APP_API_URL,
       }),
     })
       .use(plugin)
