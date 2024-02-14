@@ -1,13 +1,14 @@
 <template>
-  <h1>home</h1>
+  <Head title="prize wheel" />
+  <h1>home page site</h1>
 </template>
 
 <script>
-
+import { Head } from '@inertiajs/vue3'
 
 export default {
   components: {
-
+    Head
   },
   props: [],
   data: () => ({
@@ -32,6 +33,4 @@ export default {
 </script>
 
 
-<style scoped>
-
-</style>
+<style scoped></style>

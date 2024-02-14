@@ -84,7 +84,8 @@
 
         <div v-if="stepStart">
 
-          <h1>{{ remainTry }}</h1>
+          <h5 v-if="remainTry && flagRemainTry">تعداد فرصت بازی: {{ remainTry }}</h5>
+
           <h2 v-if="wheel.date_left_to_try_again">{{ convertToJalali(wheel.date_left_to_try_again.date_at) }}</h2>
 
           <ul>
@@ -100,7 +101,7 @@
           </button>
 
           <button type="button" class="btn btn-danger btn-sm mt-3" v-if="flagReStart" @click="reStart">
-            شروع مجدد
+            راه اندازی مجدد
           </button>
 
         </div>
@@ -163,6 +164,7 @@ export default {
     flagWheel: 1,
     flagStart: 1,
     flagReStart: 0,
+    flagRemainTry: 1,
 
     remainTry: 0,
     prizes: [],
@@ -287,6 +289,7 @@ export default {
 
       this.flagStart = 0
       this.flagReStart = 0
+      this.flagRemainTry = 0
       let _this = this
 
       axios.post(`${this.baseURL}/prizes`, win).then(res => {
@@ -300,6 +303,8 @@ export default {
           if (_this.remainTry < 1) {
             _this.flagStart = 0
             _this.flagReStart = 0
+          } else {
+            _this.flagRemainTry = 1
           }
         }, 10000)
 

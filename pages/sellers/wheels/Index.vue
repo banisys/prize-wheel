@@ -2,13 +2,16 @@
   <div class="container">
     <div class="row mt-5">
 
-      <div v-for="item in wheels" class="col-3">
+      <div v-for="item in _wheels" class="col-3">
         <h6>{{ item.title }}</h6>
         <p>
           <Link :href="`wheels/${item.slug}/edit`">ویرایش</Link>
         </p>
         <p>
           <Link :href="`wheels/${item.slug}`">نتایج بازی ها</Link>
+        </p>
+        <p>
+          <a target="_blank" :href="`/${item.slug}`">مشاهده گردونه</a>
         </p>
         <button class="btn btn-danger btn-sm" @click="deleteWheel(item.slug)">حذف</button>
       </div>
@@ -42,6 +45,8 @@ export default {
     sliceNum: 10,
     baseURL: '',
     assetsURL: '',
+
+    _wheels: [],
   }),
   computed: {
 
@@ -57,8 +62,11 @@ export default {
     deleteWheel(wheelSlug) {
       let _this = this
       axios.delete(`${this.baseURL}/${wheelSlug}`).then(res => {
-        _this.wheels = res.status === 201 &&
-          _this.wheels.filter(wheel => wheel.slug !== wheelSlug)
+        const w = Object.values(JSON.parse(JSON.stringify(_this._wheels)))
+
+        _this._wheels = res.status === 201 &&
+          w.filter(wheel => wheel.slug !== wheelSlug)
+
       })
     }
   },
@@ -67,9 +75,7 @@ export default {
     this.assetsURL = this.$root.assetsURL
   },
   mounted() {
-
-    // console.log(this.wheels);
-
+    this._wheels = { ...this.wheels }
   }
 }
 </script>

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('wheel_id');
             $table->string('title');
             $table->string('token')->nullable();
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->integer('probability');
             $table->unsignedTinyInteger('old')->nullable();
             $table->timestamps();

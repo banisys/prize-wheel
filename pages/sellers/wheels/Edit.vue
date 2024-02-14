@@ -79,7 +79,7 @@
           </div>
 
 
-          <Link :href="`${}/tokens/${wheel.slug}`">مدیریت توکن ها</Link>
+          <!-- <Link :href="`${}/tokens/${wheel.slug}`">مدیریت توکن ها</Link> -->
 
 
         </div>

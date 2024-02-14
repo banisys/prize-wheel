@@ -12,7 +12,7 @@ class Todo extends Command
      *
      * @var string
      */
-    protected $signature = 'app:todo';
+    protected $signature = 'z:testing';
 
     /**
      * The console command description.
