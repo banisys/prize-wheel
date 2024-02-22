@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use App\Http\Controllers\Controller;
 use App\Models\UserRequirementValue;
+use App\Models\Wheel;
 
 class WheelController extends Controller
 {

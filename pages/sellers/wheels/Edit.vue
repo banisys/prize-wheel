@@ -57,29 +57,31 @@
         <div class="p-3 border mt-4 rounded">
           <p class="fw-bold">روش ورود کاربر</p>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="login_method" id="login_mobile" value="1" checked
+            <input class="form-check-input" type="radio" name="login_method" id="login_mobile" :value="1" checked
               v-model="form.login_method">
             <label class="form-check-label" for="login_mobile">
               موبایل
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="login_method" id="login_mobile_sms" value="2"
+            <input class="form-check-input" type="radio" name="login_method" id="login_mobile_sms" :value="2"
               v-model="form.login_method">
             <label class="form-check-label" for="login_mobile_sms">
               موبایل با احراز هویت پیامکی
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="login_method" id="login_token" v-model="form.login_method"
-              value="3">
+            <input class="form-check-input" type="radio" name="login_method" id="login_token" :value="3"
+              v-model="form.login_method">
             <label class="form-check-label" for="login_token">
               توکن
             </label>
           </div>
 
 
-          <Link :href="`${$root.baseURL}/tokens/${wheel.slug}`">مدیریت توکن ها</Link>
+          <Link :href="`${$root.baseUrl}/tokens/${wheel.slug}`" v-if="form.login_method === 3">
+          مدیریت توکن ها
+          </Link>
 
 
         </div>
@@ -134,12 +136,12 @@ export default {
     Link
   },
   data: () => ({
-    flag: 1,
     userRequirementsSelected: [],
     holderDaysLeftToTryAgain: null,
     flagDaysLeftToTryAgain: true,
     flagStartAt: true,
     flagEndAt: true,
+
     form: {
       title: '',
       try: null,
@@ -193,7 +195,7 @@ export default {
         ).join('-')
       }
 
-      axios.put(`${this.$root.apiURL}/wheels/${this.wheel.slug}`,
+      axios.put(`${this.$root.apiUrl}/wheels/${this.wheel.slug}`,
         {
           ...this.form,
           start_at: this.form.start_at && `${startJalali} ${startAtHour}`,
@@ -271,7 +273,7 @@ export default {
     }
   },
   mounted() {
-    this.form = this.wheel
+    this.form = { ...this.wheel }
 
     const wheelUserRequirements = this.wheel.user_requirements
 
@@ -322,6 +324,7 @@ export default {
     this.flagDaysLeftToTryAgain = this.form.days_left_to_try_again ? true : false
     this.flagEndAt = this.form.end_at ? true : false
     this.flagStartAt = this.form.start_at ? true : false
+
   }
 }
 </script>

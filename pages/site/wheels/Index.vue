@@ -102,7 +102,7 @@
 
           <button type="button" class="btn btn-danger btn-sm mt-3" v-if="flagReStart" @click="reStart">
             راه اندازی مجدد
-          </button>
+          </button>auth()->login($user)
 
         </div>
 
@@ -206,7 +206,7 @@ export default {
         } else if (_this.wheel.login_method === 3) {
 
           if (res.status === 200) {
-            _this.stepMobile = 0
+            _this.stepToken = 0
             if (!res.data.data.user_requirement_value_exists) {
               _this.stepUserRequirement = 1
             } else {

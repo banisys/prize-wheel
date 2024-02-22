@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('wheel_id');
             $table->integer('user_id')->nullable();
             $table->string('value')->unique();
-            $table->timestamps();
+            $table->timestamp('end_at')->nullable();
         });
     }
 

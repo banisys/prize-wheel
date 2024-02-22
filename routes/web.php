@@ -31,12 +31,7 @@ Route::prefix('sellers')
 Route::resource('wheels', SellerWheelController::class)->only(['index', 'edit', 'show'])->middleware('auth:seller');
 Route::get('slices/{slice}/edit', [SellerWheelController::class, 'editSlice']);
 
-
-
 Route::get('tokens/{wheel}', [TokenController::class, 'index'])->middleware('auth:seller');
-
-
-
 
 
 //================================ Site =====================================

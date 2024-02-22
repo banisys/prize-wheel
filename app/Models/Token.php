@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Token extends Model
 {
@@ -15,7 +16,24 @@ class Token extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'wheel_id',
         'user_id',
         'value',
+        'end_at'
     ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
+     * Get the user that owns the token.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

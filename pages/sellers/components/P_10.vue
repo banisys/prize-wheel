@@ -81,11 +81,11 @@ export default {
   },
   methods: {
     clickOnSlice(sliceId) {
-      router.get(`${this.$root.apiUrl}/slices/${sliceId}/edit`)
+      router.get(`${this.$root.baseUrl}/slices/${sliceId}/edit`)
     }
   },
   created() {
-   
+
   },
   mounted() {
 

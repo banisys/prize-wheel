@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\Seller\AuthController;
 use App\Http\Controllers\Api\V1\Seller\DiscountCodeController;
 use App\Http\Controllers\Api\V1\Seller\WheelController;
 use App\Http\Controllers\Api\V1\Seller\SliceController;
+use App\Http\Controllers\Api\V1\Seller\TokenController;
 use Illuminate\Support\Facades\Route;
 
 class SellerRoutes
@@ -51,5 +52,19 @@ class SellerRoutes
             });
 
         Route::put('v1/slices/{slice}', [SliceController::class, 'update']);
+
+
+        Route::prefix('v1/tokens')
+            ->controller(TokenController::class)
+            ->name('v1.tokens.')
+            ->middleware(['auth:seller'])
+            ->group(function () {
+
+                Route::post('{wheel}', 'store')->name('store');
+                Route::delete('not-used/{wheel}', 'destroyNotUsed')->name('destroy.not.used');
+                Route::get('download-excel/{wheel}', 'downloadExcel')->name('download.excel');
+                Route::get('search/{wheel}', 'search')->name('search');
+
+            });
     }
 }

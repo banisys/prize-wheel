@@ -60,13 +60,25 @@ class WheelController extends Controller
             return response(Helper::responseTemplate(message: 'success done'), 201);
         } else if ($req->input('login_method') === 3) {
 
-            $token = Token::where($req->input('token'))->whereNull('user_id')->first();
+            $token = Token::where('value', $req->input('token'))->first();
 
             if (!$token)
                 return response(Helper::responseTemplate(message: 'token not exist'), 401);
 
-            $user = User::firstOrCreate(['mobile' => $req->input('mobile')]);
-            $token->update(['user_id' => $user->id]);
+            if ($token->end_at < now())
+                return response(Helper::responseTemplate(message: 'token is expired'), 410);
+
+            if ($token->user_id) {
+                $user = User::find($token->user_id);
+
+                if ($user->mobile !== $req->input('mobile'))
+                    return response(Helper::responseTemplate(message: 'mobile is not correct'), 400);
+
+            } else {
+                $user = User::firstOrCreate(['mobile' => $req->input('mobile')]);
+                $token->update(['user_id' => $user->id]);
+            }
+
             auth()->login($user);
 
             $userRequirementValueExists = UserRequirementValue::where([
