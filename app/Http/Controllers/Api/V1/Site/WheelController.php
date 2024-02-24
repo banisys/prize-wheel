@@ -27,7 +27,10 @@ class WheelController extends Controller
 
         if ($req->input('login_method') === 1) {
 
-            $user = User::firstOrCreate(['mobile' => $req->input('mobile')]);
+            $user = User::firstOrCreate([
+                'mobile' => $req->input('mobile'),
+                // 'code' =>
+            ]);
             auth()->login($user);
 
             $userRequirementValueExists = UserRequirementValue::where([
@@ -73,7 +76,6 @@ class WheelController extends Controller
 
                 if ($user->mobile !== $req->input('mobile'))
                     return response(Helper::responseTemplate(message: 'mobile is not correct'), 400);
-
             } else {
                 $user = User::firstOrCreate(['mobile' => $req->input('mobile')]);
                 $token->update(['user_id' => $user->id]);
@@ -241,6 +243,8 @@ class WheelController extends Controller
             'wheel_id' => $wheel->id,
         ])->whereNull('old')->count();
 
-        return $wheel->try - $prizeCount;
+        $subUserTryCount = 0;
+
+        return ($wheel->try - $prizeCount) + $subUserTryCount;
     }
 }
