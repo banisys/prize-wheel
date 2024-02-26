@@ -23,6 +23,7 @@ class Wheel extends Model
         'slug',
         'slice_num',
         'try',
+        'try_share',
         'days_left_to_try_again',
         'start_at',
         'end_at',

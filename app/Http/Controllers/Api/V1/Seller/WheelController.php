@@ -84,10 +84,6 @@ class WheelController extends Controller
         ], 'success done'), 200);
     }
 
-    public function calPrizeStatistics(Wheel $wheel, Request $req)
-    {
-    }
-
     public function destroy(Wheel $wheel)
     {
         $wheel->slices()->delete();

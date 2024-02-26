@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('sub_users', function (Blueprint $table) {
             $table->id();
+            $table->integer('wheel_id');
             $table->integer('user_id');
             $table->integer('sub_id');
-            $table->tinyInteger('try');
+            $table->float('try');
         });
     }
 

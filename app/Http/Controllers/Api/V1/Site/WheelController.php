@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Api\V1\Helper;
 use App\Models\DateLeftToTryAgain;
 use App\Models\Prize;
+use App\Models\Subuser;
 use App\Models\UserRequirement;
 use App\Models\UserRequirementValue;
 use Carbon\Carbon;
@@ -25,13 +26,32 @@ class WheelController extends Controller
             'mobile' => 'required',
         ]);
 
-        if ($req->input('login_method') === 1) {
+        $introducerId = User::where('code', $req->input('introducer_code'))->pluck('id');
+        if (!$introducerId)
+            return response(Helper::responseTemplate(message: 'introducer not exist'), 401);
 
-            $user = User::firstOrCreate([
-                'mobile' => $req->input('mobile'),
-                // 'code' =>
-            ]);
+
+        if ($req->input('login_method') === 1) {
+            $user = User::firstOrCreate(
+                ['mobile' => $req->input('mobile')],
+                ['code' => rand(100000, 999999)]
+            );
             auth()->login($user);
+
+            // store interducer
+            $subuserExists = Subuser::where([
+                'wheel_id' => $req->input('wheel_id'),
+                'sub_id' => $user->id,
+            ])->exists();
+
+            if (!$subuserExists) {
+                Subuser::create([
+                    'wheel_id' => $req->input('wheel_id'),
+                    'user_id' => $introducerId,
+                    'sub_id' => $user->id,
+                    'try' => Wheel::find($req->input('wheel_id'))->pluck('try_share')
+                ]);
+            }
 
             $userRequirementValueExists = UserRequirementValue::where([
                 'user_id' => $user->id,
@@ -43,7 +63,10 @@ class WheelController extends Controller
             ], 'login'), 200);
         } else if ($req->input('login_method') === 2) {
 
-            $user = User::firstOrCreate(['mobile' => $req->input('mobile')]);
+            $user = User::firstOrCreate(
+                ['mobile' => $req->input('mobile')],
+                ['code' => rand(100000, 999999)]
+            );
             $code = rand(1000, 9999);
 
             if ($user->verificationCode) {
@@ -77,11 +100,16 @@ class WheelController extends Controller
                 if ($user->mobile !== $req->input('mobile'))
                     return response(Helper::responseTemplate(message: 'mobile is not correct'), 400);
             } else {
-                $user = User::firstOrCreate(['mobile' => $req->input('mobile')]);
+                $user = User::firstOrCreate(
+                    ['mobile' => $req->input('mobile')],
+                    ['code' => rand(100000, 999999)]
+                );
                 $token->update(['user_id' => $user->id]);
             }
 
             auth()->login($user);
+
+            // store interducer
 
             $userRequirementValueExists = UserRequirementValue::where([
                 'user_id' => $user->id,
@@ -94,7 +122,7 @@ class WheelController extends Controller
         }
     }
 
-    public function enterVerificationCode(Request $req): Response
+    public function checkVerificationCode(Request $req): Response
     {
         if (auth()->check())
             return response(Helper::responseTemplate(message: 'you are already logged in'), 400);
@@ -116,6 +144,8 @@ class WheelController extends Controller
 
         $user = User::where('mobile', $req->input('mobile'))->first();
         auth()->login($user);
+
+        // store interducer
 
         return response(Helper::responseTemplate([
             'user' => $user->load('userRequirementValues')

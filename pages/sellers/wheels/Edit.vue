@@ -13,19 +13,68 @@
           <input type="number" min="1" max="5" class="form-control" id="try" v-model="form.try">
         </div>
 
-        <div class="mt-4 form-check">
-          <input type="checkbox" class="form-check-input" id="cancel_try_again" @change="changeCheckBoxDaysLeftToTryAgain"
-            :checked="!flagDaysLeftToTryAgain">
-          <label class="form-check-label" for="cancel_try_again">بازی مجدد نداشته باشد</label>
+
+
+        <div class="mt-4 border p-3 rounded">
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="try_check"
+              @change="changeCheckBoxDaysLeftToTryAgain" :checked="!flagDaysLeftToTryAgain">
+            <label class="form-check-label" for="try_check">بازی مجدد نداشته باشد</label>
+          </div>
+
+          <Transition>
+            <div class="mt-4" v-if="flagDaysLeftToTryAgain">
+              <label for="days_left_to_try_again" class="form-label">بازی مجدد بعد از (روز)</label>
+              <input type="number" min="1" max="365" class="form-control" id="days_left_to_try_again"
+                v-model="form.days_left_to_try_again">
+            </div>
+          </Transition>
         </div>
 
-        <Transition>
-          <div class="mt-4" v-if="flagDaysLeftToTryAgain">
-            <label for="try_again" class="form-label">بازی مجدد بعد از (روز)</label>
-            <input type="number" min="1" max="365" class="form-control" id="try_again"
-              v-model="form.days_left_to_try_again">
+
+
+        <div class="mt-4 border p-3 rounded">
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="try_share" @change="changeCheckBoxTryShare"
+              :checked="!flagTryShare">
+            <label class="form-check-label" for="try_share">لینک اشتراک گذاری نداشته باشد</label>
           </div>
-        </Transition>
+
+          <Transition>
+            <div class="mt-4" v-if="flagTryShare">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="try_share" id="try_share_1_1" :value="1" checked
+                  v-model="form.try_share">
+                <label class="form-check-label" for="try_share_1_1">
+                  ۱ فرصت به ازای ۱ زیر مجموعه
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="try_share" id="try_share_2_1" :value="2"
+                  v-model="form.try_share">
+                <label class="form-check-label" for="try_share_2_1">
+                  ۲ فرصت به ازای ۱ زیر مجموعه
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="try_share" id="try_share_1_2" :value="0.5enter_verification_code"
+                  v-model="form.try_share">
+                <label class="form-check-label" for="try_share_1_2">
+                  ۱ فرصت به ازای ۲ زیر مجموعه
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="try_share" id="try_share_1_3" :value="0.33"
+                  v-model="form.try_share">
+                <label class="form-check-label" for="try_share_1_3">
+                  ۱ فرصت به ازای ۳ زیر مجموعه
+                </label>
+              </div>
+            </div>
+          </Transition>
+        </div>
+
+
 
         <div class="mt-4 border p-3 rounded">
           <div class="form-check">
@@ -139,12 +188,14 @@ export default {
     userRequirementsSelected: [],
     holderDaysLeftToTryAgain: null,
     flagDaysLeftToTryAgain: true,
+    flagTryShare: true,
     flagStartAt: true,
     flagEndAt: true,
 
     form: {
       title: '',
       try: null,
+      try_share: null,
       days_left_to_try_again: null,
       start_at: '',
       end_at: '',
@@ -154,12 +205,9 @@ export default {
     discountCodeSliceId: null,
     discountCodeFile: null,
 
-
-    page: 1,
-    per_page: null,
-
     holderStartAt: null,
     holderEndAt: null,
+    holderTryShare: null,
   }),
   computed: {
   },
@@ -259,6 +307,10 @@ export default {
         index !== -1 && this.form.user_requirements.splice(index, 1)
       }
     },
+    changeCheckBoxTryShare(e) {
+      this.flagTryShare = !e.target.checked
+      this.form.try_share = e.target.checked ? null : this.holderTryShare
+    },
     changeCheckBoxDaysLeftToTryAgain(e) {
       this.flagDaysLeftToTryAgain = !e.target.checked
       this.form.days_left_to_try_again = e.target.checked ? null : this.holderDaysLeftToTryAgain
@@ -321,6 +373,7 @@ export default {
     this.holderEndAt = this.form.end_at
     this.holderStartAt = this.form.start_at
 
+    this.flagTryShare = this.form.try_share ? true : false
     this.flagDaysLeftToTryAgain = this.form.days_left_to_try_again ? true : false
     this.flagEndAt = this.form.end_at ? true : false
     this.flagStartAt = this.form.start_at ? true : false

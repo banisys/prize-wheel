@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('title')->default('بدون عنوان');
             $table->unsignedTinyInteger('slice_num');
             $table->unsignedTinyInteger('try')->default(1);
+            $table->float('try_share')->nullable();
             $table->integer('days_left_to_try_again')->nullable();
             $table->unsignedTinyInteger('login_method')->default(1); // 1= mobile | 2= mobile(auth) | 3= token
             $table->unsignedTinyInteger('status')->default(1); // 0= inactive | 1= active

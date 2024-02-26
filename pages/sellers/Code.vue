@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     submit() {
-      axios.post(`${this.$root.apiUrl}/sellers/enter_verification_code`, {
+      axios.post(`${this.$root.apiUrl}/sellers/check_verification_code`, {
         mobile: this.$parent.mobile,
         code: this.code,
       }).then((res) => {

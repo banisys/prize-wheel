@@ -46,7 +46,7 @@ class AuthController extends Controller
         return response(Helper::responseTemplate(message: 'success done'), 201);
     }
 
-    public function enterVerificationCode(Request $req): Response
+    public function checkVerificationCode(Request $req): Response
     {
         if (auth('seller')->check())
             return response(Helper::responseTemplate(message: 'you are already logged in'), 400);

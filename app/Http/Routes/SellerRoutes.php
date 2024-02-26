@@ -18,7 +18,7 @@ class SellerRoutes
             ->name('sellers.')
             ->group(function () {
                 Route::post('send_verification_code', 'sendVerificationCode');
-                Route::post('enter_verification_code', 'enterVerificationCode');
+                Route::post('check_verification_code', 'checkVerificationCode');
                 Route::post('login', 'login');
 
                 Route::post('/password', 'passwordStore')->name('password.store')->middleware(['auth:seller']);

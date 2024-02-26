@@ -29,7 +29,7 @@ paths:
                 type: object
                 default: { "code": "1234" }
 
-  /sellers/enter_verification_code:
+  /sellers/check_verification_code:
     post:
       requestBody:
         required: true

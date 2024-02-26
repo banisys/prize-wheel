@@ -65,7 +65,7 @@ class AuthTest extends TestCase
      * ----------
      */
     /** @test */
-    public function enter_verification_code(): void
+    public function check_verification_code(): void
     {
         $this->postJson(
             $this->urlPrefix . 'send_verification_code',
@@ -77,7 +77,7 @@ class AuthTest extends TestCase
         $seller = Seller::with('verificationCode')->first();
 
         $this->postJson(
-            $this->urlPrefix . 'enter_verification_code',
+            $this->urlPrefix . 'check_verification_code',
             [
                 'mobile' => $this->seller['mobile'],
                 'code' => $seller->verificationCode->code
@@ -94,7 +94,7 @@ class AuthTest extends TestCase
      * ----------
      */
     /** @test */
-    public function enter_verification_codeـwithـaـlongـinterval(): void
+    public function check_verification_codeـwithـaـlongـinterval(): void
     {
         $this->postJson(
             $this->urlPrefix . 'send_verification_code',
@@ -110,7 +110,7 @@ class AuthTest extends TestCase
 
 
         $this->postJson(
-            $this->urlPrefix . 'enter_verification_code',
+            $this->urlPrefix . 'check_verification_code',
             [
                 'mobile' => $this->seller['mobile'],
                 'code' => $seller->verificationCode->code

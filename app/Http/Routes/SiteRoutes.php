@@ -10,7 +10,7 @@ class SiteRoutes
     public static function init(): void
     {
         Route::post('v1/users/loign', [WheelController::class, 'loign']);
-        Route::post('v1/users/enter_verification_code', [WheelController::class, 'enterVerificationCode']);
+        Route::post('v1/users/check_verification_code', [WheelController::class, 'checkVerificationCode']);
         Route::post('v1/users/user_requirement', [WheelController::class, 'userRequirementStore'])->middleware(['auth']);
         Route::get('v1/users/wheel_data/{wheel}', [WheelController::class, 'wheelDataFetch'])->middleware(['auth']);
 

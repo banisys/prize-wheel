@@ -39,13 +39,16 @@
         <div v-if="stepMobile">
           <label for="mobile" class="form-label">شماره موبایل</label>
           <input type="text" id="mobile" class="form-control ltr" placeholder="091********" v-model="mobile">
-          <button type="button" class="btn btn-danger btn-sm mt-3" @click="submitStep1">مرحله بعد</button>
+
+          <input type="text" class="form-control mt-3" placeholder="کد معرف" v-model="introducerCode">
+
+          <button type="button" class="btn btn-danger btn-sm mt-3" @click="submitLogin">مرحله بعد</button>
         </div>
 
         <div v-if="stepCode">
           <label for="mobile" class="form-label">کد ارسالی را وارد کنید</label>
           <input type="text" id="mobile" class="form-control ltr" v-model="code">
-          <button type="button" class="btn btn-danger btn-sm mt-3" @click="submitStep2">مرحله بعد</button>
+          <button type="button" class="btn btn-danger btn-sm mt-3" @click="submitCheckVerificationCode">مرحله بعد</button>
         </div>
 
         <div v-if="stepToken">
@@ -55,11 +58,12 @@
           <label for="token" class="form-label mt-4">توکن</label>
           <input type="text" id="token" class="form-control ltr" v-model="token">
 
-          <button type="button" class="btn btn-danger btn-sm mt-3" @click="submitStep1">مرحله بعد</button>
+          <input type="text" class="form-control mt-3" placeholder="کد معرف" v-model="introducerCode">
+
+          <button type="button" class="btn btn-danger btn-sm mt-3" @click="submitLogin">مرحله بعد</button>
         </div>
 
         <div v-if="stepUserRequirement">
-
           <template v-if="checkExistUserRequirement('name')">
             <label for="mobile" class="form-label mt-3">نام و نام خانوادگی</label>
             <input type="text" id="mobile" class="form-control" v-model="userRequirement.name">
@@ -86,9 +90,14 @@
 
           <h5 v-if="remainTry && flagRemainTry">تعداد فرصت بازی: {{ remainTry }}</h5>
 
-          <h2 v-if="wheel.date_left_to_try_again">{{ convertToJalali(wheel.date_left_to_try_again.date_at) }}</h2>
+          <h6 v-if="wheel.date_left_to_try_again && !remainTry">
+            فرصت های شما تمام شده است
+            <br>
+            تاریخ بازی مجدد:
+            {{ convertToJalali(wheel.date_left_to_try_again.date_at) }}
+          </h6>
 
-          <ul>
+          <ul class="mt-5">
             <li v-for="item in prizes">
               <p>{{ item.title }}</p>
               <p>{{ item.description }}</p>
@@ -102,7 +111,7 @@
 
           <button type="button" class="btn btn-danger btn-sm mt-3" v-if="flagReStart" @click="reStart">
             راه اندازی مجدد
-          </button>auth()->login($user)
+          </button>
 
         </div>
 
@@ -150,6 +159,7 @@ export default {
     stepStart: 0,
 
     mobile: '',
+    introducerCode: '',
     token: '',
     code: '',
 
@@ -177,13 +187,14 @@ export default {
 
   },
   methods: {
-    submitStep1() {
+    submitLogin() {
       let _this = this
       axios.post(`${this.$root.apiUrl}/users/loign`, {
         wheel_id: this.wheel.id,
         login_method: this.wheel.login_method,
         mobile: this.mobile,
-        token: this.token
+        token: this.token,
+        introducer_code: this.introducerCode
       }).then(res => {
         if (_this.wheel.login_method === 1) {
 
@@ -219,11 +230,12 @@ export default {
         alert(e.response.data.message)
       })
     },
-    submitStep2() {
+    submitCheckVerificationCode() {
       let _this = this
-      axios.post(`${this.$root.apiUrl}/users/enter_verification_code`, {
+      axios.post(`${this.$root.apiUrl}/users/check_verification_code`, {
         mobile: this.mobile,
-        code: this.code
+        code: this.code,
+        introducer_code: this.introducerCode
       }).then(res => {
 
         if (res.status === 200) {
