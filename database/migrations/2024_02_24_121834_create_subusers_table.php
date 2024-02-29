@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sub_users', function (Blueprint $table) {
+        Schema::create('subusers', function (Blueprint $table) {
             $table->id();
             $table->integer('wheel_id');
             $table->integer('user_id');
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sub_users');
+        Schema::dropIfExists('subusers');
     }
 };

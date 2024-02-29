@@ -17,8 +17,8 @@
 
         <div class="mt-4 border p-3 rounded">
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="try_check"
-              @change="changeCheckBoxDaysLeftToTryAgain" :checked="!flagDaysLeftToTryAgain">
+            <input type="checkbox" class="form-check-input" id="try_check" @change="changeCheckBoxDaysLeftToTryAgain"
+              :checked="!flagDaysLeftToTryAgain">
             <label class="form-check-label" for="try_check">بازی مجدد نداشته باشد</label>
           </div>
 
@@ -37,7 +37,7 @@
           <div class="form-check">
             <input type="checkbox" class="form-check-input" id="try_share" @change="changeCheckBoxTryShare"
               :checked="!flagTryShare">
-            <label class="form-check-label" for="try_share">لینک اشتراک گذاری نداشته باشد</label>
+            <label class="form-check-label" for="try_share">جایزه اشتراک گذاری نداشته باشد</label>
           </div>
 
           <Transition>
@@ -57,7 +57,7 @@
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="try_share" id="try_share_1_2" :value="0.5enter_verification_code"
+                <input class="form-check-input" type="radio" name="try_share" id="try_share_1_2" :value="0.5"
                   v-model="form.try_share">
                 <label class="form-check-label" for="try_share_1_2">
                   ۱ فرصت به ازای ۲ زیر مجموعه
@@ -73,7 +73,6 @@
             </div>
           </Transition>
         </div>
-
 
 
         <div class="mt-4 border p-3 rounded">
@@ -137,7 +136,7 @@
 
         <div class="p-3 border mt-4 rounded">
           <p class="fw-bold">اطلاعات دریافتی از کاربر:</p>
-          <div class="mt-4 form-check" v-for="item in userRequirements">
+          <div class="mt-4 form-check" v-for="  item   in   userRequirements  ">
 
             <input type="checkbox" class="form-check-input" :id="item.name"
               @change="changeUserRequirements($event, item.id)" :checked="userRequirementsSelected.includes(item.id)">
@@ -173,7 +172,7 @@ import p_10 from '../components/P_10.vue'
 import p_12 from '../components/P_12.vue'
 import p_15 from '../components/P_15.vue'
 import DatePicker from 'vue3-persian-datetime-picker'
-import { Link } from '@inertiajs/vue3'
+import { Link, router } from '@inertiajs/vue3'
 
 export default {
   props: ['wheel', 'userRequirements'],
@@ -207,12 +206,12 @@ export default {
 
     holderStartAt: null,
     holderEndAt: null,
-    holderTryShare: null,
+    holderTryShare: 1,
   }),
   computed: {
   },
   methods: {
-    submit() {
+    submit(agent = 'edit', sliceId = null) {
       let startAtDate = null
       let startAtHour = null
       let startJalali = null
@@ -243,13 +242,15 @@ export default {
         ).join('-')
       }
 
-      axios.put(`${this.$root.apiUrl}/wheels/${this.wheel.slug}`,
-        {
-          ...this.form,
-          start_at: this.form.start_at && `${startJalali} ${startAtHour}`,
-          end_at: this.form.end_at && `${endJalali} ${endAtHour}`
-        }
+      axios.put(`${this.$root.apiUrl}/wheels/${this.wheel.slug}`, {
+        ...this.form,
+        start_at: this.form.start_at && `${startJalali} ${startAtHour}`,
+        end_at: this.form.end_at && `${endJalali} ${endAtHour}`
+      }
       ).then(res => {
+
+        if (agent === 'slice')
+          router.get(`${this.$root.baseUrl}/slices/${sliceId}/edit`)
 
       }).catch(e => {
         alert(e.response.data.message)

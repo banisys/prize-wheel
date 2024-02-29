@@ -1,18 +1,15 @@
 <template>
   <div class="w-container">
-
     <template v-for="(item, index) in slices">
       <div :id="`s-${index + 1}`" class="slide" @click="clickOnSlice(item.id)">
         <p> {{ item.title }}</p>
       </div>
     </template>
-
   </div>
 </template>
 
 <script>
 import Layout from './Layout.vue'
-import { router } from '@inertiajs/vue3'
 
 export default {
   components: {
@@ -81,7 +78,7 @@ export default {
   },
   methods: {
     clickOnSlice(sliceId) {
-      router.get(`${this.$root.baseUrl}/slices/${sliceId}/edit`)
+      this.$parent.submit('slice', sliceId)
     }
   },
   created() {

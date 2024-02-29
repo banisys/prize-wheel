@@ -15,6 +15,7 @@ class Subuser extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'wheel_id',
         'user_id',
         'sub_id',
         'try',

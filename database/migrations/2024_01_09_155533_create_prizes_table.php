@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id');
             $table->integer('wheel_id');
+            $table->integer('slice_id');
             $table->string('title');
             $table->string('token')->nullable();
             $table->string('description')->nullable();

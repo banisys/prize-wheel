@@ -48,7 +48,8 @@
         <div v-if="stepCode">
           <label for="mobile" class="form-label">کد ارسالی را وارد کنید</label>
           <input type="text" id="mobile" class="form-control ltr" v-model="code">
-          <button type="button" class="btn btn-danger btn-sm mt-3" @click="submitCheckVerificationCode">مرحله بعد</button>
+          <button type="button" class="btn btn-danger btn-sm mt-3" @click="submitCheckVerificationCode">مرحله
+            بعد</button>
         </div>
 
         <div v-if="stepToken">
@@ -88,8 +89,19 @@
 
         <div v-if="stepStart">
 
-          <h5 v-if="remainTry && flagRemainTry">تعداد فرصت بازی: {{ remainTry }}</h5>
+          <span>کد معرف شما:</span>
+          <input type="text" :value="_user.code" ref="input_ic" :ic="`${this.$root.baseUrl}/${wheel.slug}?ic=${_user.code}`">
 
+          <button @click="copyIcToClipboard">کپی لینک گردونه به همراه کد معرف شما</button>
+
+          <div class="my-4">
+            <h6 v-if="wheel.try_share === 1">۱ فرصت به ازای ۱ زیر مجموعه</h6>
+            <h6 v-else-if="wheel.try_share === 2">۲ فرصت به ازای ۱ زیر مجموعه</h6>
+            <h6 v-else-if="wheel.try_share === 0.5">۱ فرصت به ازای ۲ زیر مجموعه</h6>
+            <h6 v-else-if="wheel.try_share === 0.33">۱ فرصت به ازای ۳ زیر مجموعه</h6>
+          </div>
+
+          <h5 v-if="remainTry && flagRemainTry">تعداد فرصت بازی: {{ remainTry }}</h5>
           <h6 v-if="wheel.date_left_to_try_again && !remainTry">
             فرصت های شما تمام شده است
             <br>
@@ -129,6 +141,11 @@
         <Transition>
           <p_15 v-if="wheel.slice_num === 15 && flagWheel" :slices="wheel.slices" ref="prizeWheel" @win="submitWin" />
         </Transition>
+
+
+        
+
+
       </div>
 
     </div>
@@ -140,7 +157,7 @@ import VueCountdown from '@chenfengyuan/vue-countdown'
 import p_10 from './components/P_10.vue'
 import p_12 from './components/P_12.vue'
 import p_15 from './components/P_15.vue'
-import Flip from "./components/Flip.vue"
+import Flip from './components/Flip.vue'
 
 export default {
   components: {
@@ -176,7 +193,8 @@ export default {
     remainTry: 0,
     prizes: [],
 
-    start_at: null
+    start_at: null,
+    _user: null
   }),
   watch: {
     stepStart(newValue, oldValue) {
@@ -187,6 +205,9 @@ export default {
 
   },
   methods: {
+    copyIcToClipboard() {
+      navigator.clipboard.writeText(this.$refs.input_ic.getAttribute("ic"))
+    },
     submitLogin() {
       let _this = this
       axios.post(`${this.$root.apiUrl}/users/loign`, {
@@ -199,6 +220,7 @@ export default {
         if (_this.wheel.login_method === 1) {
 
           if (res.status === 200) {
+            _this._user = res.data.data.user
             _this.stepMobile = 0
             if (_this.wheel.user_requirements.length && !res.data.data.user_requirement_value_exists) {
               _this.stepUserRequirement = 1
@@ -217,6 +239,7 @@ export default {
         } else if (_this.wheel.login_method === 3) {
 
           if (res.status === 200) {
+            _this._user = res.data.data.user
             _this.stepToken = 0
             if (!res.data.data.user_requirement_value_exists) {
               _this.stepUserRequirement = 1
@@ -239,6 +262,7 @@ export default {
       }).then(res => {
 
         if (res.status === 200) {
+          _this._user = res.data.data.user
           _this.stepCode = 0
           if (!res.data.data.user.userRequirementValues) {
             _this.stepUserRequirement = 1
@@ -392,9 +416,9 @@ export default {
     },
   },
   created() {
-
   },
   mounted() {
+    this._user = { ...this.user }
     const now = new Date()
     const start_at = new Date(this.wheel.start_at)
 
@@ -417,6 +441,11 @@ export default {
     } else {
       this.stepToken = 1
     }
+
+    this.introducerCode
+
+    const urlParams = new URLSearchParams(window.location.search)
+    this.introducerCode = urlParams.get('ic') ?? ''
   }
 }
 </script>
