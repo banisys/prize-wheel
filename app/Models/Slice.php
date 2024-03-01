@@ -32,4 +32,11 @@ class Slice extends Model
         return $this->hasMany(DiscountCode::class);
     }
 
+    /**
+     * Get the prizes for the slice.
+     */
+    public function prizes(): HasMany
+    {
+        return $this->hasMany(Prize::class);
+    }
 }

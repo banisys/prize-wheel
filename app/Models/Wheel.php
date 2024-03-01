@@ -47,6 +47,14 @@ class Wheel extends Model
     }
 
     /**
+     * Get the active slices for the wheel.
+     */
+    public function popularSlices(): HasMany
+    {
+        return $this->hasMany(Slice::class)->where('status', 1);
+    }
+
+    /**
      * The roles that belong to the user.
      */
     public function userRequirements(): BelongsToMany

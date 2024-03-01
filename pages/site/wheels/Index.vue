@@ -143,7 +143,12 @@
         </Transition>
 
 
-        
+        <h4 class="mt-5">تعداد برندگان</h4>
+        <ul>
+          <li v-for="item in wheel.popular_slices">
+            {{ item.title }} : {{ item.prizes_count }}
+          </li>
+        </ul>
 
 
       </div>
@@ -446,6 +451,8 @@ export default {
 
     const urlParams = new URLSearchParams(window.location.search)
     this.introducerCode = urlParams.get('ic') ?? ''
+
+    console.log(this.wheel);
   }
 }
 </script>

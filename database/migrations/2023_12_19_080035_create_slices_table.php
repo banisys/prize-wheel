@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('probability');
             $table->integer('inventory')->nullable();
             $table->string('description')->nullable();
-            $table->unsignedTinyInteger('status')->nullable(); // null= don't show | 1= show => winner
+            $table->unsignedTinyInteger('status')->nullable(); // null= unpopular | 1= popular
             $table->timestamps();
         });
     }

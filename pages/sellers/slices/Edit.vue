@@ -30,7 +30,7 @@
       <div class="col-12">
         <div class="mt-4 form-check">
           <input type="checkbox" class="form-check-input" id="status" @change="changeStatus" :checked="_slice.status">
-          <label class="form-check-label" for="status">نمایش تعداد برنده های این اسلاید در صفحه گردونه</label>
+          <label class="form-check-label" for="status">نمایش تعداد برنده های این اسلایس در صفحه گردونه</label>
         </div>
       </div>
     </div>

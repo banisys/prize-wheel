@@ -16,6 +16,7 @@ class Prize extends Model
     protected $fillable = [
         'user_id',
         'wheel_id',
+        'slice_id',
         'title',
         'token',
         'description',

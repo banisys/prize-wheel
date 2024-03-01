@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Site;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use App\Http\Controllers\Controller;
-use App\Models\Slice;
 use App\Models\UserRequirementValue;
 use App\Models\Wheel;
 
@@ -23,6 +22,13 @@ class WheelController extends Controller
                     'title',
                     'probability'
                 );
+            },
+            'popularSlices' => function ($query) {
+                $query->select(
+                    'id',
+                    'wheel_id',
+                    'title'
+                )->withCount(['prizes']);
             },
             'userRequirements',
             'dateLeftToTryAgain'
@@ -42,13 +48,6 @@ class WheelController extends Controller
             'user_id' => optional($user)->id,
             'wheel_id' => $wheel->id,
         ])->exists();
-
-        $prizesCount = [];
-
-        $sliceIds = Slice::where([
-            'wheel_id' => $wheel->id,
-            'status' => 1
-        ])->pluck('id');
 
         return Inertia::render('wheels/Index', [
             'wheel' => $wheel->makeHidden(['created_at', 'updated_at'])->toArray(),
