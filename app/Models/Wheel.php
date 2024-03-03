@@ -19,15 +19,16 @@ class Wheel extends Model
      */
     protected $fillable = [
         'seller_id',
-        'title',
         'slug',
+        'title',
         'slice_num',
         'try',
         'try_share',
         'days_left_to_try_again',
         'start_at',
         'end_at',
-        'login_method'
+        'login_method',
+        'status'
     ];
 
     /**

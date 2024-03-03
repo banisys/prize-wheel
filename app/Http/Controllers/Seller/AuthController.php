@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\Controller;
+use App\Models\Plan;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use Illuminate\Http\Request;
@@ -45,7 +46,11 @@ class AuthController extends Controller
     {
         Inertia::setRootView('layout-inertia.seller');
 
-        return Inertia::render('Dashboard');
+        $plans = Plan::get();
+
+        return Inertia::render('Dashboard', [
+            'plans' => $plans
+        ]);
     }
 
     public function passwordShow(): InertiaResponse | RedirectResponse

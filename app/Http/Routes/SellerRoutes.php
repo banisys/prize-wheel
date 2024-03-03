@@ -4,6 +4,7 @@ namespace App\Http\Routes;
 
 use App\Http\Controllers\Api\V1\Seller\AuthController;
 use App\Http\Controllers\Api\V1\Seller\DiscountCodeController;
+use App\Http\Controllers\Api\V1\Seller\PlanController;
 use App\Http\Controllers\Api\V1\Seller\WheelController;
 use App\Http\Controllers\Api\V1\Seller\SliceController;
 use App\Http\Controllers\Api\V1\Seller\TokenController;
@@ -64,7 +65,9 @@ class SellerRoutes
                 Route::delete('not-used/{wheel}', 'destroyNotUsed')->name('destroy.not.used');
                 Route::get('download-excel/{wheel}', 'downloadExcel')->name('download.excel');
                 Route::get('search/{wheel}', 'search')->name('search');
-
             });
+
+
+        Route::post('v1/plans', [PlanController::class, 'store']);
     }
 }

@@ -15,6 +15,27 @@
 
 
 
+        <div class="p-3 border mt-4 rounded">
+          <p class="fw-bold">وضعیت</p>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="status" id="active_status" :value="1" checked
+              v-model="form.status">
+            <label class="form-check-label" for="active_status">
+              فعال
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="status" id="inactive_status" :value="0"
+              v-model="form.status">
+            <label class="form-check-label" for="inactive_status">
+              غیر فعال
+            </label>
+          </div>
+        </div>
+
+
+
+
         <div class="mt-4 border p-3 rounded">
           <div class="form-check">
             <input type="checkbox" class="form-check-input" id="try_check" @change="changeCheckBoxDaysLeftToTryAgain"
@@ -126,12 +147,9 @@
             </label>
           </div>
 
-
           <Link :href="`${$root.baseUrl}/tokens/${wheel.slug}`" v-if="form.login_method === 3">
           مدیریت توکن ها
           </Link>
-
-
         </div>
 
         <div class="p-3 border mt-4 rounded">
@@ -327,6 +345,8 @@ export default {
   },
   mounted() {
     this.form = { ...this.wheel }
+
+    console.log(this.form);
 
     const wheelUserRequirements = this.wheel.user_requirements
 
