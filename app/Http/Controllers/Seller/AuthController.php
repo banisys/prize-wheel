@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\Controller;
-use App\Models\Plan;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 
 class AuthController extends Controller
@@ -18,14 +16,14 @@ class AuthController extends Controller
 
         Inertia::setRootView('layout-inertia.seller');
 
-        return Inertia::render('Login');
+        return Inertia::render('auth/Login');
     }
 
     public function codeShow(): InertiaResponse | RedirectResponse
     {
         Inertia::setRootView('layout-inertia.seller');
 
-        return Inertia::render('Code');
+        return Inertia::render('auth/Code');
     }
 
     public function passwordRegisterShow(): InertiaResponse | RedirectResponse
@@ -37,19 +35,8 @@ class AuthController extends Controller
 
         $seller = auth('seller')->user()->only(['id', 'mobile']);
 
-        return Inertia::render('PasswordRegister', [
+        return Inertia::render('auth/PasswordRegister', [
             'seller' => $seller
-        ]);
-    }
-
-    public function showDashboard(): InertiaResponse | RedirectResponse
-    {
-        Inertia::setRootView('layout-inertia.seller');
-
-        $plans = Plan::get();
-
-        return Inertia::render('Dashboard', [
-            'plans' => $plans
         ]);
     }
 
@@ -60,7 +47,7 @@ class AuthController extends Controller
 
         Inertia::setRootView('layout-inertia.seller');
 
-        return Inertia::render('Password');
+        return Inertia::render('auth/Password');
     }
 
     public function passwordForgotShow(): InertiaResponse | RedirectResponse
@@ -70,6 +57,6 @@ class AuthController extends Controller
 
         Inertia::setRootView('layout-inertia.seller');
 
-        return Inertia::render('PasswordForgot');
+        return Inertia::render('auth/PasswordForgot');
     }
 }

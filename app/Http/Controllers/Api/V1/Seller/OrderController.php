@@ -13,21 +13,29 @@ class OrderController extends Controller
 {
     public function store(Request $req): Response
     {
+        // payment
 
-        info($req);
-
+        $sellerId = auth('seller')->user()->id;
         $plan = Plan::find($req->input('plan_id'));
 
+        $latestOrder = Order::where('seller_id', $sellerId)->latest();
+
+        if ($latestOrder) {
+            $endAt = ($latestOrder->end_at > now()) ?
+                $latestOrder->end_at->addDays($plan->days) :
+                now()->addDays($plan->days);
+        } else {
+            $endAt = now()->addDays($plan->days);
+        }
+
         Order::create([
-            'seller_id' => auth('seller')->user()->id,
+            'seller_id' => $sellerId,
             'title' => $plan->title,
             'amount' => $plan->amount,
-            'end_at' => now()->addDays($plan->days),
+            'end_at' => $endAt,
         ]);
 
 
-        return response(Helper::responseTemplate([
-
-        ], 'success done'), 201);
+        return response(Helper::responseTemplate([], 'success done'), 201);
     }
 }

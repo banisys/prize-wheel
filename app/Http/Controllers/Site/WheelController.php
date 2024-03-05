@@ -34,12 +34,18 @@ class WheelController extends Controller
             'dateLeftToTryAgain'
         ])->firstOrFail();
 
+        $orderExist = Order::where('seller_id', $wheel->seller_id)
+            ->where('end_at', '>', now())->exists();
+
+        if ($orderExist)
+            return Inertia::render('wheels/Index', ['wheel' => ['status' => 0]]);
+
         $statusDate = $this->checkStatusDate($wheel);
 
         if ($statusDate['not_started'] || $statusDate['finished'])
-            return Inertia::render('Index', [
+            return Inertia::render('wheels/Index', [
                 ...$statusDate,
-                'wheel' => $wheel
+                'wheel' => $wheel->only(['status'])
             ]);
 
         $user = auth()->user();

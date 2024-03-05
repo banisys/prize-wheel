@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Seller;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,6 +20,11 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->timestamps();
         });
+
+        Seller::create([
+            'mobile' => '09391121001',
+            'password' => '$2y$10$.KDL650ofXhbjAsC/mqibecaS4Djs.yRy5NGTfVPOa/kQGsYFX.P.'
+        ]);
     }
 
     /**

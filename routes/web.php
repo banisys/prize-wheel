@@ -4,12 +4,16 @@ use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Seller\WheelController as SellerWheelController;
 use App\Http\Controllers\Site\WheelController as SiteWheelController;
 use App\Http\Controllers\Seller\AuthController;
+use App\Http\Controllers\Seller\DashboardController;
+use App\Http\Controllers\Seller\OrderController;
 use App\Http\Controllers\Seller\TokenController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/swagger', 'swagger');
 
 //================================ Seller =====================================
+Route::get('sellers/dashboard', [DashboardController::class, 'index'])->middleware('auth:seller');
+
 Route::prefix('sellers')
     ->controller(AuthController::class)
     ->group(function () {
@@ -23,15 +27,16 @@ Route::prefix('sellers')
             ->group(function () {
 
                 Route::get('password-register', 'passwordRegisterShow');
-                Route::get('dashboard', 'showDashboard')->name('sellers.show.dashboard');
             });
     });
+
 
 
 Route::resource('wheels', SellerWheelController::class)->only(['index', 'edit', 'show'])->middleware('auth:seller');
 Route::get('slices/{slice}/edit', [SellerWheelController::class, 'editSlice']);
 
 Route::get('tokens/{wheel}', [TokenController::class, 'index'])->middleware('auth:seller');
+Route::get('orders', [OrderController::class, 'index'])->middleware('auth:seller');
 
 
 //================================ Site =====================================
