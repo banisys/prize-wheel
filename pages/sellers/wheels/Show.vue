@@ -2,6 +2,11 @@
   <div class="container">
 
     <div class="row mt-5">
+      <div class="col-12" v-if="wheel.login_method === 2 && wheel.seller.sms_number < 1">
+        <div class="alert alert-primary" role="alert">
+          پیامک های خود را شارژ کنید
+        </div>
+      </div>
       <div class="col-6">
         <h4>{{ wheel.title }}</h4>
         <table class="table">
@@ -190,6 +195,8 @@ export default {
 
   },
   mounted() {
+
+    console.log(this.wheel);
 
     this._users = this.users
 

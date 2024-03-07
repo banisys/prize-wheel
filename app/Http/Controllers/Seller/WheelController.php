@@ -17,7 +17,8 @@ class WheelController extends Controller
 {
     public function index(): InertiaResponse
     {
-        $wheels = Wheel::where('seller_id', auth('seller')->id())->get();
+        $wheels = Wheel::where('seller_id', auth('seller')->id())
+            ->with('seller')->get();
 
         Inertia::setRootView('layout-inertia.seller');
         return Inertia::render('wheels/Index', [
@@ -33,6 +34,9 @@ class WheelController extends Controller
             },
             'userRequirements' => function ($query) {
                 $query->select('id');
+            },
+            'seller' => function ($query) {
+                $query->select(['id', 'sms_number']);
             }
         ])->first();
 
@@ -40,12 +44,19 @@ class WheelController extends Controller
 
         return Inertia::render('wheels/Edit', [
             'wheel' => $wheel->makeHidden(['created_at', 'updated_at'])->toArray(),
-            'userRequirements' => UserRequirement::all()
+            'userRequirements' => UserRequirement::all(),
         ]);
     }
 
-    public function show(Wheel $wheel): InertiaResponse
+    public function show($wheel): InertiaResponse
     {
+        $wheel = Wheel::select(['seller_id', 'slug', 'title', 'login_method'])
+            ->where('slug', $wheel)->with([
+                'seller' => function ($query) {
+                    $query->select(['id', 'sms_number']);
+                }
+            ])->first();
+
         $users = User::whereHas('prizes', function ($q) use ($wheel) {
             $q->where('wheel_id', $wheel->id);
         })->with([
@@ -57,17 +68,14 @@ class WheelController extends Controller
             }
         ])->latest()->paginate(10);
 
-
         $prizes = Prize::select('title')->where('wheel_id', $wheel->id)->get()->groupBy('title');
 
         $sumNumberOfEachPrize = [];
         foreach ($prizes as $key => $prize) $sumNumberOfEachPrize[$key] = count($prize);
 
-
-
         Inertia::setRootView('layout-inertia.seller');
         return Inertia::render('wheels/Show', [
-            'wheel' => $wheel->only(['slug', 'title']),
+            'wheel' => $wheel,
             'users' => $users,
             'sum_number_of_each_prize' => $sumNumberOfEachPrize,
         ]);

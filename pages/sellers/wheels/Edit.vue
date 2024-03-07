@@ -1,6 +1,14 @@
 <template>
   <div class="container my-5">
     <div class="row">
+
+      <div class="col-12" v-if="form.login_method === 2 && form.seller.sms_number < 1">
+        <div class="alert alert-primary" role="alert">
+          پیامک های خود را شارژ کنید
+        </div>
+      </div>
+
+
       <div class="col-12">
 
         <div class="mt-3">
@@ -12,8 +20,6 @@
           <label for="try" class="form-label">تعداد فرصت بازی</label>
           <input type="number" min="1" max="5" class="form-control" id="try" v-model="form.try">
         </div>
-
-
 
         <div class="p-3 border mt-4 rounded">
           <p class="fw-bold">وضعیت</p>
@@ -112,7 +118,8 @@
 
         <div class="mt-4 border p-3 rounded">
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="end" @change="changeCheckBoxEndAt" :checked="!flagEndAt">
+            <input type="checkbox" class="form-check-input" id="end" @change="changeCheckBoxEndAt"
+              :checked="!flagEndAt">
             <label class="form-check-label" for="end">تاریخ انقضا نداشته باشد</label>
           </div>
 

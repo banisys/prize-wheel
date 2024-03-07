@@ -4,7 +4,7 @@ namespace App\Http\Routes;
 
 use App\Http\Controllers\Api\V1\Seller\AuthController;
 use App\Http\Controllers\Api\V1\Seller\DiscountCodeController;
-use App\Http\Controllers\Api\V1\Seller\PlanController;
+use App\Http\Controllers\Api\V1\Seller\OrderController;
 use App\Http\Controllers\Api\V1\Seller\WheelController;
 use App\Http\Controllers\Api\V1\Seller\SliceController;
 use App\Http\Controllers\Api\V1\Seller\TokenController;
@@ -16,7 +16,6 @@ class SellerRoutes
     {
         Route::prefix('v1/sellers')
             ->controller(AuthController::class)
-            ->name('sellers.')
             ->group(function () {
                 Route::post('send_verification_code', 'sendVerificationCode');
                 Route::post('check_verification_code', 'checkVerificationCode');
@@ -68,6 +67,7 @@ class SellerRoutes
             });
 
 
-        Route::post('v1/plans', [PlanController::class, 'store']);
+        Route::post('v1/orders/plan', [OrderController::class, 'storePlan']);
+        Route::post('v1/orders/sms', [OrderController::class, 'storeSms']);
     }
 }

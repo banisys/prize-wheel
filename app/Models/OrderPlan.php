@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class OrderPlan extends Model
 {
     use HasFactory;
 
@@ -15,7 +15,12 @@ class Order extends Model
     protected $fillable = [
         'seller_id',
         'title',
-        'amount',
+        'payment',
         'end_at',
     ];
+
+    public function getCreatedAtAttribute()
+    {
+        return $this->attributes['created_at'];
+    }
 }

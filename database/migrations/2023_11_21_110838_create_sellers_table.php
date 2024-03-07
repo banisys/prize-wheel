@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('full_name')->nullable();
             $table->string('store_name')->nullable();
             $table->string('password')->nullable();
+            $table->integer('sms_number')->default(0);
             $table->timestamps();
         });
 

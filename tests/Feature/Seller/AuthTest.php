@@ -14,7 +14,7 @@ class AuthTest extends TestCase
     public $urlPrefix = 'api/v1/sellers/';
 
     public $seller = [
-        'mobile' => '09391121001',
+        'mobile' => '09390243166',
     ];
 
     /**

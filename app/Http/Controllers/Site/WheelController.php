@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Site;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use App\Http\Controllers\Controller;
+use App\Models\OrderPlan;
 use App\Models\UserRequirementValue;
 use App\Models\Wheel;
 
 class WheelController extends Controller
 {
-    public function wheelShow($wheel): InertiaResponse
+    public function show($wheel): InertiaResponse
     {
         Inertia::setRootView('layout-inertia.site');
 
@@ -34,11 +35,20 @@ class WheelController extends Controller
             'dateLeftToTryAgain'
         ])->firstOrFail();
 
-        $orderExist = Order::where('seller_id', $wheel->seller_id)
+        $orderPlanExist = OrderPlan::where('seller_id', $wheel->seller_id)
             ->where('end_at', '>', now())->exists();
 
-        if ($orderExist)
+        if (!$orderPlanExist)
             return Inertia::render('wheels/Index', ['wheel' => ['status' => 0]]);
+
+
+        if ($wheel->login_method === 2) {
+            $smsNumber = Seller::find($wheel->seller_id)->pluck('sms_number')->shift();
+
+            if ($smsNumber < 1) {
+                return Inertia::render('wheels/Index', ['wheel' => ['status' => 0]]);
+            }
+        }
 
         $statusDate = $this->checkStatusDate($wheel);
 

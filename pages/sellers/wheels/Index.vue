@@ -14,6 +14,10 @@
           <a target="_blank" :href="`/${item.slug}`">مشاهده گردونه</a>
         </p>
         <button class="btn btn-danger btn-sm" @click="deleteWheel(item.slug)">حذف</button>
+
+        <div class="alert alert-primary mt-3" role="alert" v-if="item.login_method === 2 && item.seller.sms_number < 1">
+          پیامک های خود را شارژ کنید
+        </div>
       </div>
 
       <div class="col-3">

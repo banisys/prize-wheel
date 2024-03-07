@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Wheel extends Model
 {
@@ -101,5 +102,13 @@ class Wheel extends Model
     public function tokens(): HasMany
     {
         return $this->hasMany(Token::class);
+    }
+
+    /**
+     * Get the user that owns the phone.
+     */
+    public function seller(): BelongsTo
+    {
+        return $this->belongsTo(Seller::class);
     }
 }
