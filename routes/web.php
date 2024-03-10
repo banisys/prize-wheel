@@ -31,13 +31,13 @@ Route::prefix('sellers')
     });
 
 
-Route::resource('wheels', SellerWheelController::class)->only(['index', 'edit', 'show'])->middleware('auth:seller');
-Route::get('slices/{slice}/edit', [SellerWheelController::class, 'editSlice']);
+Route::resource('sellers/wheels', SellerWheelController::class)->only(['index', 'edit', 'show'])->middleware('auth:seller');
+Route::get('sellers/slices/{slice}/edit', [SellerWheelController::class, 'editSlice']);
 
-Route::get('tokens/{wheel}', [TokenController::class, 'index'])->middleware('auth:seller');
+Route::get('sellers/tokens/{wheel}', [TokenController::class, 'index'])->middleware('auth:seller');
 
-Route::get('orders/plan', [OrderController::class, 'plan'])->middleware('auth:seller');
-Route::get('orders/sms', [OrderController::class, 'sms'])->middleware('auth:seller');
+Route::get('sellers/orders/plan', [OrderController::class, 'plan'])->middleware('auth:seller');
+Route::get('sellers/orders/sms', [OrderController::class, 'sms'])->middleware('auth:seller');
 
 
 //================================ Site =====================================

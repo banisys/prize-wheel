@@ -154,7 +154,7 @@
             </label>
           </div>
 
-          <Link :href="`${$root.baseUrl}/tokens/${wheel.slug}`" v-if="form.login_method === 3">
+          <Link :href="`${$root.baseUrl}/sellers/tokens/${wheel.slug}`" v-if="form.login_method === 3">
           مدیریت توکن ها
           </Link>
         </div>
@@ -267,7 +267,7 @@ export default {
         ).join('-')
       }
 
-      axios.put(`${this.$root.apiUrl}/wheels/${this.wheel.slug}`, {
+      axios.put(`${this.$root.apiUrl}/sellers/wheels/${this.wheel.slug}`, {
         ...this.form,
         start_at: this.form.start_at && `${startJalali} ${startAtHour}`,
         end_at: this.form.end_at && `${endJalali} ${endAtHour}`
@@ -275,7 +275,7 @@ export default {
       ).then(res => {
 
         if (agent === 'slice')
-          router.get(`${this.$root.baseUrl}/slices/${sliceId}/edit`)
+          router.get(`${this.$root.baseUrl}/sellers/slices/${sliceId}/edit`)
 
       }).catch(e => {
         alert(e.response.data.message)

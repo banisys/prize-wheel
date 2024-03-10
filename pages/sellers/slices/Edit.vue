@@ -158,7 +158,7 @@ export default {
         return
       }
 
-      axios.put(`${this.$root.apiUrl}/slices/${this.slice.id}`, this._slice).then(res => {
+      axios.put(`${this.$root.apiUrl}/sellers/slices/${this.slice.id}`, this._slice).then(res => {
 
       }).catch(e => {
         alert(e.response.data.message)
@@ -171,7 +171,7 @@ export default {
     fetchDiscountCodes() {
       let _this = this
 
-      axios.get(`${this.$root.apiUrl}/discount_codes/${this._slice.id}`
+      axios.get(`${this.$root.apiUrl}/sellers/discount_codes/${this._slice.id}`
       ).then(res => {
 
         _this.discountCodes = res.data.data.discount_codes.data
@@ -182,7 +182,7 @@ export default {
     },
     deleteDiscountCode() {
       let _this = this
-      axios.delete(`${this.$root.apiUrl}/discount_codes/${this._slice.id}`
+      axios.delete(`${this.$root.apiUrl}/sellers/discount_codes/${this._slice.id}`
       ).then(res => {
 
         _this.discountCodes = res.data.data.discount_codes.data
@@ -205,7 +205,7 @@ export default {
 
       let _this = this
 
-      axios.post(`${this.$root.apiUrl}/discount_codes`, formData, config).then(res => {
+      axios.post(`${this.$root.apiUrl}/sellers/discount_codes`, formData, config).then(res => {
 
         _this._slice = res.data.data.slice
 

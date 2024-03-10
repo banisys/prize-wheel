@@ -125,7 +125,7 @@ export default {
   methods: {
     submitSearch() {
       let _this = this
-      axios.get(`${this.$root.apiUrl}/wheels/${this.wheel.slug}/search`, {
+      axios.get(`${this.$root.apiUrl}/sellers/wheels/${this.wheel.slug}/search`, {
         params: this.search
       }).then(res => {
 

@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     submit() {
-      axios.post(`${this.$root.apiUrl}/orders/plan`, {
+      axios.post(`${this.$root.apiUrl}/sellers/orders/plan`, {
         plan_id: this.planId
       }).then(res => {
 
@@ -116,7 +116,7 @@ export default {
       if (param === 'mobile') this.search.token = null
 
       let _this = this
-      axios.get(`${this.$root.apiUrl}/tokens/search/${this.slug}?page=${page}`, {
+      axios.get(`${this.$root.apiUrl}/sellers/tokens/search/${this.slug}?page=${page}`, {
         params: this.search
       }).then(res => {
         _this._tokens = res.data.data.tokens

@@ -12,7 +12,7 @@ class WheelTest extends TestCase
 {
     use RefreshDatabase;
 
-    public $urlPrefix = 'api/v1/wheels/';
+    public $urlPrefix = 'api/v1/sellers/wheels/';
 
     public $seller = [
         'mobile' => '09391121001',
@@ -24,10 +24,10 @@ class WheelTest extends TestCase
     /** @test */
     public function show_wheel_index_page(): void
     {
-        $this->get('wheels')->assertRedirectToRoute('sellers.login');
+        $this->get('sellers/wheels')->assertRedirectToRoute('sellers.login');
 
         $seller = Seller::factory()->create();
-        $this->actingAs($seller, 'seller')->get('wheels')->assertStatus(200);
+        $this->actingAs($seller, 'seller')->get('sellers/wheels')->assertStatus(200);
     }
 
     /**
@@ -39,7 +39,7 @@ class WheelTest extends TestCase
         $seller = Seller::factory()->create();
 
         $this->actingAs($seller, 'seller')->postJson(
-            'api/v1/wheels',
+            'api/v1/sellers/wheels',
             [
                 'slice_num' => 10,
             ]
@@ -61,7 +61,7 @@ class WheelTest extends TestCase
             ]
         );
 
-        $this->actingAs($seller, 'seller')->get("wheels/{$res['data']['slug']}/edit")->assertStatus(200);
+        $this->actingAs($seller, 'seller')->get("sellers/wheels/{$res['data']['slug']}/edit")->assertStatus(200);
     }
 
     /**

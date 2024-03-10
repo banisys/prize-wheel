@@ -25,7 +25,7 @@ class SellerRoutes
             });
 
 
-        Route::prefix('v1/wheels')
+        Route::prefix('v1/sellers/wheels')
             ->controller(WheelController::class)
             ->name('v1.wheels.')
             ->middleware(['auth:seller'])
@@ -40,7 +40,7 @@ class SellerRoutes
 
 
 
-        Route::prefix('v1/discount_codes')
+        Route::prefix('v1/sellers/discount_codes')
             ->controller(DiscountCodeController::class)
             ->name('v1.discount_codes.')
             ->middleware(['auth:seller'])
@@ -51,10 +51,10 @@ class SellerRoutes
                 Route::delete('/{slice_id}', 'destroy')->name('destroy');
             });
 
-        Route::put('v1/slices/{slice}', [SliceController::class, 'update']);
+        Route::put('v1/sellers/slices/{slice}', [SliceController::class, 'update']);
 
 
-        Route::prefix('v1/tokens')
+        Route::prefix('v1/sellers/tokens')
             ->controller(TokenController::class)
             ->name('v1.tokens.')
             ->middleware(['auth:seller'])
@@ -67,7 +67,7 @@ class SellerRoutes
             });
 
 
-        Route::post('v1/orders/plan', [OrderController::class, 'storePlan']);
-        Route::post('v1/orders/sms', [OrderController::class, 'storeSms']);
+        Route::post('v1/sellers/orders/plan', [OrderController::class, 'storePlan']);
+        Route::post('v1/sellers/orders/sms', [OrderController::class, 'storeSms']);
     }
 }

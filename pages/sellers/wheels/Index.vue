@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     submitCreate() {
-      axios.post(`${this.$root.apiUrl}/wheels`, {
+      axios.post(`${this.$root.apiUrl}/sellers/wheels`, {
         slice_num: this.sliceNum,
       }).then(res => {
         res.status === 201 && router.get(`wheels/${res.data.data.slug}/edit`)
@@ -61,7 +61,7 @@ export default {
     },
     deleteWheel(wheelSlug) {
       let _this = this
-      axios.delete(`${this.$root.apiUrl}/wheels/${wheelSlug}`).then(res => {
+      axios.delete(`${this.$root.apiUrl}/sellers/wheels/${wheelSlug}`).then(res => {
         const w = Object.values(JSON.parse(JSON.stringify(_this._wheels)))
 
         _this._wheels = res.status === 201 &&

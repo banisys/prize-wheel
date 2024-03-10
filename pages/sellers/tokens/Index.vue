@@ -22,7 +22,7 @@
       </div>
 
       <div class="col-6 mt-5">
-        <a :href="`${$root.apiUrl}/tokens/download-excel/${this.slug}`" target="_blank" class="btn btn-success btn-sm">
+        <a :href="`${$root.apiUrl}/sellers/tokens/download-excel/${this.slug}`" target="_blank" class="btn btn-success btn-sm">
           اکسل توکن های استفاده نشده
         </a>
       </div>
@@ -129,7 +129,7 @@ export default {
         ).join('-')
       }
 
-      axios.post(`${this.$root.apiUrl}/tokens/${this.slug}`, {
+      axios.post(`${this.$root.apiUrl}/sellers/tokens/${this.slug}`, {
         token_num: this.tokenNum,
         end_at: this.endAt && `${endJalali} ${endAtHour}`,
       }).then(res => {
@@ -169,7 +169,7 @@ export default {
       if (param === 'mobile') this.search.token = null
 
       let _this = this
-      axios.get(`${this.$root.apiUrl}/tokens/search/${this.slug}?page=${page}`, {
+      axios.get(`${this.$root.apiUrl}/sellers/tokens/search/${this.slug}?page=${page}`, {
         params: this.search
       }).then(res => {
         _this._tokens = res.data.data.tokens
@@ -180,7 +180,7 @@ export default {
     },
     deleteNotUsedTokens() {
       let _this = this
-      axios.delete(`${this.$root.apiUrl}/tokens/not-used/${this.slug}`
+      axios.delete(`${this.$root.apiUrl}/sellers/tokens/not-used/${this.slug}`
       ).then(res => {
         _this._tokens = res.data.data.tokens
       }).catch(e => {
