@@ -144,7 +144,7 @@ class WheelController extends Controller
         Prize::create([
             'user_id' => $userId,
             'wheel_id' => $req->input('wheel_id'),
-            'slice_id' => $req->input('slice_id'),
+            'slice_id' => $req->input('id'),
             'title' => $req->input('title'),
             'probability' => $req->input('probability')
         ]);

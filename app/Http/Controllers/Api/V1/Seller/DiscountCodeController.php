@@ -16,7 +16,6 @@ class DiscountCodeController extends Controller
     public function store(Request $req): Response
     {
         $req->validate([
-            'wheel_id' => 'required|integer',
             'slice_id' => 'required|integer',
             'file' => 'file',
         ]);
@@ -28,28 +27,17 @@ class DiscountCodeController extends Controller
 
         DB::transaction(function () use ($req, $file) {
 
-            Slice::where('wheel_id', $req->input('wheel_id'))
-                ->update([
-                    'inventory' => null
-                ]);
-
-
             DiscountCode::where([
-                'wheel_id' => $req->input('wheel_id'),
                 'slice_id' => $req->input('slice_id'),
             ])->whereNull('user_id')->delete();
-
 
             foreach ($file[0] as $item) {
                 DiscountCode::updateOrCreate(
                     [
-                        'wheel_id' => $req->input('wheel_id'),
                         'slice_id' => $req->input('slice_id'),
                         'code' => $item[0]
-
                     ],
                     [
-                        'wheel_id' => $req->input('wheel_id'),
                         'slice_id' => $req->input('slice_id'),
                         'code' => $item[0]
                     ]
@@ -57,10 +45,29 @@ class DiscountCodeController extends Controller
             }
         });
 
-        $slice = Slice::withCount('discountCodes')->find($req->input('slice_id'));
+        $discountCodeCount = DiscountCode::where([
+            'slice_id' => $req->input('slice_id'),
+            'user_id' => null
+        ])->count();
+
+
+        Slice::find($req->input('slice_id'))->update([
+            'inventory' => $discountCodeCount
+        ]);
+
+        $slice = Slice::withCount([
+            'discountCodes' => function ($query) {
+                $query->whereNull('user_id');
+            }
+        ])->find($req->input('slice_id'));
+
+
+
+        $discountCodesExists = DiscountCode::where('slice_id', $req->input('slice_id'))->exists();
 
         return response(Helper::responseTemplate([
-            'slice' => $slice
+            'slice' => $slice,
+            'discount_codes_exists' => $discountCodesExists
         ], 'success done'), 201);
     }
 
@@ -81,11 +88,22 @@ class DiscountCodeController extends Controller
         $discountCodes = DiscountCode::with('user')
             ->where('slice_id', $slice_id)->paginate(20);
 
-        $slice = Slice::withCount('discountCodes')->find($slice_id);
+        $slice = Slice::withCount([
+            'discountCodes' => function ($query) {
+                $query->whereNull('user_id');
+            }
+        ])->find($slice_id);
+
+        $discountCodesExists = DiscountCode::where('slice_id', $slice_id)->exists();
+
+        Slice::find($slice_id)->update([
+            'inventory' => 0
+        ]);
 
         return response(Helper::responseTemplate([
             'discount_codes' => $discountCodes,
-            'slice' => $slice
+            'slice' => $slice,
+            'discount_codes_exists' => $discountCodesExists
         ], 'success done'), 201);
     }
 }

@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('discount_codes', function (Blueprint $table) {
             $table->id();
-            $table->integer('wheel_id');
             $table->integer('slice_id');
             $table->integer('user_id')->nullable();
             $table->string('code');

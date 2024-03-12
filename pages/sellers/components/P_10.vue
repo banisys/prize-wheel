@@ -1,9 +1,11 @@
 <template>
   <div class="w-container">
     <template v-for="(item, index) in slices">
-      <div :id="`s-${index + 1}`" class="slide" @click="clickOnSlice(item.id)">
-        <p> {{ item.title }}</p>
-      </div>
+      <a target="_blank" :href="`${this.$root.baseUrl}/sellers/slices/${item.id}/edit`">
+        <div :id="`s-${index + 1}`" class="slide">
+          <p> {{ item.title }}</p>
+        </div>
+      </a>
     </template>
   </div>
 </template>
@@ -77,9 +79,7 @@ export default {
     }
   },
   methods: {
-    clickOnSlice(sliceId) {
-      this.$parent.submit('slice', sliceId)
-    }
+
   },
   created() {
 

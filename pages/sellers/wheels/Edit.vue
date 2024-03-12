@@ -2,14 +2,14 @@
   <div class="container my-5">
     <div class="row">
 
-      <div class="col-12" v-if="form.login_method === 2 && form.seller.sms_number < 1">
+      <div class="col-6" v-if="form.login_method === 2 && form.seller.sms_number < 1">
         <div class="alert alert-primary" role="alert">
           پیامک های خود را شارژ کنید
         </div>
       </div>
 
 
-      <div class="col-12">
+      <div class="col-6">
 
         <div class="mt-3">
           <label for="title" class="form-label">عنوان</label>
@@ -154,9 +154,9 @@
             </label>
           </div>
 
-          <Link :href="`${$root.baseUrl}/sellers/tokens/${wheel.slug}`" v-if="form.login_method === 3">
-          مدیریت توکن ها
-          </Link>
+          <a target="_blank" :href="`${$root.baseUrl}/sellers/tokens/${wheel.slug}`" v-if="form.login_method === 3">
+            مدیریت توکن ها
+          </a>
         </div>
 
         <div class="p-3 border mt-4 rounded">
@@ -182,7 +182,7 @@
     </div>
 
     <div class="row mt-5">
-      <div class="col-12">
+      <div class="col-6">
         <button type="button" class="btn btn-success w-100 btn-sm mt-3" @click="submit">
           ثبت
         </button>
@@ -236,7 +236,7 @@ export default {
   computed: {
   },
   methods: {
-    submit(agent = 'edit', sliceId = null) {
+    submit() {
       let startAtDate = null
       let startAtHour = null
       let startJalali = null
@@ -273,9 +273,6 @@ export default {
         end_at: this.form.end_at && `${endJalali} ${endAtHour}`
       }
       ).then(res => {
-
-        if (agent === 'slice')
-          router.get(`${this.$root.baseUrl}/sellers/slices/${sliceId}/edit`)
 
       }).catch(e => {
         alert(e.response.data.message)
@@ -352,8 +349,6 @@ export default {
   },
   mounted() {
     this.form = { ...this.wheel }
-
-    console.log(this.form);
 
     const wheelUserRequirements = this.wheel.user_requirements
 

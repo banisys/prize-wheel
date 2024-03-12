@@ -17,9 +17,9 @@
     </div>
 
     <div class="row mt-5">
-      <div class="col-12">
+      <div class="col-6">
         <div class="alert alert-primary" role="alert">
-          مجموع احتمالات دیگر اسلاس ها:
+          مجموع احتمالات دیگر اسلایس ها:
           {{ this.sum_probability - this.slice.probability }}
           درصد
         </div>
@@ -27,7 +27,7 @@
     </div>
 
     <div class="row">
-      <div class="col-12">
+      <div class="col-6">
         <div class="mt-4 form-check">
           <input type="checkbox" class="form-check-input" id="status" @change="changeStatus" :checked="_slice.status">
           <label class="form-check-label" for="status">نمایش تعداد برنده های این اسلایس در صفحه گردونه</label>
@@ -74,7 +74,7 @@
 
       <div class="col-2">
         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#discountCodeModal"
-          v-if="_slice.discount_codes_count" @click="fetchDiscountCodes">
+          v-if="_discount_codes_exists" @click="fetchDiscountCodes">
           کد های تخفیف
           ({{ _slice.discount_codes_count }})
         </button>
@@ -88,7 +88,7 @@
     </div>
 
     <div class="row mt-5">
-      <div class="col-12">
+      <div class="col-6">
         <button type="button" class="btn btn-success w-100 btn-sm mt-3" @click="submit">
           ثبت
         </button>
@@ -101,7 +101,6 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          <h1 class="modal-title fs-5">{{ _slice.title }}</h1>
           <button type="button" class="btn btn-success btn-sm" @click="deleteDiscountCode">
             حذف کدهای بدون کاربر
           </button>
@@ -136,7 +135,7 @@
 <script>
 
 export default {
-  props: ['slice', 'sum_probability'],
+  props: ['slice', 'sum_probability', 'discount_codes_exists'],
   components: {
 
   },
@@ -146,7 +145,8 @@ export default {
     page: 1,
     per_page: null,
     _slice: {},
-    status: null
+    status: null,
+    _discount_codes_exists: 0
   }),
   computed: {
 
@@ -187,6 +187,7 @@ export default {
 
         _this.discountCodes = res.data.data.discount_codes.data
         _this._slice = res.data.data.slice
+        _this._discount_codes_exists = res.data.data.discount_codes_exists
 
       }).catch(e => {
         alert(e.response.data.message)
@@ -199,7 +200,6 @@ export default {
 
       let formData = new FormData
 
-      formData.append('wheel_id', this._slice.wheel_id)
       formData.append('slice_id', this._slice.id)
       formData.append('file', this.discountCodeFile)
 
@@ -208,6 +208,7 @@ export default {
       axios.post(`${this.$root.apiUrl}/sellers/discount_codes`, formData, config).then(res => {
 
         _this._slice = res.data.data.slice
+        _this._discount_codes_exists = res.data.data.discount_codes_exists
 
       }).catch(e => {
         alert(e.response.data.message)
@@ -223,6 +224,7 @@ export default {
   },
   mounted() {
     this._slice = { ...this.slice }
+    this._discount_codes_exists = this.discount_codes_exists
   }
 }
 </script>

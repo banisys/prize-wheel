@@ -83,14 +83,16 @@
             <label for="mobile" class="form-label mt-3">ایمیل</label>
             <input type="text" id="mobile" class="form-control ltr" v-model="userRequirement.email">
           </template>
-          <button type="button" class="btn btn-danger btn-sm mt-3" @click="submitUserRequirement">مرحله
-            بعد</button>
+          <button type="button" class="btn btn-danger btn-sm mt-3" @click="submitUserRequirement">
+            مرحله بعد
+          </button>
         </div>
 
         <div v-if="stepStart">
 
           <span>کد معرف شما:</span>
-          <input type="text" :value="_user.code" ref="input_ic" :ic="`${this.$root.baseUrl}/${wheel.slug}?ic=${_user.code}`">
+          <input type="text" :value="_user.code" ref="input_ic"
+            :ic="`${this.$root.baseUrl}/${wheel.slug}?ic=${_user.code}`">
 
           <button @click="copyIcToClipboard">کپی لینک گردونه به همراه کد معرف شما</button>
 
@@ -131,25 +133,28 @@
 
       <div class="col-6">
         <Transition>
-          <p_10 v-if="wheel.slice_num === 10 && flagWheel" :slices="wheel.slices" ref="prizeWheel" @win="submitWin" />
+          <p_10 v-if="wheel.slice_num === 10 && flagWheel" :slices="wheel.slices" ref="prizeWheel"
+            @winSlice="submitWin" />
         </Transition>
 
         <Transition>
-          <p_12 v-if="wheel.slice_num === 12 && flagWheel" :slices="wheel.slices" ref="prizeWheel" @win="submitWin" />
+          <p_12 v-if="wheel.slice_num === 12 && flagWheel" :slices="wheel.slices" ref="prizeWheel"
+            @winSlice="submitWin" />
         </Transition>
 
         <Transition>
-          <p_15 v-if="wheel.slice_num === 15 && flagWheel" :slices="wheel.slices" ref="prizeWheel" @win="submitWin" />
+          <p_15 v-if="wheel.slice_num === 15 && flagWheel" :slices="wheel.slices" ref="prizeWheel"
+            @winSlice="submitWin" />
         </Transition>
 
-
-        <h4 class="mt-5">تعداد برندگان</h4>
-        <ul>
-          <li v-for="item in wheel.popular_slices">
-            {{ item.title }} : {{ item.prizes_count }}
-          </li>
-        </ul>
-
+        <div v-if="wheel.popular_slices.length">
+          <h4 class="mt-5">تعداد برندگان</h4>
+          <ul>
+            <li v-for="item in wheel.popular_slices">
+              {{ item.title }} : {{ item.prizes_count }}
+            </li>
+          </ul>
+        </div>
 
       </div>
 
@@ -323,14 +328,14 @@ export default {
         this.flagStart = 1
       }, 500)
     },
-    submitWin(win) {
+    submitWin(winSlice) {
 
       this.flagStart = 0
       this.flagReStart = 0
       this.flagRemainTry = 0
       let _this = this
 
-      axios.post(`${this.$root.apiUrl}/prizes`, win).then(res => {
+      axios.post(`${this.$root.apiUrl}/prizes`, winSlice).then(res => {
 
         setTimeout(() => {
           _this.remainTry = res.data.data.remain_try

@@ -21,7 +21,8 @@ class WheelController extends Controller
                     'id',
                     'wheel_id',
                     'title',
-                    'probability'
+                    'probability',
+                    'inventory'
                 );
             },
             'popularSlices' => function ($query) {
@@ -35,11 +36,14 @@ class WheelController extends Controller
             'dateLeftToTryAgain'
         ])->firstOrFail();
 
-        $orderPlanExist = OrderPlan::where('seller_id', $wheel->seller_id)
-            ->where('end_at', '>', now())->exists();
 
-        if (!$orderPlanExist)
-            return Inertia::render('wheels/Index', ['wheel' => ['status' => 0]]);
+        // $probabilitySum = 0;
+        // foreach ($wheel->slices as $slice) $probabilitySum += $slice->probability;
+
+        // $orderPlanExist = OrderPlan::where('seller_id', $wheel->seller_id)->where('end_at', '>', now())->exists();
+
+        // if (!$orderPlanExist || $probabilitySum === 0)
+        //     return Inertia::render('wheels/Index', ['wheel' => ['status' => 0]]);
 
 
         if ($wheel->login_method === 2) {

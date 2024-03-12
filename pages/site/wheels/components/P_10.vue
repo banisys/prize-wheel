@@ -1,5 +1,5 @@
 <template>
-  <div class="w-container" style="position: relative;">
+  <div class="w-container">
     <template v-for="(item, index) in slices">
       <div :id="`s-${index + 1}`" class="slide">
         <p> {{ item.title }}</p>
@@ -20,7 +20,6 @@ export default {
   props: ['slices'],
   data: () => ({
     numDeg: 1800,
-    // numDeg: 0,
   }),
   computed: {
     reverseSlides() {
@@ -29,7 +28,7 @@ export default {
   },
   methods: {
     start() {
-    //   document.querySelector('.w-container').style.transition = '10s cubic-bezier(.08, .46, .4, 1.01)'
+      //   document.querySelector('.w-container').style.transition = '10s cubic-bezier(.08, .46, .4, 1.01)'
 
       const standDeg = {
         0: [5, 6, 7, 8],
@@ -47,14 +46,18 @@ export default {
       const stack = []
 
       this.reverseSlides.forEach((item, index) => {
-        for (let i = 0; i < item.probability; i++) {
-          stack.push(standDeg[index][Math.floor(Math.random() * 4)])
+
+        if (item.probability !== 0) {
+          for (let i = 0; i < item.probability; i++) {
+            stack.push(standDeg[index][Math.floor(Math.random() * 4)])
+          }
         }
+
       })
 
       const random = stack[Math.floor(Math.random() * stack.length)]
 
-      let win =
+      let winSlice =
         0 < random && random < 36 ? this.reverseSlides[9] :
           36 < random && random < 72 ? this.reverseSlides[8] :
             72 < random && random < 108 ? this.reverseSlides[7] :
@@ -68,7 +71,7 @@ export default {
       this.numDeg = this.numDeg + random
       document.querySelector('.w-container').style.transform = `rotate(${this.numDeg}deg)`
 
-      this.$emit('win', win)
+      this.$emit('winSlice', winSlice)
     }
   },
   mounted() {
@@ -79,8 +82,6 @@ export default {
 }
 </script>
 
-
-
 <style scoped>
 .layout {
   display: flex;
@@ -88,6 +89,7 @@ export default {
 }
 
 .w-container {
+  position: relative;
   width: 500px;
   height: 500px;
   display: flex;
