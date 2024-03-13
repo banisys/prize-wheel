@@ -6,8 +6,6 @@ use App\Http\Controllers\Api\V1\Helper;
 use App\Http\Controllers\Controller;
 use App\Models\Slice;
 use Illuminate\Http\Request;
-use Inertia\Response as InertiaResponse;
-use Inertia\Inertia;
 use Illuminate\Http\Response;
 
 class SliceController extends Controller

@@ -33,6 +33,14 @@ class Slice extends Model
     }
 
     /**
+     * Get the not used discount codes for the slice.
+     */
+    public function discountCodesNotUsed(): HasMany
+    {
+        return $this->hasMany(DiscountCode::class)->whereNull('user_id');
+    }
+
+    /**
      * Get the prizes for the slice.
      */
     public function prizes(): HasMany

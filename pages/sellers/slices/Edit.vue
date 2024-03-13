@@ -76,7 +76,7 @@
         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#discountCodeModal"
           v-if="_discount_codes_exists" @click="fetchDiscountCodes">
           کد های تخفیف
-          ({{ _slice.discount_codes_count }})
+          ({{ _slice.discount_codes_not_used_count }})
         </button>
         <input v-else type="number" class="form-control" v-model="_slice.inventory">
       </div>
@@ -130,6 +130,7 @@
       </div>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -188,6 +189,12 @@ export default {
         _this.discountCodes = res.data.data.discount_codes.data
         _this._slice = res.data.data.slice
         _this._discount_codes_exists = res.data.data.discount_codes_exists
+
+        if (!_this.discountCodes.length) {
+          let modalEl = document.getElementById('discountCodeModal')
+          let modal = bootstrap.Modal.getInstance(modalEl)
+          modal.hide()
+        }
 
       }).catch(e => {
         alert(e.response.data.message)

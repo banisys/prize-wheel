@@ -86,11 +86,7 @@ class WheelController extends Controller
     {
         Inertia::setRootView('layout-inertia.seller');
 
-        $slice = Slice::withCount([
-            'discountCodes' => function ($query) {
-                $query->whereNull('user_id');
-            }
-        ])->findOrfail($slice);
+        $slice = Slice::withCount('discountCodesNotUsed')->findOrfail($slice);
 
         $sumProbability = Slice::where('wheel_id', $slice->wheel_id)->sum('probability');
 
