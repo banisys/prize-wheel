@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->integer('wheel_id');
             $table->string('title');
-            $table->unsignedTinyInteger('probability');
-            $table->integer('inventory')->nullable();
-            $table->string('description')->nullable();
+            $table->unsignedSmallInteger('probability');
+            $table->unsignedTinyInteger('inventory')->nullable();
             $table->unsignedTinyInteger('status')->nullable(); // null= unpopular | 1= popular
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }

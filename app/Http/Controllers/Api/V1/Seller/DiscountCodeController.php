@@ -57,8 +57,6 @@ class DiscountCodeController extends Controller
 
         $slice = Slice::withCount('discountCodesNotUsed')->find($req->input('slice_id'));
 
-
-
         $discountCodesExists = DiscountCode::where('slice_id', $req->input('slice_id'))->exists();
 
         return response(Helper::responseTemplate([
@@ -69,8 +67,7 @@ class DiscountCodeController extends Controller
 
     public function fetch($slice_id): Response
     {
-        $discountCodes = DiscountCode::with('user')
-            ->where('slice_id', $slice_id)->paginate(20);
+        $discountCodes = DiscountCode::with('user')->where('slice_id', $slice_id)->paginate(20);
 
         return response(Helper::responseTemplate([
             'discount_codes' => $discountCodes

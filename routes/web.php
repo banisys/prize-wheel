@@ -42,4 +42,5 @@ Route::get('sellers/orders/sms', [OrderController::class, 'sms'])->middleware('a
 
 //================================ Site =====================================
 Route::get('/', [HomeController::class, 'index']);
+
 Route::get('{wheel}', [SiteWheelController::class, 'show']);

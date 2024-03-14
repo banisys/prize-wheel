@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Api\V1\Helper;
 use App\Models\DateLeftToTryAgain;
 use App\Models\Prize;
+use App\Models\Slice;
 use App\Models\Subuser;
 use App\Models\UserRequirement;
 use App\Models\UserRequirementValue;
@@ -138,7 +139,6 @@ class WheelController extends Controller
         if (!$remainTry)
             return response(Helper::responseTemplate('there is no retry'), 400);
 
-
         $userId = auth()->user()->id;
 
         Prize::create([
@@ -148,6 +148,9 @@ class WheelController extends Controller
             'title' => $req->input('title'),
             'probability' => $req->input('probability')
         ]);
+
+        $slice = Slice::whereNotNull('inventory')->find($req->input('id'));
+        if ($slice) $slice->update(['inventory' => ($slice->inventory - 1 < 0) ? 0 : $slice->inventory - 1]);
 
         $prizes = Prize::where([
             'user_id' => $userId,
