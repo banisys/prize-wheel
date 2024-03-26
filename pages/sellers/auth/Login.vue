@@ -11,6 +11,9 @@
         <button type="button" class="btn btn-danger btn-sm mt-3" @click="submit">
           ورود
         </button>
+
+        <v-btn color="primary">Button</v-btn>
+
       </div>
     </div>
   </div>
@@ -19,7 +22,6 @@
 <script>
 import axios from 'axios'
 import { router } from '@inertiajs/vue3'
-// import p_10 from './Components/p_10.vue'
 
 export default {
   components: {

@@ -1,7 +1,16 @@
 import './bootstrap'
 import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
-import VueAwesomePaginate from "vue-awesome-paginate"
+
+import "vuetify/styles"
+import { createVuetify } from "vuetify"
+import * as components from "vuetify/components"
+import * as directives from "vuetify/directives"
+
+const vuetify = createVuetify({
+    components,
+    directives
+});
 
 
 createInertiaApp({
@@ -17,8 +26,6 @@ createInertiaApp({
         assetsUrl: import.meta.env.VITE_APP_ASSETS_URL,
         apiUrl: import.meta.env.VITE_APP_API_URL,
       }),
-    })
-      .use(plugin)
-      .mount(el)
+    }).use(plugin).use(vuetify).mount(el)
   }
 })
